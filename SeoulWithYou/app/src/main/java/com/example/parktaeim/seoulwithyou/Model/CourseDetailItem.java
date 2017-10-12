@@ -4,13 +4,13 @@ package com.example.parktaeim.seoulwithyou.Model;
  * Created by user on 2017-10-11.
  */
 
-public class CourseDetail {
+public class CourseDetailItem {
     private String number;
     private String name;
     private String detail;
     private String picUrl;
 
-    public CourseDetail(String number, String name, String detail, String picUrl) {
+    public CourseDetailItem(String picUrl, String name, String number, String detail) {
         this.number = number;
         this.name = name;
         this.detail = detail;

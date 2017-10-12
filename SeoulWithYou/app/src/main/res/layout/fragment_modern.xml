@@ -7,20 +7,8 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6"/>
-
-    <!--<com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="6"-->
-        <!--android:id="@+id/courseRecyclerView"/>-->
-
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="6"-->
-        <!--android:background="@android:color/black">-->
-    <!--</View>-->
+        android:layout_weight="6"
+        android:id="@+id/courseRecyclerView"/>
 
     <fragment android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -32,17 +20,7 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"/>
-
-    <!--<com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:id="@+id/detailRecyclerView"-->
-        <!--android:layout_weight="5"/>-->
-
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="5"/>-->
+        android:layout_weight="5"
+        android:id="@+id/detailRecyclerView"/>
 
 </LinearLayout>
