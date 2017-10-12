@@ -1,7 +1,9 @@
 package com.example.parktaeim.seoulwithyou.Fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +23,8 @@ import java.util.ArrayList;
  * Created by user on 2017-10-11.
  */
 
-public class ModernFragment extends Fragment{
+@RequiresApi(api = Build.VERSION_CODES.M)
+public class ModernFragment extends Fragment implements RecyclerView.OnScrollChangeListener{
 
     private RecyclerView courseRecyclerView;
     private RecyclerView.Adapter courseAdapter;
@@ -31,6 +34,7 @@ public class ModernFragment extends Fragment{
     private RecyclerView.Adapter detailAdapter;
     private RecyclerView.LayoutManager detailManger;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,6 +51,7 @@ public class ModernFragment extends Fragment{
         detailRecyclerView.setLayoutManager(detailManger);
         dataSet();
         dataSet2();
+        detailRecyclerView.setOnScrollChangeListener(this);
 
         return view;
     }
@@ -77,5 +82,20 @@ public class ModernFragment extends Fragment{
 
         detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), items);
         detailRecyclerView.setAdapter(detailAdapter);
+    }
+
+    @Override
+    public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+        detailRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 }
