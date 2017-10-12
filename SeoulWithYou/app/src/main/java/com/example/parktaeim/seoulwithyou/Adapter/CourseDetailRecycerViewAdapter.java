@@ -3,6 +3,7 @@ package com.example.parktaeim.seoulwithyou.Adapter;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ public class CourseDetailRecycerViewAdapter extends RecyclerView.Adapter<CourseD
     public void onBindViewHolder(ViewHolder holder, int position) {
         String url = details.get(position).getPicUrl();
         Glide.with(context).load(url).into(holder.detailPic);
+        holder.detailExplaination.setMovementMethod(new ScrollingMovementMethod());
         holder.detailExplaination.setText(details.get(position).getDetail());
         holder.detailName.setText(details.get(position).getName());
         holder.courseNum.setText(details.get(position).getNumber());
