@@ -1,21 +1,20 @@
 package com.example.parktaeim.seoulwithyou.Fragment;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
 import com.example.parktaeim.seoulwithyou.Adapter.CourseDetailRecycerViewAdapter;
 import com.example.parktaeim.seoulwithyou.Adapter.CourseRecyclerViewAdapter;
@@ -52,8 +51,9 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         companionBtn = (ImageButton) view.findViewById(R.id.companionBtn);
 
         courseRecyclerView = (RecyclerView) view.findViewById(R.id.courseRecyclerView);
-        courseManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false);
         courseRecyclerView.hasFixedSize();
+        courseManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false);
+        courseManager.hasFocus();
         courseRecyclerView.setLayoutManager(courseManager);
 
         detailRecyclerView = (RecyclerView) view.findViewById(R.id.detailRecyclerView);
@@ -114,7 +114,14 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (newState == 0) {
-                    companionBtn.setVisibility(View.VISIBLE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            companionBtn.setVisibility(View.VISIBLE);
+                            companionBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.show));
+                        }
+                    }, 1000);
+
                 }
             }
 
@@ -123,7 +130,8 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
                 super.onScrolled(recyclerView, dx, dy);
 
                 if((dy > 0) || (dy < 0)) {
-                   companionBtn.setVisibility(View.INVISIBLE);
+                    companionBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.hide));
+                    companionBtn.setVisibility(View.INVISIBLE);
                 }
             }
 
