@@ -34,11 +34,11 @@
             android:layout_marginTop="40dp"
             android:hint="아이디"
             android:textColor="#FFFFFF"
-            app:met_baseColor="@color/colorAccent"
+            app:met_baseColor="@color/whiteColor"
             app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorAccent"
+            app:met_primaryColor="@color/whiteColor"
             app:met_singleLineEllipsis="true"
-            app:met_textColorHint="@color/colorAccent" />
+            app:met_textColorHint="@color/whiteColor" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/pwEditText"
@@ -48,11 +48,11 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:hint="비밀번호"
-            app:met_baseColor="@color/colorAccent"
+            app:met_baseColor="@color/whiteColor"
             app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorAccent"
+            app:met_primaryColor="@color/whiteColor"
             app:met_singleLineEllipsis="true"
-            app:met_textColorHint="@color/colorAccent" />
+            app:met_textColorHint="@color/whiteColor" />
 
         <ImageView
             android:id="@+id/loginBtn"
@@ -73,7 +73,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="회원가입"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/whiteColor"
                 android:layout_weight="1"
                 android:gravity="center"/>
 
@@ -82,7 +82,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="아이디 / 비밀번호 찾기"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/whiteColor"
                 android:layout_weight="1"
                 android:gravity="center"/>
         </LinearLayout>

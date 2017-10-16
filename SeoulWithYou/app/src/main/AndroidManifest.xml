@@ -10,29 +10,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-<<<<<<< HEAD
-        <activity android:name=".MainActivity">
-
-        </activity>
-        <activity android:name=".LoginActivity">
-=======
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".Activity.MainActivity">
->>>>>>> 25cddcaa2d1029ce1300623344d0c8715d35b51d
+        <activity android:name=".Activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUpActivity"/>
-        <activity android:name=".FindIdPwActivity"/>
-        <activity android:name=".SplashActivity"/>
+        <activity android:name=".Activity.MainActivity">
 
-    </application>
+        </activity>
+        <activity android:name=".Activity.SignUpActivity">
+
+        </activity>
+        <activity android:name=".Activity.FindIdPwActivity"/>
+        <activity android:name=".Activity.SplashActivity"/>
+
+
+</application>
 
 </manifest>
