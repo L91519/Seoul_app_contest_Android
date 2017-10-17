@@ -56,6 +56,8 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         courseManager.hasFocus();
         courseRecyclerView.setLayoutManager(courseManager);
 
+        courseRecyclerView.scrollToPosition(2);
+
         detailRecyclerView = (RecyclerView) view.findViewById(R.id.detailRecyclerView);
         detailManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         detailRecyclerView.hasFixedSize();

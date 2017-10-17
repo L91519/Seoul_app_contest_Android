@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Model.CourseItem;
@@ -57,7 +58,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         return courseItems.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements  View.OnFocusChangeListener{
+    public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView coursePic;
         TextView courseName;
         TextView courseDistance;
@@ -71,21 +72,16 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
             courseDistance = (TextView) itemView.findViewById(R.id.courseDistanceText);
             view = (CardView) itemView.findViewById(R.id.courseItem);
 
-        }
-
-        @Override
-        public void onFocusChange(View view, boolean hasFocus) {
-            if(hasFocus) {
-                Log.d(view.toString(), "logCheck sucess");
-                Animation anim = AnimationUtils.loadAnimation(context, R.anim.current_item_bigger);
-                itemView.startAnimation(anim);
-                anim.setFillAfter(true);
-            } else {
-                Log.d(view.toString(), "logCheck fail");
-                Animation anim = AnimationUtils.loadAnimation(context, R.anim.other_item_small);
-                itemView.startAnimation(anim);
-                anim.setFillAfter(true);
-            }
+            itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    if(b) {
+                        Toast.makeText(context, "focused", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "????", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 }
