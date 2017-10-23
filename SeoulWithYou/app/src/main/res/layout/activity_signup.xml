@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/backgroundImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FF4444"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/logo_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="70dp" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/nameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/logo_img"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="40dp"
+            android:hint="이름"
+            android:textColor="#FFFFFF"
+            app:met_baseColor="@color/whiteColor"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/whiteColor"
+            app:met_singleLineEllipsis="true"
+            app:met_textColorHint="@color/whiteColor" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/idEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nameEditText"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:hint="아이디"
+            android:textColor="#FFFFFF"
+            app:met_baseColor="@color/whiteColor"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/whiteColor"
+            app:met_singleLineEllipsis="true"
+            app:met_textColorHint="@color/whiteColor" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/pwEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/idEditText"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:hint="비밀번호"
+            app:met_baseColor="@color/whiteColor"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/whiteColor"
+            app:met_singleLineEllipsis="true"
+            app:met_textColorHint="@color/whiteColor" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/pwCheckEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pwEditText"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:hint="비밀번호 확인"
+            app:met_baseColor="@color/whiteColor"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/whiteColor"
+            app:met_singleLineEllipsis="true"
+            app:met_textColorHint="@color/whiteColor" />
+
+        <ImageView
+            android:id="@+id/loginBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pwEditText"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>
