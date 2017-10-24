@@ -1,5 +1,6 @@
 package com.example.parktaeim.seoulwithyou.Activity;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -63,9 +64,20 @@ public class SignUpActivity extends AppCompatActivity {
                 }
             }
         });
+
         gender_woman.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+            }
+        });
+
+        signupBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
+                startActivity(intent);
+
 
             }
         });
