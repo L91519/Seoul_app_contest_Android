@@ -19,13 +19,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.CourseDetailRecycerViewAdapter;
 import com.example.parktaeim.seoulwithyou.Adapter.CourseRecyclerViewAdapter;
 import com.example.parktaeim.seoulwithyou.Model.CourseDetailItem;
 import com.example.parktaeim.seoulwithyou.Model.CourseItem;
 import com.example.parktaeim.seoulwithyou.R;
-import com.example.parktaeim.seoulwithyou.Widget.HorizontalTransitionLayout;
 import com.stone.pile.libs.PileLayout;
 
 import java.util.ArrayList;
@@ -140,90 +138,12 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if((dy > 0) || (dy < 0)) {
+                if ((dy > 0) || (dy < 0)) {
                     companionBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.hide));
                     companionBtn.setVisibility(View.INVISIBLE);
                 }
             }
 
         });
-
-        initDataList();
-
-        pileLayout.setAdapter(new PileLayout.Adapter() {
-            @Override
-            public int getLayoutId() {
-                return R.layout.item_layout;
-            }
-
-            @Override
-            public int getItemCount() {
-                return courseItems.size();
-            }
-
-            @Override
-            public void bindView(View view, int position) {
-                ViewHolder viewHolder = (ViewHolder) view.getTag();
-                if(viewHolder == null) {
-                    viewHolder = new ViewHolder();
-                    viewHolder.coursePic = (ImageView) view.findViewById(R.id.coursePic);
-                    view.setTag(viewHolder);
-                }
-                viewHolder.horizontalTransitionLayout.firstInit(courseItems.get(position).getPlaceDistance());
-                Glide.with(getContext()).load(courseItems.get(position).getPicUrl()).into(viewHolder.coursePic);
-            }
-
-            @Override
-            public void displaying(int position) {
-                super.displaying(position);
-            }
-
-            @Override
-            public void onItemClick(View view, int position) {
-                super.onItemClick(view, position);
-            }
-        });
     }
-
-    private void initDataList() {
-        courseItems = new ArrayList<>();
-
-        CourseItem item1 = new CourseItem("http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", "Maldives", "far");
-        courseItems.add(item1);
-        CourseItem item2 = new CourseItem("http://img.hb.aicdn.com/41ff5110b4ecdec24e14f767e83c1659c2e8a180f3df-QqUAgk_fw658", "Norway", "near");
-        courseItems.add(item2);
-        CourseItem item3 = new CourseItem("http://img.hb.aicdn.com/80006ed344ed8dee7ad8142b3c4dc1b51cbf207c3097a-SGiu5P_fw658", "USA", "middle");
-        courseItems.add(item3);
-    }
-
-    private void transitionSecene(int position) {
-        if (transitionAnimator != null) {
-            transitionAnimator.cancel();
-        }
-
-//        countryView.saveNextPosition(position, dataList.get(position).getCountry() + "-" + position);
-//        temperatureView.saveNextPosition(position, dataList.get(position).getTemperature());
-
-        transitionAnimator = ObjectAnimator.ofFloat(getActivity(), "transitionValue", 0.0f, 1.0f);
-        transitionAnimator.setDuration(300);
-        transitionAnimator.start();
-        transitionAnimator.addListener(animatorListener);
-
-    }
-
-    private void initScene (int position) {
-        dataSet2();
-    }
-
-    class ViewHolder {
-        ImageView coursePic;
-        HorizontalTransitionLayout horizontalTransitionLayout;
-    }
-
-    /*private void adjustStatusBarHeight() {
-        int statusBarHeight = Utils.getStatusBarHeight(getContext());
-        ViewGroup.LayoutParams lp = positionView.getLayoutParams();
-        lp.height = statusBarHeight;
-        positionView.setLayoutParams(lp);
-    }*/
 }
