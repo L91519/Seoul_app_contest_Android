@@ -2,47 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:pile="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:scrollbars="vertical">
 
+    <com.stone.pile.libs.PileLayout
+        android:id="@+id/pileLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        pile:displayCount="1.8"
+        pile:interval="10dp"
+        pile:scaleStep="0.32"
+        pile:sizeRatio="1.12" />
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="5" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5">
+
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/courseRecyclerView"
+            android:id="@+id/detailRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="6" />
+            android:layout_height="match_parent">
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="5" />
+        </android.support.v7.widget.RecyclerView>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="5">
+        <ImageButton
+            android:id="@+id/companionBtn"
+            android:layout_width="300dp"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:animateLayoutChanges="true"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/main_companion_btn" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/detailRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </android.support.v7.widget.RecyclerView>
-
-
-            <ImageButton
-                android:id="@+id/companionBtn"
-                android:layout_width="300dp"
-                android:layout_height="80dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:animateLayoutChanges="true"
-                android:background="@null"
-                android:scaleType="fitXY"
-                android:src="@drawable/main_companion_btn" />
-
-        </RelativeLayout>
+    </RelativeLayout>
 </LinearLayout>
 
