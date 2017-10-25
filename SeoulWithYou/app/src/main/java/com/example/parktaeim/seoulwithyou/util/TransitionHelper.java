@@ -1,4 +1,4 @@
-package util;
+package com.example.parktaeim.seoulwithyou.util;
 
 /**
  * Created by admin on 2017/5/12.

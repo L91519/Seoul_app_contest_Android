@@ -1,4 +1,4 @@
-package util;
+package com.example.parktaeim.seoulwithyou.util;
 
 import android.app.Activity;
 import android.content.Context;

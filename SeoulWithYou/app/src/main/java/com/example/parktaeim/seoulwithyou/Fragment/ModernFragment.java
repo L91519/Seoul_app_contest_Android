@@ -1,14 +1,17 @@
 package com.example.parktaeim.seoulwithyou.Fragment;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.pm.PackageManager;
+import android.location.LocationListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,26 +20,28 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.CourseDetailRecycerViewAdapter;
-import com.example.parktaeim.seoulwithyou.Adapter.CourseRecyclerViewAdapter;
 import com.example.parktaeim.seoulwithyou.Model.CourseDetailItem;
 import com.example.parktaeim.seoulwithyou.Model.CourseItem;
 import com.example.parktaeim.seoulwithyou.R;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.stone.pile.libs.PileLayout;
 
 import java.util.ArrayList;
+import java.util.Map;
 
-import util.Utils;
+import com.example.parktaeim.seoulwithyou.util.Utils;
 
 /**
  * Created by user on 2017-10-11.
  */
 
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class ModernFragment extends Fragment implements RecyclerView.OnScrollChangeListener{
+public class ModernFragment extends Fragment implements RecyclerView.OnScrollChangeListener, OnMapReadyCallback {
 
     private RecyclerView detailRecyclerView;
     private RecyclerView.Adapter detailAdapter;
@@ -46,6 +51,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     private ImageButton companionBtn;
     private Animator.AnimatorListener animatorListener;
     private PileLayout pileLayout;
+    private MapView mapView;
 
     private int lastDisplay = -1;
     private float transitionValue;
@@ -58,6 +64,10 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
 //        fab = (FloatingActionButton) view.findViewById(R.id.companionBtn);
         companionBtn = (ImageButton) view.findViewById(R.id.companionBtn);
+
+        mapView = (MapView) view.findViewById(R.id.map);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this);
 
         detailRecyclerView = (RecyclerView) view.findViewById(R.id.detailRecyclerView);
         detailManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -157,6 +167,32 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         detailRecyclerView.setAdapter(detailAdapter);
     }
 
+    public void dataSet1() {
+        ArrayList<CourseDetailItem> items = new ArrayList<>();
+
+        CourseDetailItem item1 = new CourseDetailItem(
+                "http://img.hb.aicdn.com/4ba573e93c6fe178db6730ba05f0176466056dbe14905-ly0Z43_fw658",
+                "name 1st",
+                "1",
+                "Hello from the other side");
+        items.add(item1);
+        CourseDetailItem item2 = new CourseDetailItem(
+                "http://img.hb.aicdn.com/4bc60d00aa3184f1f98e418df6fb6abc447dc814226ef-ZtS8hB_fw658",
+                "name 1st",
+                "2",
+                "details");
+        items.add(item2);
+        CourseDetailItem item3 = new CourseDetailItem(
+                "http://img.hb.aicdn.com/d9a48c272914c5253eceac26c51a56a26f4e50d048ba7-IJsbou_fw658",
+                "name 1st",
+                "3",
+                "details");
+        items.add(item3);
+
+        detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), items);
+        detailRecyclerView.setAdapter(detailAdapter);
+    }
+
     @Override
     public void onScrollChange(View view, int i, int i1, int i2, int i3) {
         detailRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -196,6 +232,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
     private void transitionSecene(int position) {
         if (transitionAnimator != null) {
+            dataSet1();
             transitionAnimator.cancel();
         }
 
@@ -223,6 +260,42 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         return transitionValue;
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
+    }
+
+
     class ViewHolder {
         ImageView imageView;
-    }}
+    }
+
+    @Override
+    public void onResume() {
+        mapView.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+}
