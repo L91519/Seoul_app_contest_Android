@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationListener;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,10 +28,16 @@ import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.CourseDetailRecycerViewAdapter;
 import com.example.parktaeim.seoulwithyou.Model.CourseDetailItem;
 import com.example.parktaeim.seoulwithyou.Model.CourseItem;
+import com.example.parktaeim.seoulwithyou.MyLocation;
 import com.example.parktaeim.seoulwithyou.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.stone.pile.libs.PileLayout;
 
 import java.util.ArrayList;
@@ -45,6 +52,9 @@ import com.example.parktaeim.seoulwithyou.util.Utils;
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class ModernFragment extends Fragment implements RecyclerView.OnScrollChangeListener, OnMapReadyCallback {
 
+    static final LatLng SEOUL = new LatLng(37.56, 126.97);
+
+
     private RecyclerView detailRecyclerView;
     private RecyclerView.Adapter detailAdapter;
     private RecyclerView.LayoutManager detailManger;
@@ -54,6 +64,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     private Animator.AnimatorListener animatorListener;
     private PileLayout pileLayout;
     private MapView mapView;
+    private GoogleMap myMap;
 
     private int lastDisplay = -1;
     private float transitionValue;
@@ -189,14 +200,6 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         Log.d("---position&item", String.valueOf(position) + String.valueOf(courseItems.get(position).getId()));
 
         dataSet1();
-
-        /*if(id == 0) {
-            dataSet1();
-        } else if(id == 1){
-            dataSet2();
-        } else if(id == 3){
-            dataSet3();
-        }*/
     }
 
     private void transitionSecene(int position) {
@@ -241,21 +244,14 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        googleMap.setMyLocationEnabled(true);
+        myMap = googleMap;
+
+        LatLng sydney = new LatLng(-34, 151);
+        myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        myMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
-
+//    view holder, dataset, fragment life cycle
     class ViewHolder {
         ImageView imageView;
         TextView courseName;
@@ -333,7 +329,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         ArrayList<CourseDetailItem> items = new ArrayList<>();
 
         CourseDetailItem item1 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658\"",
+                "http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658",
                 "name 1st",
                 "1",
                 "Meaningless mock-up, mock turtle soup spilled on a mock turtle neck. Mach I Convertible copy. To kill a mockingbird, you need only force it to read this copy. This is Meaningless filler. (Elvis movies.) It is not meant to be a forum for value judgments nor a scholarly diatribe on how virtue should be measured. The whole point here (if such a claim can be made in an admittedly pointless paragraph) is that this is dummy copy.  Real bullets explode with destructive intensity. Such is not the case with dummy bullets. In fact, they don't explode at all. Duds. Dull thuds. Dudley do-wrongs. And do-wrongs don't make a right. Why on earth are you still reading this? Haven't you realized it's just dummy copy? How many times must you be reminded that it's really not meant to be read? You're only wasting precious time. But be that as it may, you've got to throw in a short paragraph from time to time. Here's a short paragraph.\n");
