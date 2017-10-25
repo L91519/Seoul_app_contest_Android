@@ -14,12 +14,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.CourseDetailRecycerViewAdapter;
@@ -99,7 +101,6 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
             }
         };
 
-        dataSet2();
         initDtalist();
 
         pileLayout.setAdapter(new PileLayout.Adapter() {
@@ -119,13 +120,18 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
                 if (viewHolder == null) {
                     viewHolder = new ViewHolder();
                     viewHolder.imageView = (ImageView) view.findViewById(R.id.imageView);
+                    viewHolder.courseName = (TextView) view.findViewById(R.id.courseNameText);
+                    viewHolder.distance = (TextView) view.findViewById(R.id.courseDistanceText);
                     view.setTag(viewHolder);
                 }
                 Glide.with(getContext()).load(courseItems.get(position).getPicUrl()).into(viewHolder.imageView);
+                viewHolder.courseName.setText(courseItems.get(position).getPlaceName());
+                viewHolder.distance.setText(courseItems.get(position).getPlaceDistance());
             }
 
             @Override
             public void displaying(int position) {
+                Log.d("---positionLog", String.valueOf(position));
                 if (lastDisplay < 0) {
                     initSecene(position);
                     lastDisplay = 0;
@@ -142,55 +148,6 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         });
 
         return view;
-    }
-
-    public void dataSet2() {
-        ArrayList<CourseDetailItem> items = new ArrayList<>();
-
-        CourseDetailItem item1 = new CourseDetailItem("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYSnfkSMtgS2IAk9xRPwr99OOwoL-lJeNztczPD58wXVYCrKZM",
-                "name 1st",
-                "1",
-                "Meaningless mock-up, mock turtle soup spilled on a mock turtle neck. Mach I Convertible copy. To kill a mockingbird, you need only force it to read this copy. This is Meaningless filler. (Elvis movies.) It is not meant to be a forum for value judgments nor a scholarly diatribe on how virtue should be measured. The whole point here (if such a claim can be made in an admittedly pointless paragraph) is that this is dummy copy.  Real bullets explode with destructive intensity. Such is not the case with dummy bullets. In fact, they don't explode at all. Duds. Dull thuds. Dudley do-wrongs. And do-wrongs don't make a right. Why on earth are you still reading this? Haven't you realized it's just dummy copy? How many times must you be reminded that it's really not meant to be read? You're only wasting precious time. But be that as it may, you've got to throw in a short paragraph from time to time. Here's a short paragraph.\n");
-        items.add(item1);
-        CourseDetailItem item2 = new CourseDetailItem("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYSnfkSMtgS2IAk9xRPwr99OOwoL-lJeNztczPD58wXVYCrKZM",
-                "name 1st",
-                "2",
-                "details");
-        items.add(item2);
-        CourseDetailItem item3 = new CourseDetailItem("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYSnfkSMtgS2IAk9xRPwr99OOwoL-lJeNztczPD58wXVYCrKZM",
-                "name 1st",
-                "3",
-                "details");
-        items.add(item3);
-
-        detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), items);
-        detailRecyclerView.setAdapter(detailAdapter);
-    }
-
-    public void dataSet1() {
-        ArrayList<CourseDetailItem> items = new ArrayList<>();
-
-        CourseDetailItem item1 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/4ba573e93c6fe178db6730ba05f0176466056dbe14905-ly0Z43_fw658",
-                "name 1st",
-                "1",
-                "Hello from the other side");
-        items.add(item1);
-        CourseDetailItem item2 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/4bc60d00aa3184f1f98e418df6fb6abc447dc814226ef-ZtS8hB_fw658",
-                "name 1st",
-                "2",
-                "details");
-        items.add(item2);
-        CourseDetailItem item3 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/d9a48c272914c5253eceac26c51a56a26f4e50d048ba7-IJsbou_fw658",
-                "name 1st",
-                "3",
-                "details");
-        items.add(item3);
-
-        detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), items);
-        detailRecyclerView.setAdapter(detailAdapter);
     }
 
     @Override
@@ -228,12 +185,34 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     }
 
     private void initSecene(int position) {
+
+        Log.d("---position&item", String.valueOf(position) + String.valueOf(courseItems.get(position).getId()));
+
+        dataSet1();
+
+        /*if(id == 0) {
+            dataSet1();
+        } else if(id == 1){
+            dataSet2();
+        } else if(id == 3){
+            dataSet3();
+        }*/
     }
 
     private void transitionSecene(int position) {
+        Log.d("---position&item", String.valueOf(position) + String.valueOf(courseItems.get(position).getId()));
         if (transitionAnimator != null) {
-            dataSet1();
             transitionAnimator.cancel();
+        }
+
+            int id = courseItems.get(position).getId();
+
+        if(id == 0) {
+            dataSet1();
+        } else if(id == 1){
+            dataSet2();
+        } else if(id == 2){
+            dataSet3();
         }
 
         transitionAnimator = ObjectAnimator.ofFloat(this, "transitionValue", 0.0f, 1.0f);
@@ -244,11 +223,11 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
     private void initDtalist() {
         courseItems = new ArrayList<>();
-        CourseItem item1 = new CourseItem("http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", "palace", "far");
+        CourseItem item1 = new CourseItem("http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", "palace", "far",0);
         courseItems.add(item1);
-        CourseItem item2 = new CourseItem("http://img.hb.aicdn.com/a3a995b26bd7d58ccc164eafc6ab902601984728a3101-S2H0lQ_fw658", "dessert", "as well");
+        CourseItem item2 = new CourseItem("http://img.hb.aicdn.com/a3a995b26bd7d58ccc164eafc6ab902601984728a3101-S2H0lQ_fw658", "dessert", "as well",1);
         courseItems.add(item2);
-        CourseItem item3 = new CourseItem("http://pic4.nipic.com/20091124/3789537_153149003980_2.jpg", "kingdom", "near");
+        CourseItem item3 = new CourseItem("http://pic4.nipic.com/20091124/3789537_153149003980_2.jpg", "kingdom", "near",2);
         courseItems.add(item3);
     }
 
@@ -279,6 +258,8 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
     class ViewHolder {
         ImageView imageView;
+        TextView courseName;
+        TextView distance;
     }
 
     @Override
@@ -297,5 +278,80 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
+    }
+
+    public void dataSet1() {
+        ArrayList<CourseDetailItem> items = new ArrayList<>();
+
+        CourseDetailItem item1 = new CourseDetailItem(
+                "http://img.hb.aicdn.com/4ba573e93c6fe178db6730ba05f0176466056dbe14905-ly0Z43_fw658",
+                "name 1st",
+                "1",
+                "Hello from the other side");
+        items.add(item1);
+        CourseDetailItem item2 = new CourseDetailItem(
+                "http://img.hb.aicdn.com/4bc60d00aa3184f1f98e418df6fb6abc447dc814226ef-ZtS8hB_fw658",
+                "name 1st",
+                "2",
+                "details");
+        items.add(item2);
+        CourseDetailItem item3 = new CourseDetailItem(
+                "http://img.hb.aicdn.com/d9a48c272914c5253eceac26c51a56a26f4e50d048ba7-IJsbou_fw658",
+                "name 1st",
+                "3",
+                "details");
+        items.add(item3);
+
+        detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), items);
+        detailRecyclerView.setAdapter(detailAdapter);
+    }
+
+    public void dataSet2() {
+        ArrayList<CourseDetailItem> items = new ArrayList<>();
+
+        CourseDetailItem item1 = new CourseDetailItem("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYSnfkSMtgS2IAk9xRPwr99OOwoL-lJeNztczPD58wXVYCrKZM",
+                "name 1st",
+                "1",
+                "Meaningless mock-up, mock turtle soup spilled on a mock turtle neck. Mach I Convertible copy. To kill a mockingbird, you need only force it to read this copy. This is Meaningless filler. (Elvis movies.) It is not meant to be a forum for value judgments nor a scholarly diatribe on how virtue should be measured. The whole point here (if such a claim can be made in an admittedly pointless paragraph) is that this is dummy copy.  Real bullets explode with destructive intensity. Such is not the case with dummy bullets. In fact, they don't explode at all. Duds. Dull thuds. Dudley do-wrongs. And do-wrongs don't make a right. Why on earth are you still reading this? Haven't you realized it's just dummy copy? How many times must you be reminded that it's really not meant to be read? You're only wasting precious time. But be that as it may, you've got to throw in a short paragraph from time to time. Here's a short paragraph.\n");
+        items.add(item1);
+        CourseDetailItem item2 = new CourseDetailItem("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYSnfkSMtgS2IAk9xRPwr99OOwoL-lJeNztczPD58wXVYCrKZM",
+                "name 1st",
+                "2",
+                "details");
+        items.add(item2);
+        CourseDetailItem item3 = new CourseDetailItem("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYSnfkSMtgS2IAk9xRPwr99OOwoL-lJeNztczPD58wXVYCrKZM",
+                "name 1st",
+                "3",
+                "details");
+        items.add(item3);
+
+        detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), items);
+        detailRecyclerView.setAdapter(detailAdapter);
+    }
+
+    public void dataSet3() {
+        ArrayList<CourseDetailItem> items = new ArrayList<>();
+
+        CourseDetailItem item1 = new CourseDetailItem(
+                "http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658\"",
+                "name 1st",
+                "1",
+                "Meaningless mock-up, mock turtle soup spilled on a mock turtle neck. Mach I Convertible copy. To kill a mockingbird, you need only force it to read this copy. This is Meaningless filler. (Elvis movies.) It is not meant to be a forum for value judgments nor a scholarly diatribe on how virtue should be measured. The whole point here (if such a claim can be made in an admittedly pointless paragraph) is that this is dummy copy.  Real bullets explode with destructive intensity. Such is not the case with dummy bullets. In fact, they don't explode at all. Duds. Dull thuds. Dudley do-wrongs. And do-wrongs don't make a right. Why on earth are you still reading this? Haven't you realized it's just dummy copy? How many times must you be reminded that it's really not meant to be read? You're only wasting precious time. But be that as it may, you've got to throw in a short paragraph from time to time. Here's a short paragraph.\n");
+        items.add(item1);
+        CourseDetailItem item2 = new CourseDetailItem(
+                "http://img.hb.aicdn.com/004cddd40519846281526b4b25fbdea36b31d01e190dd-7zlmuG_fw658",
+                "name 1st",
+                "2",
+                "details");
+        items.add(item2);
+        CourseDetailItem item3 = new CourseDetailItem(
+                "http://img.hb.aicdn.com/a58eda8a9a2a3f30f0a694c2702e1aba71d97d616d34f-rqv6FA_fw658",
+                "name 1st",
+                "3",
+                "details");
+        items.add(item3);
+
+        detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), items);
+        detailRecyclerView.setAdapter(detailAdapter);
     }
 }
