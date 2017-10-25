@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.CourseDetailRecycerViewAdapter;
 import com.example.parktaeim.seoulwithyou.Adapter.CourseRecyclerViewAdapter;
 import com.example.parktaeim.seoulwithyou.Model.CourseDetailItem;
@@ -46,6 +47,8 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     private Animator.AnimatorListener animatorListener;
     private PileLayout pileLayout;
 
+    private int lastDisplay = -1;
+    private float transitionValue;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
@@ -61,8 +64,6 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         detailRecyclerView.hasFixedSize();
         detailRecyclerView.setLayoutManager(detailManger);
         pileLayout = (PileLayout) view.findViewById(R.id.pileLayout);
-
-        dataSet2();
 
         detailRecyclerView.setOnScrollChangeListener(this);
 
@@ -87,6 +88,48 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
             }
         };
+
+        dataSet2();
+        initDtalist();
+
+        pileLayout.setAdapter(new PileLayout.Adapter() {
+            @Override
+            public int getLayoutId() {
+                return R.layout.item_layout;
+            }
+
+            @Override
+            public int getItemCount() {
+                return courseItems.size();
+            }
+
+            @Override
+            public void bindView(View view, int position) {
+                ViewHolder viewHolder = (ViewHolder) view.getTag();
+                if (viewHolder == null) {
+                    viewHolder = new ViewHolder();
+                    viewHolder.imageView = (ImageView) view.findViewById(R.id.imageView);
+                    view.setTag(viewHolder);
+                }
+                Glide.with(getContext()).load(courseItems.get(position).getPicUrl()).into(viewHolder.imageView);
+            }
+
+            @Override
+            public void displaying(int position) {
+                if (lastDisplay < 0) {
+                    initSecene(position);
+                    lastDisplay = 0;
+                } else if (lastDisplay != position) {
+                    transitionSecene(position);
+                    lastDisplay = position;
+                }
+            }
+
+            @Override
+            public void onItemClick(View view, int position) {
+                super.onItemClick(view, position);
+            }
+        });
 
         return view;
     }
@@ -126,6 +169,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+
                             companionBtn.setVisibility(View.VISIBLE);
                             companionBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.show));
                         }
@@ -146,4 +190,39 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
         });
     }
-}
+
+    private void initSecene(int position) {
+    }
+
+    private void transitionSecene(int position) {
+        if (transitionAnimator != null) {
+            transitionAnimator.cancel();
+        }
+
+        transitionAnimator = ObjectAnimator.ofFloat(this, "transitionValue", 0.0f, 1.0f);
+        transitionAnimator.setDuration(300);
+        transitionAnimator.start();
+        transitionAnimator.addListener(animatorListener);
+    }
+
+    private void initDtalist() {
+        courseItems = new ArrayList<>();
+        CourseItem item1 = new CourseItem("http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", "palace", "far");
+        courseItems.add(item1);
+        CourseItem item2 = new CourseItem("http://img.hb.aicdn.com/a3a995b26bd7d58ccc164eafc6ab902601984728a3101-S2H0lQ_fw658", "dessert", "as well");
+        courseItems.add(item2);
+        CourseItem item3 = new CourseItem("http://pic4.nipic.com/20091124/3789537_153149003980_2.jpg", "kingdom", "near");
+        courseItems.add(item3);
+    }
+
+    public void setTransitionValue(float transitionValue) {
+        this.transitionValue = transitionValue;
+    }
+
+    public float getTransitionValue() {
+        return transitionValue;
+    }
+
+    class ViewHolder {
+        ImageView imageView;
+    }}
