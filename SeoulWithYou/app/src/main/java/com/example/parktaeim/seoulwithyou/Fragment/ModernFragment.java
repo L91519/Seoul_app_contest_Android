@@ -3,6 +3,7 @@ package com.example.parktaeim.seoulwithyou.Fragment;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -23,8 +24,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.parktaeim.seoulwithyou.Activity.SearchCompanionActivity;
 import com.example.parktaeim.seoulwithyou.Adapter.CourseDetailRecycerViewAdapter;
 import com.example.parktaeim.seoulwithyou.Model.CourseDetailItem;
 import com.example.parktaeim.seoulwithyou.Model.CourseItem;
@@ -40,6 +43,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.stone.pile.libs.PileLayout;
 
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -65,6 +69,13 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     private PileLayout pileLayout;
     private MapView mapView;
     private GoogleMap myMap;
+    private int currentPosition;
+
+    private static final int REQUEST_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+    };
 
     private int lastDisplay = -1;
     private float transitionValue;
@@ -75,8 +86,15 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_modern, container, false);
 
-//        fab = (FloatingActionButton) view.findViewById(R.id.companionBtn);
         companionBtn = (ImageButton) view.findViewById(R.id.companionBtn);
+        companionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SearchCompanionActivity.class);
+                intent.putExtra("currentPosition",currentPosition);
+                startActivity(intent);
+            }
+        });
 
         mapView = (MapView) view.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
@@ -204,6 +222,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
     private void transitionSecene(int position) {
         Log.d("---position&item", String.valueOf(position) + String.valueOf(courseItems.get(position).getId()));
+        currentPosition = position;
         if (transitionAnimator != null) {
             transitionAnimator.cancel();
         }
@@ -246,10 +265,26 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     public void onMapReady(GoogleMap googleMap) {
         myMap = googleMap;
 
-        LatLng sydney = new LatLng(-34, 151);
-        myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        myMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng location = new LatLng(-34, 151);
+        myMap.addMarker(new MarkerOptions().position(location).title("Location"));
+        myMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//        ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION이 권한이 없을때
+            ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, REQUEST_STORAGE);
+            ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, 0);
+        } else {
+//        ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION이 권한이 있을때
+            Toast.makeText(getContext(), "you have all permissions", Toast.LENGTH_SHORT).show();
+        }
+
+        myMap.setMyLocationEnabled(true);
+        myMap.getUiSettings().setMyLocationButtonEnabled(true);
+        myMap.getUiSettings().setCompassEnabled(true);
+        myMap.animateCamera(CameraUpdateFactory.zoomTo(5));
     }
+
 
 //    view holder, dataset, fragment life cycle
     class ViewHolder {

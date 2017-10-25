@@ -34,6 +34,7 @@
             <uses-library android:name="com.google.android.maps" />
 
         </activity>
+        <activity android:name=".Activity.SearchCompanionActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
