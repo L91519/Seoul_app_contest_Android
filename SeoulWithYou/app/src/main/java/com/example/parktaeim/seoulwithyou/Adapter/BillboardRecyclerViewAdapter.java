@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,7 +38,7 @@ public class BillboardRecyclerViewAdapter extends RecyclerView.Adapter<Billboard
     }
 
     @Override
-    public void onBindViewHolder(BillboardRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final BillboardRecyclerViewAdapter.ViewHolder holder, int position) {
         Glide.with(context)
                 .load(items.get(position).getPic())
                 .apply(RequestOptions.bitmapTransform(new CircleCrop()))
@@ -45,6 +46,13 @@ public class BillboardRecyclerViewAdapter extends RecyclerView.Adapter<Billboard
         holder.date.setText(items.get(position).getDate());
         holder.name.setText(items.get(position).getName());
         holder.title.setText(items.get(position).getTitle());
+        holder.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.button.setImageResource(R.drawable.close);
+
+            }
+        });
     }
 
     @Override
@@ -54,9 +62,8 @@ public class BillboardRecyclerViewAdapter extends RecyclerView.Adapter<Billboard
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView profilPic;
-        TextView name;
-        TextView date;
-        TextView title;
+        TextView name, date, title;
+        ImageButton button;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -65,6 +72,7 @@ public class BillboardRecyclerViewAdapter extends RecyclerView.Adapter<Billboard
             name = itemView.findViewById(R.id.nameText);
             date = itemView.findViewById(R.id.billboardDate);
             title = itemView.findViewById(R.id.titleText);
+            button = itemView.findViewById(R.id.drawerBtn);
         }
     }
 }

@@ -6,7 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.BillboardRecyclerViewAdapter;
 import com.example.parktaeim.seoulwithyou.Model.BillboardItem;
 import com.example.parktaeim.seoulwithyou.R;
@@ -19,10 +22,13 @@ import java.util.ArrayList;
 
 public class SearchCompanionActivity extends AppCompatActivity {
 
-    private int position;
+    private String picture, title, distance, id;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager manager;
     private RecyclerView.Adapter adapter;
+
+    private ImageView coverPicture;
+    private TextView courseTitle, courstDistance;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,13 +36,24 @@ public class SearchCompanionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_companion);
 
         Intent intent = getIntent();
-        position = intent.getIntExtra("currentPosition", 0);
+        picture = intent.getStringExtra("picture");
+        title = intent.getStringExtra("title");
+        distance = intent.getStringExtra("distance");
+        id = intent.getStringExtra("id");
+
+        coverPicture = (ImageView) findViewById(R.id.picture);
+        courseTitle = (TextView) findViewById(R.id.title);
+        courstDistance = (TextView) findViewById(R.id.distance);
 
         recyclerView = (RecyclerView) findViewById(R.id.billboardRecyclerView);
         recyclerView.hasFixedSize();
         manager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         manager.hasFocus();
         recyclerView.setLayoutManager(manager);
+
+        Glide.with(this).load(picture).into(coverPicture);
+        courseTitle.setText(title);
+        courstDistance.setText(distance);
 
         setData();
     }

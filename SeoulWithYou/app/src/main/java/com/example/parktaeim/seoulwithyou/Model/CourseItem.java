@@ -5,6 +5,8 @@ package com.example.parktaeim.seoulwithyou.Model;
  */
 
 public class CourseItem {
+    private int lon;
+    private int lat;
     private String picUrl;
     private String placeName;
     private String placeDistance;
@@ -18,6 +20,31 @@ public class CourseItem {
         this.placeName = placeName;
         this.placeDistance = placeDistance;
         this.id = id;
+    }
+
+    public CourseItem(int lon, int lat, String picUrl, String placeName, String placeDistance, int id) {
+        this.lon = lon;
+        this.lat = lat;
+        this.picUrl = picUrl;
+        this.placeName = placeName;
+        this.placeDistance = placeDistance;
+        this.id = id;
+    }
+
+    public int getLon() {
+        return lon;
+    }
+
+    public void setLon(int lon) {
+        this.lon = lon;
+    }
+
+    public int getLat() {
+        return lat;
+    }
+
+    public void setLat(int lat) {
+        this.lat = lat;
     }
 
     public int getId() {

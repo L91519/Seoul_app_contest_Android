@@ -83,7 +83,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_modern, container, false);
 
         companionBtn = (ImageButton) view.findViewById(R.id.companionBtn);
@@ -91,7 +91,10 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SearchCompanionActivity.class);
-                intent.putExtra("currentPosition",currentPosition);
+                intent.putExtra("picture",courseItems.get(currentPosition).getPicUrl());
+                intent.putExtra("title", courseItems.get(currentPosition).getPlaceName());
+                intent.putExtra("distance", courseItems.get(currentPosition).getPlaceDistance());
+                intent.putExtra("id", courseItems.get(currentPosition).getId());
                 startActivity(intent);
             }
         });
@@ -265,7 +268,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     public void onMapReady(GoogleMap googleMap) {
         myMap = googleMap;
 
-        LatLng location = new LatLng(-34, 151);
+        LatLng location = new LatLng(37.56647, 126.977963);
         myMap.addMarker(new MarkerOptions().position(location).title("Location"));
         myMap.moveCamera(CameraUpdateFactory.newLatLng(location));
 
@@ -276,13 +279,12 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
             ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, 0);
         } else {
 //        ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION이 권한이 있을때
-            Toast.makeText(getContext(), "you have all permissions", Toast.LENGTH_SHORT).show();
         }
 
         myMap.setMyLocationEnabled(true);
         myMap.getUiSettings().setMyLocationButtonEnabled(true);
         myMap.getUiSettings().setCompassEnabled(true);
-        myMap.animateCamera(CameraUpdateFactory.zoomTo(5));
+        myMap.animateCamera(CameraUpdateFactory.zoomTo(10));
     }
 
 
