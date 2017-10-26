@@ -7,6 +7,8 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,7 +61,7 @@ public class CourseDetailRecycerViewAdapter extends RecyclerView.Adapter<CourseD
         ImageView detailPic;
         View detailItem;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
 
             courseNum = (TextView) itemView.findViewById(R.id.courseNum);

@@ -8,14 +8,24 @@ public class CourseItem {
     private String picUrl;
     private String placeName;
     private String placeDistance;
+    private int id;
 
     public CourseItem() {
     }
 
-    public CourseItem(String picUrl, String placeName, String placeDistance) {
+    public CourseItem(String picUrl, String placeName, String placeDistance, int id) {
         this.picUrl = picUrl;
         this.placeName = placeName;
         this.placeDistance = placeDistance;
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getPicUrl() {

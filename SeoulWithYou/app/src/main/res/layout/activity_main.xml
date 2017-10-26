@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.parktaeim.seoulwithyou.Activity.MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.example.parktaeim.seoulwithyou.Activity.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolBar"
@@ -53,17 +52,18 @@
     </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.TabLayout
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tabLayout"
+        android:layout_below="@id/toolBar"
+        android:elevation="10dp"
         app:tabSelectedTextColor="@color/fontColor"
-        app:tabTextColor="@color/fontColor"
-        android:elevation="10dp"/>
+        app:tabTextColor="@color/fontColor" />
 
-    <android.support.v4.view.ViewPager
+    <com.example.parktaeim.seoulwithyou.CustomViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/viewPager"/>
+        android:layout_weight="1" />
 
 </LinearLayout>
