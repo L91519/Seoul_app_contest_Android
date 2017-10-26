@@ -6,13 +6,17 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.BillboardRecyclerViewAdapter;
 import com.example.parktaeim.seoulwithyou.Model.BillboardItem;
 import com.example.parktaeim.seoulwithyou.R;
+import com.example.parktaeim.seoulwithyou.RecyclerViewClickListener;
 
 import java.util.ArrayList;
 
@@ -22,13 +26,16 @@ import java.util.ArrayList;
 
 public class SearchCompanionActivity extends AppCompatActivity {
 
-    private String picture, title, distance, id;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager manager;
     private RecyclerView.Adapter adapter;
 
+    private String picture, title, distance, id;
     private ImageView coverPicture;
     private TextView courseTitle, courstDistance;
+
+    private RecyclerViewClickListener listener;
+    private int itemPos;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,10 +58,15 @@ public class SearchCompanionActivity extends AppCompatActivity {
         manager.hasFocus();
         recyclerView.setLayoutManager(manager);
 
+        listener = (view, position) -> {
+            Toast.makeText(getApplicationContext(), "Position : " + position, Toast.LENGTH_SHORT).show();
+            itemPos = position;
+            manager.scrollToPosition(itemPos);
+        };
+
         Glide.with(this).load(picture).into(coverPicture);
         courseTitle.setText(title);
         courstDistance.setText(distance);
-
         setData();
     }
 
@@ -66,9 +78,11 @@ public class SearchCompanionActivity extends AppCompatActivity {
                 "title1",
                 "date1",
                 "name1");
-        items.add(item1);
+        for(int i = 0; i < 10; i++) {
+            items.add(item1);
+        }
 
-        adapter = new BillboardRecyclerViewAdapter(getApplicationContext(), items);
+        adapter = new BillboardRecyclerViewAdapter(getApplicationContext(), items, listener);
         recyclerView.setAdapter(adapter);
     }
 }
