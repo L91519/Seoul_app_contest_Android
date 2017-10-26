@@ -20,7 +20,11 @@
         <activity android:name=".Activity.MainActivity">
         </activity>
         <activity android:name=".Activity.SignUpActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".Activity.FindIdPwActivity"/>
         <activity android:name=".Activity.SplashActivity">
@@ -35,11 +39,7 @@
         </activity>
 
         <activity android:name=".Activity.MyPageDialogActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".Activity.SearchCompanionActivity"/>
     </application>

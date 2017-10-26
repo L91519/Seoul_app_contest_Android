@@ -8,6 +8,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -15,6 +17,7 @@ import com.example.parktaeim.seoulwithyou.Network.APIUrl;
 import com.example.parktaeim.seoulwithyou.Network.RestAPI;
 import com.example.parktaeim.seoulwithyou.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,17 +37,40 @@ public class SignUpActivity extends AppCompatActivity {
     private MaterialEditText idEditText;
     private ImageView gender_man;
     private ImageView gender_woman;
+    private ImageView noSelectGender_man;
+    private ImageView noSelectGender_woman;
     private ImageView signupBtn;
     private boolean isSelectMan = false;
     private boolean isSelectWoman = false;
+    private boolean gender;
+    private String name;
+    private String id;
+    private String pw;
+    private int birth;
+    private String year,month,date;
+
+    private static final String[] YEAR_BIRTH = new String[108];
+
+    private static final String[] MONTH_BIRTH = new String[]{
+            "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"
+    };
+
+    private static final String[] DATE_BIRTH = new String[]{
+            "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+            "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+            "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+
+
         setView();
     }
+
 
     private void setView() {
         backIcon = (ImageView) findViewById(R.id.backIcon);
@@ -54,8 +80,87 @@ public class SignUpActivity extends AppCompatActivity {
         pwCheckEditText = (MaterialEditText) findViewById(R.id.pwCheckEditText);
         gender_man = (ImageView) findViewById(R.id.selectGender_man);
         gender_woman = (ImageView) findViewById(R.id.selectGender_woman);
+        noSelectGender_man = (ImageView) findViewById(R.id.noSelectGender_man);
+        noSelectGender_woman = (ImageView) findViewById(R.id.noSelectGender_woman);
         signupBtn = (ImageView) findViewById(R.id.signupBtn);
 
+        //Setting Select Gender
+        noSelectGender_man.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gender = true;
+                gender_man.setVisibility(View.VISIBLE);
+                noSelectGender_man.setVisibility(View.INVISIBLE);
+                if(gender_woman.getVisibility() == View.VISIBLE){
+                    gender_woman.setVisibility(View.INVISIBLE);
+                    noSelectGender_woman.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        noSelectGender_woman.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gender = false;
+                gender_woman.setVisibility(View.VISIBLE);
+                noSelectGender_woman.setVisibility(View.INVISIBLE);
+                if(gender_man.getVisibility() == View.VISIBLE){
+                    gender_man.setVisibility(View.INVISIBLE);
+                    noSelectGender_man.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        // Settin Birth Spinner
+        int j= 0;
+        for(int i=1910;i<=2017;i++){
+            YEAR_BIRTH[j] = String.valueOf(i);
+            Log.d("YEAR_BIRTH[" + j + "] == ", YEAR_BIRTH[j]);
+            j++;
+        }
+
+        ArrayAdapter<String> yearAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, YEAR_BIRTH);
+        MaterialBetterSpinner yearSpinner = (MaterialBetterSpinner)
+                findViewById(R.id.birthYearSpinner);
+        yearSpinner.setAdapter(yearAdapter);
+
+
+        ArrayAdapter<String> monthAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, MONTH_BIRTH);
+        final MaterialBetterSpinner monthSpinner = (MaterialBetterSpinner)
+                findViewById(R.id.birthMonthSpinner);
+        monthSpinner.setAdapter(monthAdapter);
+
+        ArrayAdapter<String> dateAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, DATE_BIRTH);
+        MaterialBetterSpinner dateSpinner = (MaterialBetterSpinner)
+                findViewById(R.id.birthDateSpinner);
+        dateSpinner.setAdapter(dateAdapter);
+
+        yearSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                year = adapterView.getItemAtPosition(position).toString();
+                Log.d("spinner year Listener==",year);
+            }
+        });
+
+        monthSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                month = adapterView.getItemAtPosition(position).toString();
+                Log.d("spinner month Listener=",month);
+            }
+        });
+
+        dateSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                date = adapterView.getItemAtPosition(position).toString();
+                Log.d("spinner date Listener==",date);
+            }
+        });
 
         backIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,29 +169,17 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        gender_man.setOnClickListener(new View.OnClickListener() {
+
+        signupBtn.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
-                if(isSelectWoman == true){
-                    isSelectWoman = false;
-                    isSelectMan = true;
-
-                }
-            }
-        });
-
-        gender_woman.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        signupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
-                startActivity(intent);
+                id = idEditText.getText().toString();
+                pw = pwEditText.getText().toString();
+                name = nameExitText.getText().toString();
+                birth = Integer.valueOf(year+month+date);
+                Log.d("birth Int",String.valueOf(birth));
 
                 Retrofit builder = new Retrofit.Builder()
                         .baseUrl(APIUrl.API_BASE_URL)
@@ -95,30 +188,30 @@ public class SignUpActivity extends AppCompatActivity {
 
                 RestAPI restAPI = builder.create(RestAPI.class);
 
-                Call<Void> call = restAPI.signUp("abc","abc123",20001215,false);
+                Call<Void> call = restAPI.signUp(name,id, pw, birth, gender);
 
-                Log.d("retrofit start ===","yeah~~");
+                Log.d("retrofit start ===", "yeah~~");
 
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        Log.d("reponse ===",String.valueOf(response.code()));
+                        Log.d("reponse ===", String.valueOf(response.code()));
 
-                        if(response.code() == 200){
-                            Log.d("response ===","200");
+                        if (response.code() == 200) {
+                            Log.d("response ===", "200");
 
-                            Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
+                            Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                             startActivity(intent);
                             finish();
-                        } else if(response.code() == 400){
-                            Toast.makeText(SignUpActivity.this,"회원가입 실패!",Toast.LENGTH_SHORT);
+                        } else if (response.code() == 400) {
+                            Toast.makeText(SignUpActivity.this, "회원가입 실패!", Toast.LENGTH_SHORT);
                             return;
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Log.d("login Failure === ",t.toString());
+                        Log.d("login Failure === ", t.toString());
                     }
                 });
             }

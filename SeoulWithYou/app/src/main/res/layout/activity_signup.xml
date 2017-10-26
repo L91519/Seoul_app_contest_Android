@@ -84,7 +84,7 @@
                         android:layout_width="100dp"
                         android:layout_height="30dp"
                         android:src="@drawable/icon_select_boy"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/noSelectGender_woman"
@@ -101,15 +101,48 @@
                         android:layout_marginLeft="30dp"
                         android:layout_toRightOf="@+id/selectGender_man"
                         android:src="@drawable/icon_select_girl"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/selectBirth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_below="@+id/selectGender">
+
+                <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                    android:id="@+id/birthYearSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/selectGender"
+                    android:layout_weight="2.5"
+                    android:hint="생년월일 (년)" />
+
+                <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                    android:id="@+id/birthMonthSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:hint="월"/>
+
+                <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                    android:id="@+id/birthDateSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:hint="일"/>
+
             </LinearLayout>
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/idEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/selectGender"
+                android:layout_below="@id/selectBirth"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:hint="아이디"
@@ -165,4 +198,5 @@
         </RelativeLayout>
 
     </ScrollView>
+
 </RelativeLayout>

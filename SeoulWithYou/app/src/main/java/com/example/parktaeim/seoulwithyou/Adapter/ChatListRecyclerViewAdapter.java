@@ -1,6 +1,8 @@
 package com.example.parktaeim.seoulwithyou.Adapter;
 
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
+import com.example.parktaeim.seoulwithyou.Activity.ChattingActivity;
 import com.example.parktaeim.seoulwithyou.Model.ChatListItem;
 import com.example.parktaeim.seoulwithyou.R;
 
@@ -42,6 +45,16 @@ public class ChatListRecyclerViewAdapter extends RecyclerView.Adapter<ChatListRe
         holder.yourName.setText(items.get(position).getYourName());
         holder.lastMessage.setText(items.get(position).getLastMessage());
         holder.time.setText(items.get(position).getTime());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ChattingActivity.class);
+                ActivityOptions activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(),R.anim.fromright,R.anim.toleft);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                context.startActivity(intent,activityOptions.toBundle());
+            }
+        });
     }
 
     @Override
