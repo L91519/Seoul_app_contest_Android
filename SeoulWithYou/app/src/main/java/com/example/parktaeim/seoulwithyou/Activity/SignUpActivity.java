@@ -6,11 +6,21 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.parktaeim.seoulwithyou.Network.APIUrl;
+import com.example.parktaeim.seoulwithyou.Network.RestAPI;
 import com.example.parktaeim.seoulwithyou.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by parktaeim on 2017. 10. 11..
@@ -78,8 +88,41 @@ public class SignUpActivity extends AppCompatActivity {
                 Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
                 startActivity(intent);
 
+                Retrofit builder = new Retrofit.Builder()
+                        .baseUrl(APIUrl.API_BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
 
+                RestAPI restAPI = builder.create(RestAPI.class);
+
+                Call<Void> call = restAPI.signUp("abc","abc123",20001215,false);
+
+                Log.d("retrofit start ===","yeah~~");
+
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.d("reponse ===",String.valueOf(response.code()));
+
+                        if(response.code() == 200){
+                            Log.d("response ===","200");
+
+                            Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else if(response.code() == 400){
+                            Toast.makeText(SignUpActivity.this,"회원가입 실패!",Toast.LENGTH_SHORT);
+                            return;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.d("login Failure === ",t.toString());
+                    }
+                });
             }
         });
+
     }
 }

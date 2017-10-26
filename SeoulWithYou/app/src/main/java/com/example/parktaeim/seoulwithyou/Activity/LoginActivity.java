@@ -92,14 +92,21 @@ public class LoginActivity extends AppCompatActivity {
                         .baseUrl(APIUrl.API_BASE_URL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
+
                 RestAPI restAPI = builder.create(RestAPI.class);
 
                 Call<Void> call = restAPI.logIn(id,pw);
 
+                Log.d("retrofit start ===","yeah~~");
+
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.d("reponse ===",String.valueOf(response.code()));
+
                         if(response.code() == 200){
+                            Log.d("response ===","200");
+
                             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                             startActivity(intent);
                             finish();
