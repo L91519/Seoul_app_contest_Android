@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.BillboardRecyclerViewAdapter;
 import com.example.parktaeim.seoulwithyou.Model.BillboardItem;
+import com.example.parktaeim.seoulwithyou.MyLayoutManager;
+import com.example.parktaeim.seoulwithyou.MyRecyclerView;
 import com.example.parktaeim.seoulwithyou.R;
 import com.example.parktaeim.seoulwithyou.RecyclerViewClickListener;
 
@@ -35,7 +37,6 @@ public class SearchCompanionActivity extends AppCompatActivity {
     private TextView courseTitle, courstDistance;
 
     private RecyclerViewClickListener listener;
-    private int itemPos;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,14 +55,15 @@ public class SearchCompanionActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.billboardRecyclerView);
         recyclerView.hasFixedSize();
-        manager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+//        manager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        manager = new MyLayoutManager(getApplicationContext());
         manager.hasFocus();
         recyclerView.setLayoutManager(manager);
 
         listener = (view, position) -> {
             Toast.makeText(getApplicationContext(), "Position : " + position, Toast.LENGTH_SHORT).show();
-            itemPos = position;
-            manager.scrollToPosition(itemPos);
+            ((LinearLayoutManager)recyclerView.getLayoutManager()).scrollToPositionWithOffset(position,10);
+            recyclerView.smoothScrollToPosition(position);
         };
 
         Glide.with(this).load(picture).into(coverPicture);
@@ -73,13 +75,15 @@ public class SearchCompanionActivity extends AppCompatActivity {
     public void setData() {
         ArrayList<BillboardItem> items = new ArrayList<>();
 
-        BillboardItem item1 = new BillboardItem(
-                "http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658",
-                "title1",
-                "date1",
-                "name1");
         for(int i = 0; i < 10; i++) {
-            items.add(item1);
+
+            BillboardItem item = new BillboardItem(
+                    "http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658",
+                    "title" + i,
+                    "date" + i,
+                    "name" + i);
+
+            items.add(item);
         }
 
         adapter = new BillboardRecyclerViewAdapter(getApplicationContext(), items, listener);
