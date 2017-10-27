@@ -18,14 +18,8 @@
 
         </activity>
         <activity android:name=".Activity.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".Activity.SignUpActivity">
-
         </activity>
         <activity android:name=".Activity.FindIdPwActivity"/>
         <activity android:name=".Activity.SplashActivity">
@@ -40,9 +34,14 @@
         </activity>q
 
         <activity android:name=".Activity.MyPageDialogActivity">
-
         </activity>
-        <activity android:name=".Activity.SearchCompanionActivity"/>
+        <activity android:name=".Activity.SearchCompanionActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

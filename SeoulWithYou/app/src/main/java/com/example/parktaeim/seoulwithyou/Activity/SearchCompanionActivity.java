@@ -1,5 +1,6 @@
 package com.example.parktaeim.seoulwithyou.Activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.BillboardRecyclerViewAdapter;
+import com.example.parktaeim.seoulwithyou.Dialog.SearchDetailDialog;
 import com.example.parktaeim.seoulwithyou.Model.BillboardItem;
 import com.example.parktaeim.seoulwithyou.MyLayoutManager;
 import com.example.parktaeim.seoulwithyou.MyRecyclerView;
@@ -64,6 +66,22 @@ public class SearchCompanionActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Position : " + position, Toast.LENGTH_SHORT).show();
             ((LinearLayoutManager)recyclerView.getLayoutManager()).scrollToPositionWithOffset(position,10);
             recyclerView.smoothScrollToPosition(position);
+
+            SearchDetailDialog dialog = new SearchDetailDialog(getApplicationContext());
+
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialogInterface) {
+
+                }
+            });
+
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+
+                }
+            });
         };
 
         Glide.with(this).load(picture).into(coverPicture);
