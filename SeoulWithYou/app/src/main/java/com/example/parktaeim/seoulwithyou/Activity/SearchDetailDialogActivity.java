@@ -1,10 +1,13 @@
-package com.example.parktaeim.seoulwithyou.Dialog;
+package com.example.parktaeim.seoulwithyou.Activity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +28,7 @@ import java.util.ArrayList;
  * Created by user on 2017-10-28.
  */
 
-public class SearchDetailDialog extends Dialog {
+public class SearchDetailDialogActivity extends AppCompatActivity {
 
     private CardView contentVIew, commentView;
     private RelativeLayout layout;
@@ -35,45 +38,21 @@ public class SearchDetailDialog extends Dialog {
     private RecyclerView.LayoutManager manager;
     private RecyclerView.Adapter adapter;
 
-    public SearchDetailDialog(@NonNull Context context) {
-        super(context);
-    }
-
-    public SearchDetailDialog(@NonNull Context context, @NonNull int layoutParamX, @NonNull int layoutParamY) {
-        super(context);
-
-        this.layoutParamX = layoutParamX;
-        this.layoutParamY = layoutParamY;
-    }
-
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_search_detail);
 
-        layout = (RelativeLayout) findViewById(R.id.container);
-        contentVIew = (CardView) findViewById(R.id.contentView);
-        commentView = (CardView) findViewById(R.id.commentView);
         recyclerView = (RecyclerView) findViewById(R.id.commentRecyclerView);
-
-        contentVIew = new CardView(getContext());
-        commentView = new CardView(getContext());
         recyclerView.hasFixedSize();
-
-        manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        manager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         manager.hasFocus();
         recyclerView.setLayoutManager(manager);
-
         setData();
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(0, 0);
 
-        contentVIew.setLayoutParams(params);
-        commentView.setLayoutParams(params);
 
-        layout.addView(contentVIew);
-        layout.addView(commentView);
     }
 
     public void setData() {
@@ -85,7 +64,7 @@ public class SearchDetailDialog extends Dialog {
             items.add(item1);
         }
 
-        adapter = new CommentRecyclerViewAdapter(getContext(), items);
+        adapter = new CommentRecyclerViewAdapter(getApplicationContext(), items);
         recyclerView.setAdapter(adapter);
     }
 }

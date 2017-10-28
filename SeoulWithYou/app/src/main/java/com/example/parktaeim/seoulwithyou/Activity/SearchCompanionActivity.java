@@ -1,6 +1,5 @@
 package com.example.parktaeim.seoulwithyou.Activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -9,20 +8,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.BillboardRecyclerViewAdapter;
-import com.example.parktaeim.seoulwithyou.Dialog.SearchDetailDialog;
 import com.example.parktaeim.seoulwithyou.Model.BillboardItem;
 import com.example.parktaeim.seoulwithyou.MyLayoutManager;
-import com.example.parktaeim.seoulwithyou.MyRecyclerView;
 import com.example.parktaeim.seoulwithyou.R;
 import com.example.parktaeim.seoulwithyou.RecyclerViewClickListener;
 
@@ -43,9 +36,6 @@ public class SearchCompanionActivity extends AppCompatActivity {
     private TextView courseTitle, courstDistance;
 
     private RecyclerViewClickListener listener;
-
-    private SearchDetailDialog dialog;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,13 +62,9 @@ public class SearchCompanionActivity extends AppCompatActivity {
             ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 10);
             recyclerView.smoothScrollToPosition(position);
 
-            dialog = new SearchDetailDialog(SearchCompanionActivity.this, location[0], location[1]);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-            WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
-
-            dialog.show();
-            dialog.getWindow().setLayout(MainActivity.screenWidth, MainActivity.screenHeight);
+            Intent dialogIntent = new Intent(getApplicationContext(), SearchDetailDialogActivity.class);
+            dialogIntent.putExtra("location", location);
+            startActivity(dialogIntent);
         };
 
 

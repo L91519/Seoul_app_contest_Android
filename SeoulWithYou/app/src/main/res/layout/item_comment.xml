@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginRight="20dp"
     android:background="@null"
-    android:orientation="horizontal"
-    android:layout_margin="10dp">
+    android:orientation="horizontal">
 
     <ImageView
-        android:background="@color/gray300"
-        android:scaleType="centerCrop"
+        android:id="@+id/profilePic"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_margin="15dp"
-        android:id="@+id/profilePic"/>
+        android:background="@color/gray300"
+        android:scaleType="centerCrop" />
 
 
     <RelativeLayout
@@ -22,65 +22,60 @@
         android:paddingTop="20dp">
 
         <TextView
-            android:text="고수민"
-            android:layout_marginBottom="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/nameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@id/userPic"
+            android:text="고수민"
             android:textSize="13dp"
-            android:textStyle="bold"
-            android:layout_toRightOf="@id/userPic"/>
+            android:textStyle="bold" />
 
         <TextView
-            android:layout_marginLeft="5dp"
             android:id="@+id/gender"
-            android:text="여자"
-            android:paddingRight="10dp"
-            android:paddingLeft="10dp"
-            android:paddingBottom="3dp"
-            android:paddingTop="3dp"
-            android:textSize="11dp"
-            android:layout_toRightOf="@id/nameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/nameText"
+            android:background="@drawable/intro_oval"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="3dp"
+            android:text="여자"
             android:textColor="@color/colorPrimary"
-            android:background="@drawable/intro_oval"/>
+            android:textSize="11dp" />
 
         <TextView
-            android:layout_marginLeft="15dp"
-            android:text="10대"
             android:id="@+id/age"
-            android:paddingRight="10dp"
-            android:paddingLeft="10dp"
-            android:paddingBottom="3dp"
-            android:paddingTop="3dp"
-            android:textSize="10dp"
-            android:layout_toRightOf="@id/gender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/gender"
+            android:background="@drawable/intro_oval"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="3dp"
+            android:text="10대"
             android:textColor="@color/colorPrimary"
-            android:background="@drawable/intro_oval"/>
+            android:textSize="10dp" />
 
-        <android.support.v7.widget.CardView
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
             android:layout_below="@id/nameText">
 
-            <RelativeLayout
+            <TextView
+                android:id="@+id/content"
                 android:layout_width="match_parent"
-                android:layout_height="28dp">
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:background="@null"
+                android:textSize="11dp" />
 
-                <TextView
-                    android:background="@null"
-                    android:id="@+id/content"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:textSize="11dp" />
-
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
-
+        </RelativeLayout>
     </RelativeLayout>
 
 </LinearLayout>

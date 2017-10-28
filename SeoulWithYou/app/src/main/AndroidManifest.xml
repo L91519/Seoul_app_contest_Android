@@ -38,10 +38,11 @@
 
         </activity>q
 
-        <activity android:name=".Activity.MyPageDialogActivity">
+        <activity android:name=".Activity.MyPageDialogActivity" android:theme="@style/Theme.Transparent">
         </activity>
         <activity android:name=".Activity.SearchCompanionActivity">
         </activity>
+        <activity android:name=".Activity.SearchDetailDialogActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

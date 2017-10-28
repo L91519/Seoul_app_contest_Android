@@ -17,7 +17,7 @@ public class APIAdapter {
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://52.15.75.60:8080/")
+                .baseUrl("https://seoul-with-u.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
