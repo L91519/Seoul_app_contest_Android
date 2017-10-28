@@ -32,7 +32,14 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     @Override
     public void onClick(View view) {
+        int[] location = new int[2];
+        int x, y;
+
         mListener.onClick(view, getAdapterPosition());
         button.setImageResource(R.drawable.close);
+        itemView.getLocationInWindow(location);
+
+        x = location[0];
+        y = location[1];
     }
 }

@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,10 +31,18 @@ public class MainActivity extends AppCompatActivity {
     private ImageView drawerBtn;
     private DrawerLayout drawerLayout;
 
+    public static int screenWidth, screenHeight;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        screenWidth = displayMetrics.widthPixels;// 가로
+        screenHeight = displayMetrics.heightPixels;// 세로
 
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (CustomViewPager) findViewById(R.id.viewPager);

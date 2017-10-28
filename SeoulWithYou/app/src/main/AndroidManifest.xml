@@ -18,6 +18,11 @@
 
         </activity>
         <activity android:name=".Activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".Activity.SignUpActivity">
         </activity>
@@ -36,11 +41,6 @@
         <activity android:name=".Activity.MyPageDialogActivity">
         </activity>
         <activity android:name=".Activity.SearchCompanionActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

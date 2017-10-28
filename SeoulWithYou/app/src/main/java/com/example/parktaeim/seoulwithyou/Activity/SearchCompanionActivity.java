@@ -67,13 +67,13 @@ public class SearchCompanionActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(manager);
 
         dialog = new SearchDetailDialog(SearchCompanionActivity.this);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         listener = (view, position) -> {
-            Toast.makeText(getApplicationContext(), "Position : " + position, Toast.LENGTH_SHORT).show();
             ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 10);
             recyclerView.smoothScrollToPosition(position);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.show();
+            dialog.getWindow().setLayout(MainActivity.screenWidth, MainActivity.screenHeight);
         };
 
 

@@ -55,13 +55,6 @@ public class BillboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             viewHolder.date.setText(items.get(position).getDate());
             viewHolder.name.setText(items.get(position).getName());
             viewHolder.title.setText(items.get(position).getTitle());
-/*
-            viewHolder.button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                }
-            });
-*/
         }
     }
 
