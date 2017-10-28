@@ -24,11 +24,7 @@ public class SearchDetailDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_search_detail);
 
-        WindowManager.LayoutParams wm = new WindowManager.LayoutParams();
-        wm.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-        wm.dimAmount = 0.8f;
-        getWindow().setAttributes(wm);
+        setContentView(R.layout.dialog_search_detail);
     }
 }

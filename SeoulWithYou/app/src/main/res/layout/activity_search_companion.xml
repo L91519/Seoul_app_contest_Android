@@ -9,7 +9,7 @@
         android:elevation="5dp"
         android:background="@color/whiteColor"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="wrap_content">
         <ImageButton
             android:layout_marginRight="30dp"
             android:layout_width="20dp"

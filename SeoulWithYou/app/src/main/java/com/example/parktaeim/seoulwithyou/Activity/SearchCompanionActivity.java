@@ -2,6 +2,8 @@ package com.example.parktaeim.seoulwithyou.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -40,6 +42,8 @@ public class SearchCompanionActivity extends AppCompatActivity {
 
     private RecyclerViewClickListener listener;
 
+    private SearchDetailDialog dialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,27 +66,16 @@ public class SearchCompanionActivity extends AppCompatActivity {
         manager.hasFocus();
         recyclerView.setLayoutManager(manager);
 
+        dialog = new SearchDetailDialog(SearchCompanionActivity.this);
+
         listener = (view, position) -> {
             Toast.makeText(getApplicationContext(), "Position : " + position, Toast.LENGTH_SHORT).show();
-            ((LinearLayoutManager)recyclerView.getLayoutManager()).scrollToPositionWithOffset(position,10);
+            ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 10);
             recyclerView.smoothScrollToPosition(position);
-
-            SearchDetailDialog dialog = new SearchDetailDialog(getApplicationContext());
-
-            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialogInterface) {
-
-                }
-            });
-
-            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface) {
-
-                }
-            });
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
         };
+
 
         Glide.with(this).load(picture).into(coverPicture);
         courseTitle.setText(title);
@@ -93,7 +86,7 @@ public class SearchCompanionActivity extends AppCompatActivity {
     public void setData() {
         ArrayList<BillboardItem> items = new ArrayList<>();
 
-        for(int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
 
             BillboardItem item = new BillboardItem(
                     "http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658",
