@@ -1,6 +1,7 @@
 package com.example.parktaeim.seoulwithyou.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -19,6 +20,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.util.Collection;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView findIdPwTextView;
     MaterialEditText input_id;
     MaterialEditText input_pw;
+    private String id;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String id = input_id.getText().toString();
+                id = input_id.getText().toString();
                 String pw = input_pw.getText().toString();
 
                 //id,pw가 입력되지 않았으면
@@ -105,7 +109,13 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("reponse ===",String.valueOf(response.code()));
 
                         if(response.code() == 200){
-                            Log.d("response ===","200");
+                            SharedPreferences sharedPreferences = getSharedPreferences("myId",MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("myId",id);
+                            editor.commit();
+
+                            Collection<?> collection = sharedPreferences.getAll().values();
+                            Log.d("after login pef===",collection.toString());
 
                             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                             startActivity(intent);

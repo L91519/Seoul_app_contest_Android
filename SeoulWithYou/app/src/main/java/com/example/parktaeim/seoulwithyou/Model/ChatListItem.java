@@ -5,18 +5,20 @@ package com.example.parktaeim.seoulwithyou.Model;
  */
 
 public class ChatListItem {
+    private String yourId;
     private String yourProfile;
     private String yourName;
     private String lastMessage;
     private String time;
     private String countUnsightMessage;
 
-    public ChatListItem(String yourProfile, String yourName, String lastMessage, String time, String countUnsightMessage) {
+    public ChatListItem(String yourProfile, String yourName, String lastMessage, String time, String countUnsightMessage,String yourId) {
         this.yourProfile = yourProfile;
         this.yourName = yourName;
         this.lastMessage = lastMessage;
         this.time = time;
         this.countUnsightMessage = countUnsightMessage;
+        this.yourId = yourId;
     }
 
     public String getYourProfile() {
@@ -58,4 +60,13 @@ public class ChatListItem {
     public void setCountUnsightMessage(String countUnsightMessage) {
         this.countUnsightMessage = countUnsightMessage;
     }
+
+    public String getYourId() {
+        return yourId;
+    }
+
+    public void setYourId(String yourId) {
+        this.yourId = yourId;
+    }
+
 }

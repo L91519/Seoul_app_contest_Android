@@ -25,6 +25,8 @@ public class ChatListRecyclerViewAdapter extends RecyclerView.Adapter<ChatListRe
     private Context context;
     private ArrayList<ChatListItem> items = new ArrayList<>();
     private RequestManager requestManager;
+    String yourId;
+
 
     public ChatListRecyclerViewAdapter(Context context, ArrayList<ChatListItem> items, RequestManager requestManager) {
         this.context = context;
@@ -40,16 +42,18 @@ public class ChatListRecyclerViewAdapter extends RecyclerView.Adapter<ChatListRe
     }
 
     @Override
-    public void onBindViewHolder(ChatListRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final ChatListRecyclerViewAdapter.ViewHolder holder, final int position) {
         requestManager.load(items.get(position).getYourProfile()).into(holder.profileImg);
         holder.yourName.setText(items.get(position).getYourName());
         holder.lastMessage.setText(items.get(position).getLastMessage());
         holder.time.setText(items.get(position).getTime());
 
+//        final String yourName = items.get(position).get();
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ChattingActivity.class);
+                intent.putExtra("yourName",items.get(position).getYourId());
                 ActivityOptions activityOptions = ActivityOptions.makeCustomAnimation(view.getContext(),R.anim.fromright,R.anim.toleft);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 context.startActivity(intent,activityOptions.toBundle());
