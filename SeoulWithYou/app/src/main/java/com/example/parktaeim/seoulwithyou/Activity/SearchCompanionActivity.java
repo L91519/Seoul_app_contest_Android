@@ -10,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,12 +68,15 @@ public class SearchCompanionActivity extends AppCompatActivity {
         manager.hasFocus();
         recyclerView.setLayoutManager(manager);
 
-        dialog = new SearchDetailDialog(SearchCompanionActivity.this);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        listener = (view, position) -> {
+        listener = (view, position, location) -> {
             ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 10);
             recyclerView.smoothScrollToPosition(position);
+
+            dialog = new SearchDetailDialog(SearchCompanionActivity.this, location[0], location[1]);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+            WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+
             dialog.show();
             dialog.getWindow().setLayout(MainActivity.screenWidth, MainActivity.screenHeight);
         };

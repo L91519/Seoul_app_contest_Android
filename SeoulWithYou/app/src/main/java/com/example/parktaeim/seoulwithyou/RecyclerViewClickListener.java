@@ -8,5 +8,5 @@ import android.view.View;
 
 public interface RecyclerViewClickListener {
 
-    public void onClick(View v, int position);
+    public void onClick(View v, int position, int[] coordination);
 }
