@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -67,7 +68,9 @@ public class SearchCompanionActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(manager);
 
         ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
-        params.height = 1200;
+        int height = (int) ((float)MainActivity.screenHeight * 0.6);
+        Log.d("---height", String.valueOf(height));
+        params.height = height;
         recyclerView.setLayoutParams(params);
 
         listener = (view, position, location) -> {
