@@ -1,10 +1,12 @@
 package com.example.parktaeim.seoulwithyou.Activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,12 +19,16 @@ import com.example.parktaeim.seoulwithyou.R;
  * Created by parktaeim on 2017. 10. 26..
  */
 
-public class MyPageDialogActivity extends AppCompatActivity {
+public class MyPageDialogActivity extends Activity {
     private TextView goChatBtn;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_mypage);
+
 
         ImageView backImg = (ImageView) findViewById(R.id.backImg);
         Glide.with(this).load(R.drawable.img_login_background).into(backImg);

@@ -268,7 +268,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     public void onMapReady(GoogleMap googleMap) {
         myMap = googleMap;
 
-        LatLng location = new LatLng(37.56647, 126.977963);
+        LatLng location = new LatLng(36.316889, 127.158272);
         myMap.addMarker(new MarkerOptions().position(location).title("Location"));
         myMap.moveCamera(CameraUpdateFactory.newLatLng(location));
 

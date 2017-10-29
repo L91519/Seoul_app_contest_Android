@@ -1,18 +1,28 @@
 package com.example.parktaeim.seoulwithyou.Activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.BillboardRecyclerViewAdapter;
+import com.example.parktaeim.seoulwithyou.Dialog.SearchDetailDialog;
 import com.example.parktaeim.seoulwithyou.Model.BillboardItem;
+import com.example.parktaeim.seoulwithyou.MyLayoutManager;
+import com.example.parktaeim.seoulwithyou.MyRecyclerView;
 import com.example.parktaeim.seoulwithyou.R;
+import com.example.parktaeim.seoulwithyou.RecyclerViewClickListener;
 
 import java.util.ArrayList;
 
@@ -22,13 +32,17 @@ import java.util.ArrayList;
 
 public class SearchCompanionActivity extends AppCompatActivity {
 
-    private String picture, title, distance, id;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager manager;
     private RecyclerView.Adapter adapter;
 
+    private String picture, title, distance, id;
     private ImageView coverPicture;
     private TextView courseTitle, courstDistance;
+
+    private RecyclerViewClickListener listener;
+
+    private SearchDetailDialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,28 +61,43 @@ public class SearchCompanionActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.billboardRecyclerView);
         recyclerView.hasFixedSize();
-        manager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+//        manager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        manager = new MyLayoutManager(getApplicationContext());
         manager.hasFocus();
         recyclerView.setLayoutManager(manager);
+
+        dialog = new SearchDetailDialog(SearchCompanionActivity.this);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        listener = (view, position) -> {
+            ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 10);
+            recyclerView.smoothScrollToPosition(position);
+            dialog.show();
+            dialog.getWindow().setLayout(MainActivity.screenWidth, MainActivity.screenHeight);
+        };
+
 
         Glide.with(this).load(picture).into(coverPicture);
         courseTitle.setText(title);
         courstDistance.setText(distance);
-
         setData();
     }
 
     public void setData() {
         ArrayList<BillboardItem> items = new ArrayList<>();
 
-        BillboardItem item1 = new BillboardItem(
-                "http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658",
-                "title1",
-                "date1",
-                "name1");
-        items.add(item1);
+        for (int i = 0; i < 10; i++) {
 
-        adapter = new BillboardRecyclerViewAdapter(getApplicationContext(), items);
+            BillboardItem item = new BillboardItem(
+                    "http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658",
+                    "title" + i,
+                    "date" + i,
+                    "name" + i);
+
+            items.add(item);
+        }
+
+        adapter = new BillboardRecyclerViewAdapter(getApplicationContext(), items, listener);
         recyclerView.setAdapter(adapter);
     }
 }

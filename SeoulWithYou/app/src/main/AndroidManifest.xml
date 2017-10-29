@@ -21,7 +21,6 @@
 
         </activity>
         <activity android:name=".Activity.SignUpActivity">
-
         </activity>
         <activity android:name=".Activity.FindIdPwActivity"/>
         <activity android:name=".Activity.SplashActivity">
@@ -37,12 +36,15 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>q
+        </activity>
 
-        <activity android:name=".Activity.MyPageDialogActivity">
+
+        <activity android:name=".Activity.MyPageDialogActivity"
+            android:theme="@android:style/Theme.Translucent">
 
         </activity>
-        <activity android:name=".Activity.SearchCompanionActivity"/>
+        <activity android:name=".Activity.SearchCompanionActivity">
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

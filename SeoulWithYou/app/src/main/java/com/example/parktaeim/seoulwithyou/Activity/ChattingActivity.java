@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.parktaeim.seoulwithyou.Model.ChatData;
 import com.example.parktaeim.seoulwithyou.Model.ChatModel;
 import com.example.parktaeim.seoulwithyou.R;
 import com.github.bassaer.chatmessageview.models.Message;
@@ -37,6 +38,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +54,7 @@ import java.util.Random;
 public class ChattingActivity extends AppCompatActivity {
 
     private ChatView mChatView;
-    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("message");
+    private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().getRoot();
 
     private String myName;
     private TextView titleYourName;
@@ -62,6 +64,8 @@ public class ChattingActivity extends AppCompatActivity {
     String yourId = "mb5356";
     String chatRoomId;
     private RecyclerView recyclerView;
+
+    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child(myId).child(yourId);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,57 +77,206 @@ public class ChattingActivity extends AppCompatActivity {
 
         yourId = getIntent().getStringExtra("yourId");
 
-        startChat();
-        sendMessage();
+//        startChat();
+//        sendMessage();
+        setChatView();
 
     }
 
-    private void sendMessage() {
-        sendMessageBtn.setOnClickListener(new View.OnClickListener() {
+    private void setChatView() {
+        //User id
+        int meId = 0;
+        //User icon
+        Bitmap myIcon = BitmapFactory.decodeResource(getResources(), R.drawable.face_2);
+        //User name
+        String myName = "Michael";
+
+        int yourId = 1;
+        Bitmap yourIcon = BitmapFactory.decodeResource(getResources(), R.drawable.face_1);
+        String yourName = "Emily";
+
+        final User me = new User(meId, myName, myIcon);
+        final User you = new User(yourId, yourName, yourIcon);
+
+        mChatView = (ChatView) findViewById(R.id.chat_view);
+
+        //Set UI parameters if you need
+        mChatView.setRightBubbleColor(ContextCompat.getColor(this, R.color.green500));
+        mChatView.setLeftBubbleColor(Color.WHITE);
+        mChatView.setBackgroundColor(ContextCompat.getColor(this, R.color.blueGray500));
+        mChatView.setSendButtonColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        mChatView.setSendIcon(R.drawable.ic_action_send);
+        mChatView.setRightMessageTextColor(Color.WHITE);
+        mChatView.setLeftMessageTextColor(Color.BLACK);
+        mChatView.setUsernameTextColor(Color.WHITE);
+        mChatView.setSendTimeTextColor(Color.WHITE);
+        mChatView.setDateSeparatorColor(Color.WHITE);
+        mChatView.setInputTextHint("new message...");
+        mChatView.setMessageMarginTop(5);
+        mChatView.setMessageMarginBottom(5);
+
+        //Click Send Button
+        mChatView.setOnClickSendButtonListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                long time = System.currentTimeMillis();
-                SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                String msgTime = dayTime.format(new Date(time));
 
-                ChatModel chatModel = new ChatModel(messageEditText.getText().toString(), myId, msgTime);
-                Map<String,Object> comment = chatModel.toMap();
-                FirebaseDatabase.getInstance().getReference().child("chat room").child("comments").push().setValue(comment).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+//                FirebaseDatabase.getInstance().getReference().setValue(myId);
+//                rootRef.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        rootRef.setValue(myId);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+
+                //new message
+                Message message = new Message.Builder()
+                        .setUser(me)
+                        .setRightMessage(true)
+                        .setMessageText(mChatView.getInputText())
+                        .hideIcon(true)
+                        .build();
+                //Set to chat view
+                mChatView.send(message);
+                //Reset edit text
+
+                //Receive message
+                final Message receivedMessage = new Message.Builder()
+                        .setUser(you)
+                        .setRightMessage(false)
+                        .setMessageText(ChatBot.talk(me.getName(), message.getMessageText()))
+                        .build();
+
+                // This is a demo bot
+                // Return within 3 seconds
+                int sendDelay = (new Random().nextInt(4) + 1) * 1000;
+                new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-
+                    public void run() {
+                        mChatView.receive(receivedMessage);
                     }
-                });
+                }, sendDelay);
+
+
+//                databaseReference.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        databaseReference.setValue("dlkfjs");
+//                        databaseReference.setValue("dlkfjs");
+//                        databaseReference.setValue("dlkfjs");
+//                        databaseReference.setValue("dlkfjs");
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+
+                ChatData chatData = new ChatData(String.valueOf(myId),mChatView.getInputText(),"2017-04-23");
+                databaseReference.child("message").push().setValue(chatData);
+
+                mChatView.setInputText("");
+
+//                databaseReference.push();
+//                Map<String, Object> map = new HashMap<String, Object>();
+//                String key = databaseReference.push().getKey();
+//                Log.d("map======", map.toString());
+////
+//                databaseReference.updateChildren(map);
+//
+//                DatabaseReference root = databaseReference.child(key);
+//                Map<String, Object> objectMap = new HashMap<String, Object>();
+//
+//                Log.d("message", message.toString());
+//                objectMap.put("name", myId);
+//                objectMap.put("message", message);
+//
+//                Log.d("object map ===", objectMap.toString());
+//
+//                //                root.updateChildren(objectMap);
+//                databaseReference.setValue(objectMap);
+
             }
-        });
-    }
 
-    private void startChat() {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        final DatabaseReference databaseReference = firebaseDatabase.getReference("chat rooms");
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // 상대방 ID 있는지 체크
-                // 있으면 채팅데이터 불러오기 / 없으면 채팅방 새로 생성
-//                FirebaseDatabase.getInstance().getReference().child("chat room").push().setValue(chatModel).addOnSuccessListener(new OnSuccessListener<Void>() {
-                FirebaseDatabase.getInstance().getReference().child("chat room").push().setValue(yourId).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-
-                    }
-                });
-
-                }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
         });
 
+
     }
+//
+//    private void sendMessage() {
+//        sendMessageBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                Map<String, Object> map = new HashMap<String, Object>();
+//                String key = reference.push().getKey();
+//
+//                rootRef.updateChildren(map);
+//
+//                DatabaseReference root = rootRef.child(key);
+//
+//                Map<String, Object> objectMap = new HashMap<String, Object>();
+//
+//                objectMap.put("name", yourId);
+//                objectMap.put("message", messageEditText.getText().toString());
+//
+//                root.updateChildren(objectMap);
+//
+//                messageEditText.setText("");
+//
+//
+//
+////                long time = System.currentTimeMillis();
+////                SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+////                String msgTime = dayTime.format(new Date(time));
+////
+////                ChatModel chatModel = new ChatModel(messageEditText.getText().toString(), myId, msgTime);
+////                Map<String, Object> comment = chatModel.toMap();
+////                FirebaseDatabase.getInstance().getReference().child("chat room").child("comments").push().setValue(comment).addOnSuccessListener(new OnSuccessListener<Void>() {
+////                    @Override
+////                    public void onSuccess(Void aVoid) {
+////
+////                    }
+////                });
+//            }
+//        });
+//    }
+
+//    private void startChat() {
+//        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+//
+//
+////        databaseReference.addValueEventListener(new ValueEventListener() {
+////            @Override
+////            public void onDataChange(DataSnapshot dataSnapshot) {
+////
+////
+////                // 상대방 ID 있는지 체크
+////                // 있으면 채팅데이터 불러오기 / 없으면 채팅방 새로 생성
+//////                FirebaseDatabase.getInstance().getReference().child("chat room").push().setValue(chatModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+////                FirebaseDatabase.getInstance().getReference().child("chat room").push().setValue(yourId).addOnSuccessListener(new OnSuccessListener<Void>() {
+////                    @Override
+////                    public void onSuccess(Void aVoid) {
+////
+////                    }
+////                });
+////
+////            }
+////
+////            @Override
+////            public void onCancelled(DatabaseError databaseError) {
+////
+////            }
+////        });
+//
+//    }
 
     private void setView() {
         ImageView backIcon = (ImageView) findViewById(R.id.chatting_back_icon);
