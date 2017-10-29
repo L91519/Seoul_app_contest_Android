@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/profilePic"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:scaleType="fitXY" />
 
     <RelativeLayout
@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:textSize="18dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/billboardDate"
@@ -31,8 +31,9 @@
             android:layout_alignBottom="@id/nameText"
             android:layout_toRightOf="@id/nameText"
             android:textColor="@android:color/darker_gray"
-            android:textSize="12dp" />
+            android:textSize="10dp" />
 
+        //제목과 버튼
         <android.support.v7.widget.CardView
             android:layout_width="350dp"
             android:layout_height="wrap_content"
@@ -50,7 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="15dp"
-                    android:textSize="18dp" />
+                    android:textSize="16dp" />
 
                 <ImageButton
                     android:layout_marginRight="15dp"

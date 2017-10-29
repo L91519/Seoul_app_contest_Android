@@ -18,7 +18,11 @@
 
         </activity>
         <activity android:name=".Activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".Activity.SignUpActivity">
         </activity>
@@ -31,11 +35,7 @@
         </activity>
 
         <activity android:name=".Activity.ChatListActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
 
@@ -44,6 +44,10 @@
 
         </activity>
         <activity android:name=".Activity.SearchCompanionActivity">
+        </activity>
+        <activity android:name=".Activity.SearchDetailDialogActivity"
+            android:theme="@android:style/Theme.Translucent">
+
         </activity>
     </application>
 

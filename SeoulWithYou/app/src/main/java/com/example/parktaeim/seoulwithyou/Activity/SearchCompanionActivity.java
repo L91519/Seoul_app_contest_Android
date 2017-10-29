@@ -1,26 +1,25 @@
 package com.example.parktaeim.seoulwithyou.Activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.BillboardRecyclerViewAdapter;
-import com.example.parktaeim.seoulwithyou.Dialog.SearchDetailDialog;
 import com.example.parktaeim.seoulwithyou.Model.BillboardItem;
 import com.example.parktaeim.seoulwithyou.MyLayoutManager;
-import com.example.parktaeim.seoulwithyou.MyRecyclerView;
 import com.example.parktaeim.seoulwithyou.R;
 import com.example.parktaeim.seoulwithyou.RecyclerViewClickListener;
 
@@ -39,11 +38,11 @@ public class SearchCompanionActivity extends AppCompatActivity {
     private String picture, title, distance, id;
     private ImageView coverPicture;
     private TextView courseTitle, courstDistance;
+    private ImageButton xBtn;
 
     private RecyclerViewClickListener listener;
 
-    private SearchDetailDialog dialog;
-
+    private ArrayList<BillboardItem> items;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +57,7 @@ public class SearchCompanionActivity extends AppCompatActivity {
         coverPicture = (ImageView) findViewById(R.id.picture);
         courseTitle = (TextView) findViewById(R.id.title);
         courstDistance = (TextView) findViewById(R.id.distance);
+        xBtn = (ImageButton) findViewById(R.id.xBtn);
 
         recyclerView = (RecyclerView) findViewById(R.id.billboardRecyclerView);
         recyclerView.hasFixedSize();
@@ -66,14 +66,21 @@ public class SearchCompanionActivity extends AppCompatActivity {
         manager.hasFocus();
         recyclerView.setLayoutManager(manager);
 
-        dialog = new SearchDetailDialog(SearchCompanionActivity.this);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
+        params.height = 1200;
+        recyclerView.setLayoutParams(params);
 
-        listener = (view, position) -> {
+        listener = (view, position, location) -> {
             ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 10);
             recyclerView.smoothScrollToPosition(position);
-            dialog.show();
-            dialog.getWindow().setLayout(MainActivity.screenWidth, MainActivity.screenHeight);
+
+            Intent dialogIntent = new Intent(getApplicationContext(), SearchDetailDialogActivity.class);
+            dialogIntent.putExtra("location", location);
+            dialogIntent.putExtra("pic", items.get(position).getPic());
+            dialogIntent.putExtra("title", items.get(position).getTitle());
+            dialogIntent.putExtra("name", items.get(position).getName());
+            dialogIntent.putExtra("date", items.get(position).getDate());
+            startActivity(dialogIntent);
         };
 
 
@@ -81,10 +88,18 @@ public class SearchCompanionActivity extends AppCompatActivity {
         courseTitle.setText(title);
         courstDistance.setText(distance);
         setData();
+
+        xBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchCompanionActivity.this.finish();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            }
+        });
     }
 
     public void setData() {
-        ArrayList<BillboardItem> items = new ArrayList<>();
+        items = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
 
