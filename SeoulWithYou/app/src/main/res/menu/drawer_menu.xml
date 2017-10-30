@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_mypage"
+            android:icon="@drawable/navi_mypage"
+            android:title="Import" />
+        <item
+            android:id="@+id/nav_changeId"
+            android:icon="@drawable/navi_id_change"
+            android:title="Gallery" />
+        <item
+            android:id="@+id/nav_changePw"
+            android:icon="@drawable/navi_pw_change"
+            android:title="Slideshow" />
+        <item
+            android:id="@+id/nav_programmer_info"
+            android:icon="@drawable/navi_programmer_info"
+            android:title="Tools" />
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/navi_logout"
+            android:title="Tools" />
+    </group>
+
+</menu>

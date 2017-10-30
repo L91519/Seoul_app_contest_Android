@@ -23,9 +23,6 @@ public class MyPageDialogActivity extends Activity {
     private TextView goChatBtn;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_mypage);
 

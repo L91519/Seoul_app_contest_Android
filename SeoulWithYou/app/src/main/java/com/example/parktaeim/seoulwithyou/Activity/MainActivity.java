@@ -10,11 +10,15 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,7 +26,7 @@ import com.example.parktaeim.seoulwithyou.Adapter.ViewPagerAdapter;
 import com.example.parktaeim.seoulwithyou.CustomViewPager;
 import com.example.parktaeim.seoulwithyou.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private TabLayout tabLayout;
     private CustomViewPager viewPager;
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setDrawer();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
@@ -75,5 +80,54 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setDrawer() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolBar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.open_drawer,R.string.close_drawer);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
+        if(drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer(GravityCompat.START);
+        }else{
+            super.onBackPressed();
+        }
+    }
+
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_mypage) {
+            // Handle the camera action
+        } else if (id == R.id.nav_changeId) {
+
+        } else if (id == R.id.nav_changePw) {
+
+        } else if (id == R.id.nav_programmer_info) {
+
+        } else if (id == R.id.nav_logout) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
