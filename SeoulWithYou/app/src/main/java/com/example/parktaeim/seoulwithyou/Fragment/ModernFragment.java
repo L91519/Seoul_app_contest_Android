@@ -287,7 +287,9 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         myMap = googleMap;
 
         LatLng location = new LatLng(36.316889, 127.158272);
+        LatLng location2 = new LatLng(36.316899, 127.158282);
         myMap.addMarker(new MarkerOptions().position(location).title("Location"));
+        myMap.addMarker(new MarkerOptions().position(location2).title("Temporary"));
         myMap.moveCamera(CameraUpdateFactory.newLatLng(location));
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -302,7 +304,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         myMap.setMyLocationEnabled(true);
         myMap.getUiSettings().setMyLocationButtonEnabled(true);
         myMap.getUiSettings().setCompassEnabled(true);
-        myMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+        myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
     }
 
 

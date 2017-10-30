@@ -1,31 +1,28 @@
 package com.example.parktaeim.seoulwithyou.Activity;
 
-import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ScrollView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.BillboardRecyclerViewAdapter;
+import com.example.parktaeim.seoulwithyou.Dialog.SearchDetailDialog;
 import com.example.parktaeim.seoulwithyou.Model.BillboardItem;
 import com.example.parktaeim.seoulwithyou.MyLayoutManager;
 import com.example.parktaeim.seoulwithyou.MyScrollView;
@@ -51,9 +48,9 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
     private TextView courseTitle, courstDistance;
     private ImageButton xBtn;
     private MyScrollView scrollView;
-
+    private RelativeLayout container;
     private RecyclerViewClickListener listener;
-
+    private SearchDetailDialog dialog;
     private ArrayList<BillboardItem> items;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,6 +69,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
         xBtn = (ImageButton) findViewById(R.id.xBtn);
         scrollView = (MyScrollView) findViewById(R.id.scrollView);
         scrollView.setScrollViewListener(this);
+        container = (RelativeLayout) findViewById(R.id.container);
 
         recyclerView = (RecyclerView) findViewById(R.id.billboardRecyclerView);
         recyclerView.hasFixedSize();
@@ -82,7 +80,6 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
 
         ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
         int height = (int) ((float)MainActivity.screenHeight * 0.6);
-        Log.d("---height", String.valueOf(height));
         params.height = height;
         recyclerView.setLayoutParams(params);
         recyclerView.setNestedScrollingEnabled(false);
@@ -91,13 +88,30 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
             ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 10);
             recyclerView.smoothScrollToPosition(position);
 
-            Intent dialogIntent = new Intent(getApplicationContext(), SearchDetailDialogActivity.class);
-            dialogIntent.putExtra("location", location);
-            dialogIntent.putExtra("pic", items.get(position).getPic());
-            dialogIntent.putExtra("title", items.get(position).getTitle());
-            dialogIntent.putExtra("name", items.get(position).getName());
-            dialogIntent.putExtra("date", items.get(position).getDate());
-            startActivity(dialogIntent);
+//            RelativeLayout.LayoutParams containerParams =  (RelativeLayout.LayoutParams) container.getLayoutParams();
+//            containerParams.setMargins(0, MainActivity.screenHeight - height, 0, 0);
+//            container.setLayoutParams(containerParams);
+
+            dialog = new SearchDetailDialog(SearchCompanionActivity.this, location);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialog) {
+
+                }
+            });
+
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+
+                }
+            });
+
+            dialog.show();
+            dialog.getWindow().setLayout(MainActivity.screenWidth, MainActivity.screenHeight);
         };
 
 
