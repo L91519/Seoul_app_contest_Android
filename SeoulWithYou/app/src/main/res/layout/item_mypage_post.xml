@@ -14,7 +14,9 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginRight="20dp"
-            android:background="@drawable/rounded" />
+            android:background="@drawable/rounded"
+            android:src="@drawable/img_login_background"
+            android:scaleType="centerCrop"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

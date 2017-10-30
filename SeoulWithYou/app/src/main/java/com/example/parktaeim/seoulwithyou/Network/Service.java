@@ -29,7 +29,7 @@ public class Service extends APIAdapter{
 
         @FormUrlEncoded
         @POST(APIUrl.SIGN_UP_URL)
-        Call<Void> signUp(@Field("id") String id,@Field("pw") String pw, @Field("birth") Integer birth, @Field("sex") Boolean sex);
+        Call<Void> signUp(@Field("name") String name,@Field("id") String id,@Field("pw") String pw, @Field("birth") Integer birth, @Field("sex") Boolean sex);
 
         @GET(APIUrl.GET_MODER_COURSE)
         Call<JsonObject> getModernCourseList();
