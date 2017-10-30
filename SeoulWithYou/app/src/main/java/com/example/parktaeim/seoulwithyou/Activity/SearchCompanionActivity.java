@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.BillboardRecyclerViewAdapter;
+import com.example.parktaeim.seoulwithyou.Dialog.BillboardDialog;
 import com.example.parktaeim.seoulwithyou.Dialog.SearchDetailDialog;
 import com.example.parktaeim.seoulwithyou.Model.BillboardItem;
 import com.example.parktaeim.seoulwithyou.MyLayoutManager;
@@ -46,11 +48,12 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
     private String picture, title, distance, id;
     private ImageView coverPicture;
     private TextView courseTitle, courstDistance;
-    private ImageButton xBtn;
+    private ImageButton xBtn, addBtn;
     private MyScrollView scrollView;
     private RelativeLayout container;
     private RecyclerViewClickListener listener;
     private SearchDetailDialog dialog;
+    private BillboardDialog addDialog;
     private ArrayList<BillboardItem> items;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,6 +70,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
         courseTitle = (TextView) findViewById(R.id.title);
         courstDistance = (TextView) findViewById(R.id.distance);
         xBtn = (ImageButton) findViewById(R.id.xBtn);
+        addBtn = (ImageButton) findViewById(R.id.addBtn);
         scrollView = (MyScrollView) findViewById(R.id.scrollView);
         scrollView.setScrollViewListener(this);
         container = (RelativeLayout) findViewById(R.id.container);
@@ -128,7 +132,16 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
             }
         });
 
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                addDialog = new BillboardDialog(SearchCompanionActivity.this);
+                addDialog.show();
+                items.add(new BillboardItem(id, "picture", addDialog.getsTitle(), "date", "name"));
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     public void setData() {
