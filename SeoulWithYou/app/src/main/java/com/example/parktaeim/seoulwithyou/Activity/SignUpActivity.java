@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Network.APIUrl;
 import com.example.parktaeim.seoulwithyou.Network.RestAPI;
 import com.example.parktaeim.seoulwithyou.Network.Service;
@@ -68,7 +69,6 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-
         setView();
     }
 
@@ -84,6 +84,9 @@ public class SignUpActivity extends AppCompatActivity {
         noSelectGender_man = (ImageView) findViewById(R.id.noSelectGender_man);
         noSelectGender_woman = (ImageView) findViewById(R.id.noSelectGender_woman);
         signupBtn = (ImageView) findViewById(R.id.signupBtn);
+        ImageView backImg= (ImageView) findViewById(R.id.signup_backgroundImg);
+
+        Glide.with(this).load(R.drawable.img_login_background).into(backImg);
 
         //Setting Select Gender
         noSelectGender_man.setOnClickListener(new View.OnClickListener() {
@@ -181,16 +184,16 @@ public class SignUpActivity extends AppCompatActivity {
                 String pwCheck = pwCheckEditText.getText().toString();
                 name = nameExitText.getText().toString();
 
-                if(name == null || name.length() ==0){
+                if (name == null || name.length() == 0) {
                     Toast.makeText(SignUpActivity.this, "이름을 입력해주세요!", Toast.LENGTH_SHORT).show();
                     return;
-                }else if (gender.equals("null")) {
+                } else if (gender.equals("null")) {
                     Toast.makeText(SignUpActivity.this, "성별을 선택해주세요!", Toast.LENGTH_SHORT).show();
                     return;
-                }  else if(year == null || month == null || date == null){
+                } else if (year == null || month == null || date == null) {
                     Toast.makeText(SignUpActivity.this, "생년월일을 선택해주세요!", Toast.LENGTH_SHORT).show();
                     return;
-                }else if (id == null || id.length() == 0) {
+                } else if (id == null || id.length() == 0) {
                     Toast.makeText(SignUpActivity.this, "아이디를 입력해주세요!", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (pw == null || pw.length() == 0) {
@@ -205,10 +208,10 @@ public class SignUpActivity extends AppCompatActivity {
                 } else if (pw.length() < 8) {
                     Toast.makeText(SignUpActivity.this, "비밀번호는 8자리 이상이어야 합니다!", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (id.length() < 16) {
+                } else if (id.length() > 16) {
                     Toast.makeText(SignUpActivity.this, "아이디는 16자리 이하여야 합니다!", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (pw.length() < 16) {
+                } else if (pw.length() > 16) {
                     Toast.makeText(SignUpActivity.this, "비밀번호는 16자리 이하여야 합니다!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -221,9 +224,9 @@ public class SignUpActivity extends AppCompatActivity {
                 birth = Integer.valueOf(year + month + date);
                 Log.d("birth Int", String.valueOf(birth));
 
-                if(gender == "Man"){
+                if (gender == "Man") {
                     realGender = true;
-                }else if(gender=="Woman"){
+                } else if (gender == "Woman") {
                     realGender = false;
                 }
 
@@ -237,68 +240,64 @@ public class SignUpActivity extends AppCompatActivity {
 
                     RestAPI restAPI = builder.create(RestAPI.class);
 
-//                Call<Void> call = restAPI.signUp(name,id, pw, birth, gender);
-                    //너가 원래 쓰던 방법
-                    //vvvvvvvvvvvvvvvvvvvvvvvv
-                /*Call<Void> call = restAPI.signUp("abc","abc123",20001215,false);
->>>>>>> e1f4287c1e689fb1f8732831278a605146f1533a
+                    Call<Void> call = restAPI.signUp(name, id, pw, birth, realGender);
+                    Log.d("retrofit start ===", "yeah~~");
 
-                Log.d("retrofit start ===", "yeah~~");
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            Log.d("reponse ===", String.valueOf(response.code()));
 
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        Log.d("reponse ===", String.valueOf(response.code()));
+                            if (response.code() == 200) {
+                                Log.d("response ===", "200");
 
-                        if (response.code() == 200) {
-                            Log.d("response ===", "200");
-
-                            Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else if (response.code() == 400) {
-                            Toast.makeText(SignUpActivity.this, "회원가입 실패!", Toast.LENGTH_SHORT);
-                            return;
+                                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else if (response.code() == 400) {
+                                Toast.makeText(SignUpActivity.this, "회원가입 실패!", Toast.LENGTH_SHORT);
+                                return;
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Log.d("login Failure === ", t.toString());
-                    }
-                });*/
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Log.d("login Failure === ", t.toString());
+                        }
+                    });
 
 
-                    Service.getRetrofit(getApplicationContext()).
-                            signUp(name,id, pw, birth, realGender).
-                            enqueue(new Callback<Void>() {
-                                @Override
-                                public void onResponse(Call<Void> call, Response<Void> response) {
-                                    Log.d("reponse ===", String.valueOf(response.code()));
-
-                                    if (response.code() == 200) {
-                                        Log.d("response ===", "200");
-
-                                        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    } else if (response.code() == 400) {
-                                        Toast.makeText(SignUpActivity.this, "회원가입 실패!", Toast.LENGTH_SHORT);
-                                        return;
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<Void> call, Throwable t) {
-                                    Log.d("login Failure === ", t.toString());
-                                }
-                            });
-                } else{
-                    Toast.makeText(SignUpActivity.this, "비밀번호와 비밀번호 체크 값이 다릅니다.", Toast.LENGTH_SHORT).show();
-                    return;
+//                    Service.getRetrofit(getApplicationContext()).
+//                            signUp(name,id, pw, birth, realGender).
+//                            enqueue(new Callback<Void>() {
+//                                @Override
+//                                public void onResponse(Call<Void> call, Response<Void> response) {
+//                                    Log.d("reponse ===", String.valueOf(response.code()));
+//
+//                                    if (response.code() == 200) {
+//                                        Log.d("response ===", "200");
+//
+//                                        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+//                                        startActivity(intent);
+//                                        finish();
+//                                    } else if (response.code() == 400) {
+//                                        Toast.makeText(SignUpActivity.this, "회원가입 실패!", Toast.LENGTH_SHORT);
+//                                        return;
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onFailure(Call<Void> call, Throwable t) {
+//                                    Log.d("login Failure === ", t.toString());
+//                                }
+//                            });
+//                } else{
+//                    Toast.makeText(SignUpActivity.this, "비밀번호와 비밀번호 체크 값이 다릅니다.", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 }
             }
-        });
 
+        });
     }
 }

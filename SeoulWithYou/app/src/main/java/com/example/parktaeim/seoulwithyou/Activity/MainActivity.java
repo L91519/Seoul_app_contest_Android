@@ -24,8 +24,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.ViewPagerAdapter;
 import com.example.parktaeim.seoulwithyou.CustomViewPager;
 import com.example.parktaeim.seoulwithyou.R;

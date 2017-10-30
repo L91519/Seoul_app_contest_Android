@@ -7,11 +7,10 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/backgroundImg"
+        android:id="@+id/signup_backgroundImg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/img_login_background" />
+        android:scaleType="centerCrop" />
 
     <ScrollView
         android:layout_width="match_parent"
