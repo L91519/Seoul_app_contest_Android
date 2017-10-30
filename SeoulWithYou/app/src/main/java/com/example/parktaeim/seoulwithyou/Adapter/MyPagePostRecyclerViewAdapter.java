@@ -1,9 +1,19 @@
 package com.example.parktaeim.seoulwithyou.Adapter;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.example.parktaeim.seoulwithyou.Activity.MyPageDialogActivity;
+import com.example.parktaeim.seoulwithyou.Model.MyPagePostItem;
+import com.example.parktaeim.seoulwithyou.R;
 
 import java.util.ArrayList;
 
@@ -11,28 +21,54 @@ import java.util.ArrayList;
  * Created by parktaeim on 2017. 10. 26..
  */
 
-public class MyPagePostRecyclerViewAdapter  extends RecyclerView.Adapter<MyPagePostRecyclerViewAdapter.ViewHolder>{
+public class MyPagePostRecyclerViewAdapter extends RecyclerView.Adapter<MyPagePostRecyclerViewAdapter.ViewHolder> {
 
     Context context;
+    ArrayList<MyPagePostItem> items = new ArrayList<>();
+    private RequestManager requestManager;
+
+    public MyPagePostRecyclerViewAdapter(Context context, ArrayList<MyPagePostItem> items, RequestManager requestManager) {
+        this.context = context;
+        this.items = items;
+        this.requestManager = requestManager;
+    }
 
     @Override
     public MyPagePostRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_mypage_post,parent,false);
+        ViewHolder viewHolder = new ViewHolder(view);
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(MyPagePostRecyclerViewAdapter.ViewHolder holder, int position) {
-
+        requestManager.load(items.get(position).getImgUrl()).into(holder.courseImg);
+        holder.courseName.setText(items.get(position).getCourseName());
+        holder.writeDate.setText(items.get(position).getWriteDate());
+        holder.postTitle.setText(items.get(position).getPostTitle());
+        holder.postContent.setText(items.get(position).getPostContent());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return items.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView courseImg;
+        TextView courseName;
+        TextView writeDate;
+        TextView postTitle;
+        TextView postContent;
+
         public ViewHolder(View itemView) {
             super(itemView);
+            courseImg = (ImageView) itemView.findViewById(R.id.courseImg);
+            courseName = (TextView) itemView.findViewById(R.id.courseName);
+            writeDate = (TextView) itemView.findViewById(R.id.writeDate);
+            postTitle = (TextView) itemView.findViewById(R.id.postTitle);
+            postContent = (TextView) itemView.findViewById(R.id.postContent);
+
         }
     }
 }

@@ -16,7 +16,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -66,10 +65,9 @@ public class SearchDetailDialog extends Dialog {
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_search_detail);
+
 
         recyclerView = (RecyclerView) findViewById(R.id.commentRecyclerView);
         recyclerView.hasFixedSize();

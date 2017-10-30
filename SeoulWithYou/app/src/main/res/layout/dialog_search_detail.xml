@@ -97,6 +97,7 @@
                 android:layout_below="@id/nameText"
                 android:layout_marginBottom="10dp"
                 android:elevation="5dp"
+                android:background="#FFFFFF"
                 app:cardCornerRadius="18dp">
 
                 <RelativeLayout
@@ -133,7 +134,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/titleLayout"
                 android:layout_marginBottom="10dp"
-                app:cardCornerRadius="18dp">
+                app:cardCornerRadius="18dp"
+                android:background="#FFFFFF">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -215,7 +217,8 @@
                 android:layout_below="@id/contentView"
                 android:focusableInTouchMode="false"
                 android:paddingTop="4dp"
-                app:cardCornerRadius="18dp">
+                app:cardCornerRadius="18dp"
+                android:background="#FFFFFF">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/commentRecyclerView"
