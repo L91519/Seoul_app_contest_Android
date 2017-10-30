@@ -52,11 +52,6 @@ import java.util.Map;
 
 import com.example.parktaeim.seoulwithyou.util.Utils;
 
-<<<<<<< HEAD
-=======
-import org.json.JSONObject;
-
->>>>>>> 76f713eb600d40d74199daa3cd5752bfe0ce624e
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -259,7 +254,6 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     }
 
     private void initDtalist() {
-<<<<<<< HEAD
 
         Service.getRetrofit(getContext()).
                 getModernCourseList().
@@ -278,20 +272,6 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
                 Log.d("error", t.toString());
             }
         });
-
-=======
-        Service.getRetrofit(getContext()).getCourseList().enqueue(new Callback<JSONObject>() {
-            @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
-                Log.d("--", String.valueOf(response.code()));
-            }
-
-            @Override
-            public void onFailure(Call<JSONObject> call, Throwable t) {
-                Log.d("--", t.toString());
-            }
-        });
->>>>>>> 76f713eb600d40d74199daa3cd5752bfe0ce624e
         courseItems = new ArrayList<>();
         CourseItem item1 = new CourseItem("http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", "palace", "far",0);
         courseItems.add(item1);
