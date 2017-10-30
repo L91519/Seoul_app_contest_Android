@@ -5,24 +5,19 @@
         <item
             android:id="@+id/nav_mypage"
             android:icon="@drawable/navi_mypage"
-            android:title="Import" />
+            android:title="마이페이지" />
         <item
             android:id="@+id/nav_changeId"
             android:icon="@drawable/navi_id_change"
-            android:title="Gallery" />
+            android:title="아이디 변경" />
         <item
             android:id="@+id/nav_changePw"
             android:icon="@drawable/navi_pw_change"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_programmer_info"
-            android:icon="@drawable/navi_programmer_info"
-            android:title="Tools" />
-
+            android:title="비밀번호 변경" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/navi_logout"
-            android:title="Tools" />
+            android:title="로그아웃" />
     </group>
 
 </menu>

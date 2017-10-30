@@ -1,5 +1,6 @@
 package com.example.parktaeim.seoulwithyou.Activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -115,14 +116,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_mypage) {
-            // Handle the camera action
+            Intent intent = new Intent(MainActivity.this,MyPageDialogActivity.class);
+            startActivity(intent);
+
         } else if (id == R.id.nav_changeId) {
+            Intent intent = new Intent(MainActivity.this,FindIdActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_changePw) {
-
-        } else if (id == R.id.nav_programmer_info) {
+            Intent intent = new Intent(MainActivity.this,FindPwActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
+
 
         }
 
