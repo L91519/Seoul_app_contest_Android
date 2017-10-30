@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -47,11 +48,9 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
     private TextView courseTitle, courstDistance;
     private ImageButton xBtn;
     private MyScrollView scrollView;
-
+    private RelativeLayout container;
     private RecyclerViewClickListener listener;
-
     private SearchDetailDialog dialog;
-
     private ArrayList<BillboardItem> items;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +69,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
         xBtn = (ImageButton) findViewById(R.id.xBtn);
         scrollView = (MyScrollView) findViewById(R.id.scrollView);
         scrollView.setScrollViewListener(this);
+        container = (RelativeLayout) findViewById(R.id.container);
 
         recyclerView = (RecyclerView) findViewById(R.id.billboardRecyclerView);
         recyclerView.hasFixedSize();
@@ -80,7 +80,6 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
 
         ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
         int height = (int) ((float)MainActivity.screenHeight * 0.6);
-        Log.d("---height", String.valueOf(height));
         params.height = height;
         recyclerView.setLayoutParams(params);
         recyclerView.setNestedScrollingEnabled(false);
@@ -88,6 +87,10 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
         listener = (view, position, location) -> {
             ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 10);
             recyclerView.smoothScrollToPosition(position);
+
+//            RelativeLayout.LayoutParams containerParams =  (RelativeLayout.LayoutParams) container.getLayoutParams();
+//            containerParams.setMargins(0, MainActivity.screenHeight - height, 0, 0);
+//            container.setLayoutParams(containerParams);
 
             dialog = new SearchDetailDialog(SearchCompanionActivity.this, location);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
