@@ -1,27 +1,37 @@
 package com.example.parktaeim.seoulwithyou.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.BillboardRecyclerViewAdapter;
 import com.example.parktaeim.seoulwithyou.Model.BillboardItem;
 import com.example.parktaeim.seoulwithyou.MyLayoutManager;
+import com.example.parktaeim.seoulwithyou.MyScrollView;
 import com.example.parktaeim.seoulwithyou.R;
 import com.example.parktaeim.seoulwithyou.RecyclerViewClickListener;
+import com.example.parktaeim.seoulwithyou.ScrollViewListener;
 
 import java.util.ArrayList;
 
@@ -29,7 +39,8 @@ import java.util.ArrayList;
  * Created by user on 2017-10-26.
  */
 
-public class SearchCompanionActivity extends AppCompatActivity {
+@RequiresApi(api = Build.VERSION_CODES.M)
+public class SearchCompanionActivity extends AppCompatActivity implements ScrollViewListener{
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager manager;
@@ -39,6 +50,7 @@ public class SearchCompanionActivity extends AppCompatActivity {
     private ImageView coverPicture;
     private TextView courseTitle, courstDistance;
     private ImageButton xBtn;
+    private MyScrollView scrollView;
 
     private RecyclerViewClickListener listener;
 
@@ -58,6 +70,8 @@ public class SearchCompanionActivity extends AppCompatActivity {
         courseTitle = (TextView) findViewById(R.id.title);
         courstDistance = (TextView) findViewById(R.id.distance);
         xBtn = (ImageButton) findViewById(R.id.xBtn);
+        scrollView = (MyScrollView) findViewById(R.id.scrollView);
+        scrollView.setScrollViewListener(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.billboardRecyclerView);
         recyclerView.hasFixedSize();
@@ -67,8 +81,11 @@ public class SearchCompanionActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(manager);
 
         ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
-        params.height = 1200;
+        int height = (int) ((float)MainActivity.screenHeight * 0.6);
+        Log.d("---height", String.valueOf(height));
+        params.height = height;
         recyclerView.setLayoutParams(params);
+        recyclerView.setNestedScrollingEnabled(false);
 
         listener = (view, position, location) -> {
             ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 10);
@@ -96,6 +113,8 @@ public class SearchCompanionActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
+
+
     }
 
     public void setData() {
@@ -114,5 +133,18 @@ public class SearchCompanionActivity extends AppCompatActivity {
 
         adapter = new BillboardRecyclerViewAdapter(getApplicationContext(), items, listener);
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onScrollChanged(MyScrollView scrollView, int x, int y, int oldx, int oldy) {
+        View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
+        int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
+
+        // if diff is zero, then the bottom has been reached
+        if (diff == 0) {
+            recyclerView.setNestedScrollingEnabled(true);
+        } else {
+            recyclerView.setNestedScrollingEnabled(false);
+        }
     }
 }

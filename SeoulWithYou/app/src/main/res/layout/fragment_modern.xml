@@ -15,8 +15,8 @@
         android:layout_weight="1"
         pile:displayCount="1.8"
         pile:interval="10dp"
-        pile:scaleStep="0.2"
-        pile:sizeRatio="0.78" />
+        pile:scaleStep="0.4"
+        pile:sizeRatio="0.65" />
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/map"

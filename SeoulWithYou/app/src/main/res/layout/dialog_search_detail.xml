@@ -7,28 +7,37 @@
     android:background="#99000000">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/whiteColor"
         android:elevation="5dp">
 
-        <ImageButton
-            android:id="@+id/xBtn"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginRight="30dp"
-            android:background="@null"
-            android:scaleType="fitXY"
-            android:src="@drawable/x_button" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="동행자 찾기"
-            android:textColor="@color/fontColor"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            <ImageButton
+                android:id="@+id/xBtn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@null"
+                android:layout_margin="10dp"
+                android:scaleType="fitXY"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/x_button" />
+
+            <TextView
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/xBtn"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="동행자 찾기"
+                android:textColor="@color/fontColor"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
