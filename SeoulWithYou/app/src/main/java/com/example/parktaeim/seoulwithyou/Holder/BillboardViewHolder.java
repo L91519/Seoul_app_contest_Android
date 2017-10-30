@@ -33,29 +33,29 @@ public class BillboardViewHolder extends RecyclerView.ViewHolder implements View
 
     @Override
     public void onClick(View view) {
-        int[] location = new int[2];
-        int x, y;
-        itemView.getLocationInWindow(location);
-        x = location[0];
-        y = location[1];
+//        int[] location = new int[2];
+//        int x, y;
+//        itemView.getLocationInWindow(location);
+//        x = location[0];
+//        y = location[1];
 
 
-//        int[] location;
-//
-//        int top;
-//        int bottom;
-//        int left;
-//        int right;
-//
-//        Rect r = new Rect();
-//        itemView.getGlobalVisibleRect(r);
-//
-//        top = r.top;
-//        bottom = r.bottom;
-//        left = r.left;
-//        right = r.right;
-//
-//        location = new int[]{top, bottom, left, right};
+        int[] location;
+
+        int top;
+        int bottom;
+        int left;
+        int right;
+
+        Rect r = new Rect();
+        itemView.getGlobalVisibleRect(r);
+
+        top = r.top;
+        bottom = r.bottom;
+        left = r.left;
+        right = r.right;
+
+        location = new int[]{top, bottom, left, right};
 
         mListener.onClick(view, getAdapterPosition(), location);
         button.setImageResource(R.drawable.close);

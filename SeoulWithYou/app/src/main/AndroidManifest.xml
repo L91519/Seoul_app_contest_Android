@@ -45,7 +45,7 @@
         </activity>
         <activity android:name=".Activity.SearchCompanionActivity">
         </activity>
-        <activity android:name=".Activity.SearchDetailDialogActivity"
+        <activity android:name=".Dialog.SearchDetailDialog"
             android:theme="@android:style/Theme.Translucent">
 
         </activity>
