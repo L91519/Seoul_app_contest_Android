@@ -32,6 +32,7 @@ import com.example.parktaeim.seoulwithyou.Adapter.CourseDetailRecycerViewAdapter
 import com.example.parktaeim.seoulwithyou.Model.CourseDetailItem;
 import com.example.parktaeim.seoulwithyou.Model.CourseItem;
 import com.example.parktaeim.seoulwithyou.MyLocation;
+import com.example.parktaeim.seoulwithyou.Network.Service;
 import com.example.parktaeim.seoulwithyou.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -48,6 +49,12 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.example.parktaeim.seoulwithyou.util.Utils;
+
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by user on 2017-10-11.
@@ -247,6 +254,17 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     }
 
     private void initDtalist() {
+        Service.getRetrofit(getContext()).getCourseList().enqueue(new Callback<JSONObject>() {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                Log.d("--", String.valueOf(response.code()));
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t) {
+                Log.d("--", t.toString());
+            }
+        });
         courseItems = new ArrayList<>();
         CourseItem item1 = new CourseItem("http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", "palace", "far",0);
         courseItems.add(item1);

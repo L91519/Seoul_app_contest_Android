@@ -3,6 +3,7 @@ package com.example.parktaeim.seoulwithyou.Adapter;
 import android.content.Context;
 import android.media.Image;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.parktaeim.seoulwithyou.Activity.MyPageDialogActivity;
 import com.example.parktaeim.seoulwithyou.Model.MyPagePostItem;
 import com.example.parktaeim.seoulwithyou.R;
@@ -43,6 +46,9 @@ public class MyPagePostRecyclerViewAdapter extends RecyclerView.Adapter<MyPagePo
     @Override
     public void onBindViewHolder(MyPagePostRecyclerViewAdapter.ViewHolder holder, int position) {
         requestManager.load(items.get(position).getImgUrl()).into(holder.courseImg);
+        holder.courseImg.setClipToOutline(true);
+        Log.d(items.get(position).getImgUrl(),"glide url");
+//        Glide.with(context).load(items.get(position).getImgUrl()).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(holder.courseImg);
         holder.courseName.setText(items.get(position).getCourseName());
         holder.writeDate.setText(items.get(position).getWriteDate());
         holder.postTitle.setText(items.get(position).getPostTitle());

@@ -1,6 +1,8 @@
 package com.example.parktaeim.seoulwithyou.Activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -9,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +29,8 @@ import android.widget.Toast;
 import com.example.parktaeim.seoulwithyou.Adapter.ViewPagerAdapter;
 import com.example.parktaeim.seoulwithyou.CustomViewPager;
 import com.example.parktaeim.seoulwithyou.R;
+
+import java.util.Collection;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -117,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.nav_mypage) {
             Intent intent = new Intent(MainActivity.this,MyPageDialogActivity.class);
+            intent.putExtra("id","");
             startActivity(intent);
 
         } else if (id == R.id.nav_changeId) {
@@ -128,6 +134,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
+
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("로그아웃").setMessage("로그아웃 하시겠습니까?")
+                    .setPositiveButton("로그아웃", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            SharedPreferences sharedPreferences = getSharedPreferences("myId",MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                            Collection<?> collection = sharedPreferences.getAll().values();
+                            Log.d("before clear pef===",collection.toString());
+
+                            editor.clear();
+                            editor.commit();
+
+                            Collection<?> collection2 = sharedPreferences.getAll().values();
+                            Log.d("after clear pef===",collection2.toString());
+
+                            finish();   //SettingsActivity finish
+
+                            Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(i);
+                        }
+                    })
+                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                        }
+                    })
+                    .show();
+
+
+
+
 
 
         }

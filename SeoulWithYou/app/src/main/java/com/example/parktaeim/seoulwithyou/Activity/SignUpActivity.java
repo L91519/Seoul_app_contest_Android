@@ -43,12 +43,13 @@ public class SignUpActivity extends AppCompatActivity {
     private ImageView signupBtn;
     private boolean isSelectMan = false;
     private boolean isSelectWoman = false;
-    private boolean gender;
+    private String gender = "null";
+    private boolean realGender;
     private String name;
     private String id;
     private String pw;
     private int birth;
-    private String year,month,date;
+    private String year, month, date;
 
     private static final String[] YEAR_BIRTH = new String[108];
 
@@ -66,7 +67,6 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
 
 
         setView();
@@ -89,10 +89,10 @@ public class SignUpActivity extends AppCompatActivity {
         noSelectGender_man.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                gender = true;
+                gender = "Man";
                 gender_man.setVisibility(View.VISIBLE);
                 noSelectGender_man.setVisibility(View.INVISIBLE);
-                if(gender_woman.getVisibility() == View.VISIBLE){
+                if (gender_woman.getVisibility() == View.VISIBLE) {
                     gender_woman.setVisibility(View.INVISIBLE);
                     noSelectGender_woman.setVisibility(View.VISIBLE);
                 }
@@ -102,10 +102,10 @@ public class SignUpActivity extends AppCompatActivity {
         noSelectGender_woman.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                gender = false;
+                gender = "Woman";
                 gender_woman.setVisibility(View.VISIBLE);
                 noSelectGender_woman.setVisibility(View.INVISIBLE);
-                if(gender_man.getVisibility() == View.VISIBLE){
+                if (gender_man.getVisibility() == View.VISIBLE) {
                     gender_man.setVisibility(View.INVISIBLE);
                     noSelectGender_man.setVisibility(View.VISIBLE);
                 }
@@ -113,8 +113,8 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
         // Settin Birth Spinner
-        int j= 0;
-        for(int i=1910;i<=2017;i++){
+        int j = 0;
+        for (int i = 1910; i <= 2017; i++) {
             YEAR_BIRTH[j] = String.valueOf(i);
             Log.d("YEAR_BIRTH[" + j + "] == ", YEAR_BIRTH[j]);
             j++;
@@ -143,7 +143,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 year = adapterView.getItemAtPosition(position).toString();
-                Log.d("spinner year Listener==",year);
+                Log.d("spinner year Listener==", year);
             }
         });
 
@@ -151,7 +151,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 month = adapterView.getItemAtPosition(position).toString();
-                Log.d("spinner month Listener=",month);
+                Log.d("spinner month Listener=", month);
             }
         });
 
@@ -159,7 +159,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 date = adapterView.getItemAtPosition(position).toString();
-                Log.d("spinner date Listener==",date);
+                Log.d("spinner date Listener==", date);
             }
         });
 
@@ -178,20 +178,68 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View view) {
                 id = idEditText.getText().toString();
                 pw = pwEditText.getText().toString();
+                String pwCheck = pwCheckEditText.getText().toString();
                 name = nameExitText.getText().toString();
-                birth = Integer.valueOf(year+month+date);
-                Log.d("birth Int",String.valueOf(birth));
 
-                Retrofit builder = new Retrofit.Builder()
-                        .baseUrl(APIUrl.API_BASE_URL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
+                if(name == null || name.length() ==0){
+                    Toast.makeText(SignUpActivity.this, "이름을 입력해주세요!", Toast.LENGTH_SHORT).show();
+                    return;
+                }else if (gender.equals("null")) {
+                    Toast.makeText(SignUpActivity.this, "성별을 선택해주세요!", Toast.LENGTH_SHORT).show();
+                    return;
+                }  else if(year == null || month == null || date == null){
+                    Toast.makeText(SignUpActivity.this, "생년월일을 선택해주세요!", Toast.LENGTH_SHORT).show();
+                    return;
+                }else if (id == null || id.length() == 0) {
+                    Toast.makeText(SignUpActivity.this, "아이디를 입력해주세요!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (pw == null || pw.length() == 0) {
+                    Toast.makeText(SignUpActivity.this, "비밀번호를 입력해주세요!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (pwCheck == null || pwCheck.length() == 0) {
+                    Toast.makeText(SignUpActivity.this, "비밀번호를 한번 더 체크해주세요!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (id.length() < 6) {
+                    Toast.makeText(SignUpActivity.this, "아이디는 6자리 이상이어야 합니다!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (pw.length() < 8) {
+                    Toast.makeText(SignUpActivity.this, "비밀번호는 8자리 이상이어야 합니다!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (id.length() < 16) {
+                    Toast.makeText(SignUpActivity.this, "아이디는 16자리 이하여야 합니다!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (pw.length() < 16) {
+                    Toast.makeText(SignUpActivity.this, "비밀번호는 16자리 이하여야 합니다!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                RestAPI restAPI = builder.create(RestAPI.class);
+//                } else if () {
+//                    Toast.makeText(SignUpActivity.this, "생년월일을 선택해주세요!", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+
+                birth = Integer.valueOf(year + month + date);
+                Log.d("birth Int", String.valueOf(birth));
+
+                if(gender == "Man"){
+                    realGender = true;
+                }else if(gender=="Woman"){
+                    realGender = false;
+                }
+
+                if (pw.equals(pwCheck)) {
+
+
+                    Retrofit builder = new Retrofit.Builder()
+                            .baseUrl(APIUrl.API_BASE_URL)
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+
+                    RestAPI restAPI = builder.create(RestAPI.class);
 
 //                Call<Void> call = restAPI.signUp(name,id, pw, birth, gender);
-                //너가 원래 쓰던 방법
-                //vvvvvvvvvvvvvvvvvvvvvvvv
+                    //너가 원래 쓰던 방법
+                    //vvvvvvvvvvvvvvvvvvvvvvvv
                 /*Call<Void> call = restAPI.signUp("abc","abc123",20001215,false);
 >>>>>>> e1f4287c1e689fb1f8732831278a605146f1533a
 
@@ -221,30 +269,34 @@ public class SignUpActivity extends AppCompatActivity {
                 });*/
 
 
-                Service.getRetrofit(getApplicationContext()).
-                        signUp("abc","abc123",20001215,false).
-                        enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        Log.d("reponse ===",String.valueOf(response.code()));
+                    Service.getRetrofit(getApplicationContext()).
+                            signUp(name,id, pw, birth, realGender).
+                            enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    Log.d("reponse ===", String.valueOf(response.code()));
 
-                        if(response.code() == 200){
-                            Log.d("response ===","200");
+                                    if (response.code() == 200) {
+                                        Log.d("response ===", "200");
 
-                            Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else if(response.code() == 400){
-                            Toast.makeText(SignUpActivity.this,"회원가입 실패!",Toast.LENGTH_SHORT);
-                            return;
-                        }
-                    }
+                                        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    } else if (response.code() == 400) {
+                                        Toast.makeText(SignUpActivity.this, "회원가입 실패!", Toast.LENGTH_SHORT);
+                                        return;
+                                    }
+                                }
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Log.d("login Failure === ",t.toString());
-                    }
-                });
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    Log.d("login Failure === ", t.toString());
+                                }
+                            });
+                } else{
+                    Toast.makeText(SignUpActivity.this, "비밀번호와 비밀번호 체크 값이 다릅니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
         });
 

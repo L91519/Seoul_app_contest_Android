@@ -30,6 +30,7 @@
                     android:scaleType="centerCrop"/>
 
                 <ImageView
+                    android:id="@+id/cancel_Btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
@@ -47,23 +48,23 @@
                     android:textSize="18dp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/goChatButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/gochat_shape"
-                    android:text="1:1채팅"
-                    android:paddingLeft="9dp"
-                    android:paddingRight="9dp"
-                    android:paddingTop="7dp"
-                    android:paddingBottom="7dp"
-                    android:textSize="10dp"
-                    android:textStyle="bold"
-                    android:textColor="#FFFFFF"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="6dp"
-                    android:layout_alignParentBottom="true"/>
+                <!--<TextView-->
+                    <!--android:id="@+id/goChatButton"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="@drawable/gochat_shape"-->
+                    <!--android:text="1:1채팅"-->
+                    <!--android:paddingLeft="9dp"-->
+                    <!--android:paddingRight="9dp"-->
+                    <!--android:paddingTop="7dp"-->
+                    <!--android:paddingBottom="7dp"-->
+                    <!--android:textSize="10dp"-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:textColor="#FFFFFF"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_marginRight="10dp"-->
+                    <!--android:layout_marginBottom="6dp"-->
+                    <!--android:layout_alignParentBottom="true"/>-->
             </RelativeLayout>
 
             <de.hdodenhof.circleimageview.CircleImageView
