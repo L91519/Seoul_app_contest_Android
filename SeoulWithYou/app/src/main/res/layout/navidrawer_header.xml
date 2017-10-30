@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app = "http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:background="@drawable/img_login_background"
     android:layout_width="match_parent"
+    android:background="@drawable/drawer_back_img"
     android:layout_height="180dp"
     android:gravity="bottom"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mypage_profile"
