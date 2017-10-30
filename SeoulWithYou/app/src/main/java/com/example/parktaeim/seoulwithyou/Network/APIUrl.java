@@ -10,5 +10,12 @@ public class APIUrl {
     public static final String LOGIN_URL = "/login";
     public static final String SIGN_UP_URL = "/register";
     public static final String LOGOUT_URL = "/logout";
-    public static final String GET_MODER_COURSE = "/list/restaurant";
+    public static final String GET_MODERN_COURSE = "/list/restaurant";
+    public static final String GET_FOOD_COURSE = "/list/food";
+    public static final String GET_TRADITION_COURSE = "/list/history";
+    public static final String GET_ART_COURSE = "/list/culture";
+    public static final String GET_HEALING_COURSE = "/list/healing";
+    public static final String POST_CONTENT = "";
+    public static final String POST_DETAIL = "";
+
 }

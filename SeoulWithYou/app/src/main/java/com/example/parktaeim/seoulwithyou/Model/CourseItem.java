@@ -12,19 +12,19 @@ public class CourseItem {
     private int no;
     private String placeName;
     private String placeDistance;
-    private int id;
+    private String id;
 
     public CourseItem() {
     }
 
-    public CourseItem(String picUrl, String placeName, String placeDistance, int id) {
+    public CourseItem(String picUrl, String placeName, String placeDistance, String id) {
         this.picUrl = picUrl;
         this.placeName = placeName;
         this.placeDistance = placeDistance;
         this.id = id;
     }
 
-    public CourseItem(int lon, int lat, String picUrl, String placeName, String placeDistance, int id) {
+    public CourseItem(int lon, int lat, String picUrl, String placeName, String placeDistance, String id) {
         this.lon = lon;
         this.lat = lat;
         this.picUrl = picUrl;
@@ -49,11 +49,11 @@ public class CourseItem {
         this.lat = lat;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
