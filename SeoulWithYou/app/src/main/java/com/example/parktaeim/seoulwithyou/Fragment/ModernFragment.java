@@ -42,6 +42,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.stone.pile.libs.PileLayout;
 
 import java.security.Permission;
@@ -50,8 +52,11 @@ import java.util.Map;
 
 import com.example.parktaeim.seoulwithyou.util.Utils;
 
+<<<<<<< HEAD
+=======
 import org.json.JSONObject;
 
+>>>>>>> 76f713eb600d40d74199daa3cd5752bfe0ce624e
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -254,6 +259,27 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     }
 
     private void initDtalist() {
+<<<<<<< HEAD
+
+        Service.getRetrofit(getContext()).
+                getModernCourseList().
+                enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if(response.code() == 200) {
+                    JsonObject jsonObject = response.body();
+                } else {
+                    Log.d("--codeTag", String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.d("error", t.toString());
+            }
+        });
+
+=======
         Service.getRetrofit(getContext()).getCourseList().enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
@@ -265,6 +291,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
                 Log.d("--", t.toString());
             }
         });
+>>>>>>> 76f713eb600d40d74199daa3cd5752bfe0ce624e
         courseItems = new ArrayList<>();
         CourseItem item1 = new CourseItem("http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", "palace", "far",0);
         courseItems.add(item1);
@@ -273,6 +300,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         CourseItem item3 = new CourseItem("http://pic4.nipic.com/20091124/3789537_153149003980_2.jpg", "kingdom", "near",2);
         courseItems.add(item3);
     }
+
 
     public void setTransitionValue(float transitionValue) {
         this.transitionValue = transitionValue;

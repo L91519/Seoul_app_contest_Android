@@ -2,6 +2,8 @@ package com.example.parktaeim.seoulwithyou.Network;
 
 import android.content.Context;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONObject;
 
 import retrofit2.Call;
@@ -29,7 +31,7 @@ public class Service extends APIAdapter{
         @POST(APIUrl.SIGN_UP_URL)
         Call<Void> signUp(@Field("name") String name,@Field("id") String id,@Field("pw") String pw, @Field("birth") Integer birth, @Field("sex") Boolean sex);
 
-        @GET("/list/resaurant")
-        Call<JSONObject> getCourseList();
+        @GET(APIUrl.GET_MODER_COURSE)
+        Call<JsonObject> getModernCourseList();
     }
 }

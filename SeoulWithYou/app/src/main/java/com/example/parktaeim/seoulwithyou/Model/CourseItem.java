@@ -8,6 +8,8 @@ public class CourseItem {
     private int lon;
     private int lat;
     private String picUrl;
+    private String picUrl2;
+    private int no;
     private String placeName;
     private String placeDistance;
     private int id;
