@@ -67,13 +67,23 @@
                     <!--android:layout_alignParentBottom="true"/>-->
             </RelativeLayout>
 
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/mypage_profileImg"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="90dp"
-                android:src="@drawable/face_2" />
+                android:src="@drawable/face_2"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/changeProfileIcon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/img_camera"
+                android:layout_marginTop="143dp"
+                android:layout_marginLeft="80dp"
+                android:elevation="6dp"/>
 
             <TextView
                 android:id="@+id/mypage_genderTextView"
@@ -88,8 +98,8 @@
                 android:textSize="10dp"
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimary"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="9dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_toRightOf="@id/mypage_profileImg"
                 android:layout_below="@id/topLayout"/>
 
@@ -106,8 +116,8 @@
                 android:textSize="10dp"
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimary"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="9dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_toRightOf="@id/mypage_genderTextView"
                 android:layout_below="@id/topLayout"/>
         </RelativeLayout>

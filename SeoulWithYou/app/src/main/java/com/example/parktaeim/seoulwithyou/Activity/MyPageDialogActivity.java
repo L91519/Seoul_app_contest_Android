@@ -29,6 +29,7 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,13 +39,15 @@ import retrofit2.Response;
  * Created by parktaeim on 2017. 10. 26..
  */
 
-public class MyPageDialogActivity extends Activity {
+public class MyPageDialogActivity extends Activity implements View.OnClickListener{
     private TextView goChatBtn;
 
     private Context context;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private CircleImageView changeProfileIcon;
+    private CircleImageView mypage_profileImg;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +67,33 @@ public class MyPageDialogActivity extends Activity {
         setProfile();
         setOnClick();
         setRecyclerView();
+        setChangeProfile();
+    }
+
+    private void setChangeProfile() {
+        changeProfileIcon = (CircleImageView) findViewById(R.id.changeProfileIcon);
+        mypage_profileImg = (CircleImageView) findViewById(R.id.mypage_profileImg);
+
+        changeProfileIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        mypage_profileImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 
     private void setProfile() {
@@ -131,4 +161,6 @@ public class MyPageDialogActivity extends Activity {
 //            }
 //        });
     }
+
+
 }
