@@ -4,7 +4,7 @@ package com.example.parktaeim.seoulwithyou.Model;
  * Created by parktaeim on 2017. 10. 26..
  */
 
-public class UserModel {
+public class UserChatModel {
     public String userName;
     public String profileImageUrl;
     public String userId;

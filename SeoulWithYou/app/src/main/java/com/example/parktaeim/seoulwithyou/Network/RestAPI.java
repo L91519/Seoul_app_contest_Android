@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 /**
@@ -20,5 +21,6 @@ public interface RestAPI {
     @POST(APIUrl.SIGN_UP_URL)
     Call<Void> signUp(@Field("name") String name, @Field("id") String id,@Field("pw") String pw, @Field("birth") Integer birth, @Field("sex") Boolean sex);
 
-
+    @GET(APIUrl.MYPAGE_MY_URL)
+    Call<JsonObject> mypage_me();
 }

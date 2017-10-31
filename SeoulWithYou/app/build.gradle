@@ -64,6 +64,8 @@ dependencies {
         exclude group: 'com.android.support'
     }
     compile project(':library')
+    compile files('libs/com.skp.Tmap_1.0.48.jar')
+
 }
 
 

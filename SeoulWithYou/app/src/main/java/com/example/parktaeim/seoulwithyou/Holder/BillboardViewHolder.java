@@ -22,7 +22,7 @@ public class BillboardViewHolder extends RecyclerView.ViewHolder implements View
 
         mListener = listener;
 
-        profilPic = itemView.findViewById(R.id.profilePic);
+        profilPic = itemView.findViewById(R.id.billboard_profilePic);
         name = itemView.findViewById(R.id.nameText);
         date = itemView.findViewById(R.id.billboardDate);
         title = itemView.findViewById(R.id.titleText);
@@ -59,5 +59,7 @@ public class BillboardViewHolder extends RecyclerView.ViewHolder implements View
 
         mListener.onClick(view, getAdapterPosition(), location);
         button.setImageResource(R.drawable.close);
+
+
     }
 }

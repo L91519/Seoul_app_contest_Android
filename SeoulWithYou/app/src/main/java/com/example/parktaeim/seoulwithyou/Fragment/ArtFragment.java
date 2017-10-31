@@ -91,9 +91,9 @@ public class ArtFragment extends Fragment implements RecyclerView.OnScrollChange
             }
         });
 
-        mapView = (MapView) view.findViewById(R.id.map);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+//        mapView = (MapView) view.findViewById(R.id.map);
+//        mapView.onCreate(savedInstanceState);
+//        mapView.getMapAsync(this);
 
         detailRecyclerView = (RecyclerView) view.findViewById(R.id.detailRecyclerView);
         detailManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -309,23 +309,23 @@ public class ArtFragment extends Fragment implements RecyclerView.OnScrollChange
         TextView distance;
     }
 
-    @Override
-    public void onResume() {
-        mapView.onResume();
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
-    }
+//    @Override
+//    public void onResume() {
+//        mapView.onResume();
+//        super.onResume();
+//    }
+//
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        mapView.onDestroy();
+//    }
+//
+//    @Override
+//    public void onLowMemory() {
+//        super.onLowMemory();
+//        mapView.onLowMemory();
+//    }
 
     public void dataSet1() {
         ArrayList<CourseDetailItem> items = new ArrayList<>();

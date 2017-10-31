@@ -14,7 +14,7 @@ import com.example.parktaeim.seoulwithyou.R;
 public class CommentViewHolder extends RecyclerView.ViewHolder {
 
     public TextView name, gender, age, content;
-    public ImageView profilePic;
+    public ImageView comment_profilePic;
 
     public CommentViewHolder(View itemView) {
         super(itemView);
@@ -23,6 +23,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
         gender = itemView.findViewById(R.id.gender);
         age = itemView.findViewById(R.id.age);
         content = itemView.findViewById(R.id.content);
-        profilePic = itemView.findViewById(R.id.profilePic);
+        comment_profilePic = itemView.findViewById(R.id.comment_profilePic);
     }
 }

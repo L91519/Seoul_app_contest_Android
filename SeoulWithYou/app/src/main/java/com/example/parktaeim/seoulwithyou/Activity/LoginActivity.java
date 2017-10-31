@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,8 +14,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Network.APIUrl;
 import com.example.parktaeim.seoulwithyou.Network.RestAPI;
+import com.example.parktaeim.seoulwithyou.Network.Service;
 import com.example.parktaeim.seoulwithyou.R;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -120,6 +119,24 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                             startActivity(intent);
                             finish();
+
+                            Log.d("ㅋㅋㅋ망한듯",sharedPreferences.getString("myId","null"));
+                            Service.getRetrofit(getApplicationContext()).mypage_info(sharedPreferences.getString("myId","null")).enqueue(new Callback<JsonObject>() {
+                                @Override
+                                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                                    Log.d("response.code ==",String.valueOf(response.code()));
+                                    if(response.code() == 200){
+                                        Log.d("mypage info==",response.body().toString());
+                                        JsonObject jsonObject = response.body();
+                                    }
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                                }
+                            });
                         } else if(response.code() == 400){
                             Toast.makeText(LoginActivity.this,"로그인 실패!",Toast.LENGTH_SHORT);
                             return;

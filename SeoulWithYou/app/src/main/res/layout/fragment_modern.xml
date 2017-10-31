@@ -18,12 +18,12 @@
         pile:scaleStep="0.4"
         pile:sizeRatio="0.65" />
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/map"
+    <LinearLayout
+        android:id="@+id/tmap_view"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

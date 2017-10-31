@@ -3,13 +3,16 @@ package com.example.parktaeim.seoulwithyou.Fragment;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -23,10 +26,13 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.parktaeim.seoulwithyou.Activity.MainActivity;
 import com.example.parktaeim.seoulwithyou.Activity.SearchCompanionActivity;
 import com.example.parktaeim.seoulwithyou.Adapter.CourseDetailRecycerViewAdapter;
 import com.example.parktaeim.seoulwithyou.Model.CourseDetailItem;
@@ -44,6 +50,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.skp.Tmap.TMapData;
+import com.skp.Tmap.TMapGpsManager;
+import com.skp.Tmap.TMapPoint;
+import com.skp.Tmap.TMapPolyLine;
+import com.skp.Tmap.TMapView;
 import com.stone.pile.libs.PileLayout;
 
 import java.security.Permission;
@@ -52,11 +63,6 @@ import java.util.Map;
 
 import com.example.parktaeim.seoulwithyou.util.Utils;
 
-<<<<<<< HEAD
-=======
-import org.json.JSONObject;
-
->>>>>>> 76f713eb600d40d74199daa3cd5752bfe0ce624e
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -66,7 +72,7 @@ import retrofit2.Response;
  */
 
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class ModernFragment extends Fragment implements RecyclerView.OnScrollChangeListener, OnMapReadyCallback {
+public class ModernFragment extends Fragment implements RecyclerView.OnScrollChangeListener, TMapGpsManager.onLocationChangedCallback {
 
     static final LatLng SEOUL = new LatLng(37.56, 126.97);
 
@@ -79,41 +85,132 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     private ImageButton companionBtn;
     private Animator.AnimatorListener animatorListener;
     private PileLayout pileLayout;
-    private MapView mapView;
+    //    private MapView mapView;
     private GoogleMap myMap;
     private int currentPosition;
 
-    private static final int REQUEST_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
+    private double currentLat;
+    private double currentLon;
+
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
+
+    private static final String[] INITIAL_PERMS = {
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+            Manifest.permission.READ_CONTACTS
     };
+    private static final String[] LOCATION_PERMS = {
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
+    private static final int REQUEST_CODE_LOCATION = 2;
+
+
+    private TMapView tMapView;
+    private TMapGpsManager tMapGps;
+    private LinearLayout mapLayout;
+    final TMapData tmapData = new TMapData();
+
+    private View view;
+
+    LocationManager locationManager;
+    String gpsProvider = LocationManager.GPS_PROVIDER;
+    String networkProvider = LocationManager.NETWORK_PROVIDER;
 
     private int lastDisplay = -1;
     private float transitionValue;
+
+    @Override
+    public void onLocationChange(Location location) {
+        Log.d("start", "onlocation change!!");
+        tMapView.setLocationPoint(location.getLongitude(), location.getLatitude());
+        tMapView.setCenterPoint(location.getLongitude(), location.getLatitude());
+        Log.d(String.valueOf(location.getLongitude()), String.valueOf(location.getLatitude()));
+
+        currentLat = location.getLatitude();
+        currentLon = location.getLongitude();
+    }
+
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            if (location != null) ;
+            tMapView.setLocationPoint(location.getLongitude(), location.getLatitude());
+            tMapView.setCenterPoint(location.getLongitude(), location.getLatitude());
+            Log.d(String.valueOf(location.getLongitude()), String.valueOf(location.getLatitude()));
+
+            currentLat = location.getLatitude();
+            currentLon = location.getLongitude();
+
+            final TMapPoint startPoint = new TMapPoint(currentLat, currentLon);   // 현재 위치
+            final TMapPoint destPoint = new TMapPoint(36.316889, 127.158272);  // 도착 위치
+
+            if(currentLat != 0){
+                tmapData.findPathDataWithType(TMapData.TMapPathType.CAR_PATH, startPoint, destPoint, new TMapData.FindPathDataListenerCallback() {
+                    @Override
+                    public void onFindPathData(TMapPolyLine tMapPolyLine) {
+                        Log.d("path start======" + String.valueOf(startPoint.getLatitude()), String.valueOf(startPoint.getLongitude()));
+                        Log.d("path dest======" + String.valueOf(destPoint.getLatitude()), String.valueOf(destPoint.getLongitude()));
+                        tMapView.setLocationPoint(startPoint.getLongitude(), startPoint.getLatitude());
+                        tMapView.addTMapPath(tMapPolyLine);
+                        Log.d("path poly", "finish=========");
+
+                    }
+                });
+            }
+
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    };
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_modern, container, false);
+        view = inflater.inflate(R.layout.fragment_modern, container, false);
+
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), LOCATION_PERMS, REQUEST_CODE_LOCATION);
+        } else {
+            setMap();
+
+        }
+
 
         companionBtn = (ImageButton) view.findViewById(R.id.companionBtn);
         companionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SearchCompanionActivity.class);
-                intent.putExtra("picture",courseItems.get(currentPosition).getPicUrl());
+                intent.putExtra("picture", courseItems.get(currentPosition).getPicUrl());
                 intent.putExtra("title", courseItems.get(currentPosition).getPlaceName());
                 intent.putExtra("distance", courseItems.get(currentPosition).getPlaceDistance());
                 intent.putExtra("id", courseItems.get(currentPosition).getId());
                 startActivity(intent);
             }
         });
-
-        mapView = (MapView) view.findViewById(R.id.map);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
 
         detailRecyclerView = (RecyclerView) view.findViewById(R.id.detailRecyclerView);
         detailManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -194,6 +291,66 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         return view;
     }
 
+    private void setMap() {
+        Log.d("!@#!@##!@", "setMap: ");
+
+        LinearLayout relativeLayout = (LinearLayout) view.findViewById(R.id.tmap_view);
+        tMapView = new TMapView(getActivity());
+
+        relativeLayout.addView(tMapView);
+
+        tMapView.setSKPMapApiKey(getString(R.string.tmap_app_key));
+
+        tMapView.setCompassMode(true);    // 현재 보는 방향
+        tMapView.setIconVisibility(true);   // 아이콘 표시
+        tMapView.setZoomLevel(13);   // 줌레벨
+        tMapView.setMapType(TMapView.MAPTYPE_STANDARD);
+        tMapView.setLanguage(TMapView.LANGUAGE_KOREAN);
+
+        tMapGps = new TMapGpsManager(getActivity());
+        tMapGps.setMinTime(1000);
+        tMapGps.setMinDistance(5);
+        tMapGps.setProvider(tMapGps.NETWORK_PROVIDER);  // 인터넷 이용 (실내일때 유용)
+//        tMapGps.setProvider(tMapGps.GPS_PROVIDER);    // 현위치 gps 이용
+        tMapGps.OpenGps();
+
+        tMapView.setTrackingMode(true);   //트래킹모드
+        tMapView.setSightVisible(true);
+
+
+        try{
+            Log.d("setmap ====","location updates");
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, mLocationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,100,1,mLocationListener);
+
+        }catch (SecurityException e){
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+
+    private boolean canAccessLocation() {
+        return (hasPermission(Manifest.permission.ACCESS_FINE_LOCATION));
+    }
+
+    private boolean hasPermission(String perm) {
+        return (PackageManager.PERMISSION_GRANTED == getActivity().checkSelfPermission(perm));
+    }
+
+    private boolean canAccessContacts() {
+        return (hasPermission(Manifest.permission.READ_CONTACTS));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        setMap();
+    }
+
+
     @Override
     public void onScrollChange(View view, int i, int i1, int i2, int i3) {
         detailRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -242,13 +399,13 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
             transitionAnimator.cancel();
         }
 
-            int id = courseItems.get(position).getId();
+        int id = courseItems.get(position).getId();
 
-        if(id == 0) {
+        if (id == 0) {
             dataSet1();
-        } else if(id == 1){
+        } else if (id == 1) {
             dataSet2();
-        } else if(id == 2){
+        } else if (id == 2) {
             dataSet3();
         }
 
@@ -259,45 +416,30 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     }
 
     private void initDtalist() {
-<<<<<<< HEAD
 
         Service.getRetrofit(getContext()).
                 getModernCourseList().
                 enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if(response.code() == 200) {
-                    JsonObject jsonObject = response.body();
-                } else {
-                    Log.d("--codeTag", String.valueOf(response.code()));
-                }
-            }
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        if (response.code() == 200) {
+                            JsonObject jsonObject = response.body();
+                        } else {
+                            Log.d("--codeTag", String.valueOf(response.code()));
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d("error", t.toString());
-            }
-        });
-
-=======
-        Service.getRetrofit(getContext()).getCourseList().enqueue(new Callback<JSONObject>() {
-            @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
-                Log.d("--", String.valueOf(response.code()));
-            }
-
-            @Override
-            public void onFailure(Call<JSONObject> call, Throwable t) {
-                Log.d("--", t.toString());
-            }
-        });
->>>>>>> 76f713eb600d40d74199daa3cd5752bfe0ce624e
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        Log.d("error", t.toString());
+                    }
+                });
         courseItems = new ArrayList<>();
-        CourseItem item1 = new CourseItem("http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", "palace", "far",0);
+        CourseItem item1 = new CourseItem("http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", "palace", "far", 0);
         courseItems.add(item1);
-        CourseItem item2 = new CourseItem("http://img.hb.aicdn.com/a3a995b26bd7d58ccc164eafc6ab902601984728a3101-S2H0lQ_fw658", "dessert", "as well",1);
+        CourseItem item2 = new CourseItem("http://img.hb.aicdn.com/a3a995b26bd7d58ccc164eafc6ab902601984728a3101-S2H0lQ_fw658", "dessert", "as well", 1);
         courseItems.add(item2);
-        CourseItem item3 = new CourseItem("http://pic4.nipic.com/20091124/3789537_153149003980_2.jpg", "kingdom", "near",2);
+        CourseItem item3 = new CourseItem("http://pic4.nipic.com/20091124/3789537_153149003980_2.jpg", "kingdom", "near", 2);
         courseItems.add(item3);
     }
 
@@ -310,56 +452,14 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         return transitionValue;
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        myMap = googleMap;
 
-        LatLng location = new LatLng(36.316889, 127.158272);
-        LatLng location2 = new LatLng(36.316899, 127.158282);
-        myMap.addMarker(new MarkerOptions().position(location).title("Location"));
-        myMap.addMarker(new MarkerOptions().position(location2).title("Temporary"));
-        myMap.moveCamera(CameraUpdateFactory.newLatLng(location));
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//        ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION이 권한이 없을때
-            ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, REQUEST_STORAGE);
-            ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, 0);
-        } else {
-//        ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION이 권한이 있을때
-        }
-
-        myMap.setMyLocationEnabled(true);
-        myMap.getUiSettings().setMyLocationButtonEnabled(true);
-        myMap.getUiSettings().setCompassEnabled(true);
-        myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-    }
-
-
-//    view holder, dataset, fragment life cycle
+    //    view holder, dataset, fragment life cycle
     class ViewHolder {
         ImageView imageView;
         TextView courseName;
         TextView distance;
     }
 
-    @Override
-    public void onResume() {
-        mapView.onResume();
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
-    }
 
     public void dataSet1() {
         ArrayList<CourseDetailItem> items = new ArrayList<>();
@@ -435,4 +535,6 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), items);
         detailRecyclerView.setAdapter(detailAdapter);
     }
+
+
 }
