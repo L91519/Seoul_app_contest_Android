@@ -38,8 +38,10 @@ import com.example.parktaeim.seoulwithyou.Adapter.CourseDetailRecycerViewAdapter
 import com.example.parktaeim.seoulwithyou.Model.CourseDetailItem;
 import com.example.parktaeim.seoulwithyou.Model.CourseItem;
 import com.example.parktaeim.seoulwithyou.MyLocation;
+import com.example.parktaeim.seoulwithyou.MyScrollView;
 import com.example.parktaeim.seoulwithyou.Network.Service;
 import com.example.parktaeim.seoulwithyou.R;
+import com.example.parktaeim.seoulwithyou.ScrollViewListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -72,7 +74,7 @@ import retrofit2.Response;
  */
 
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class ModernFragment extends Fragment implements RecyclerView.OnScrollChangeListener, TMapGpsManager.onLocationChangedCallback {
+public class ModernFragment extends Fragment implements RecyclerView.OnScrollChangeListener, TMapGpsManager.onLocationChangedCallback, ScrollViewListener {
 
     static final LatLng SEOUL = new LatLng(37.56, 126.97);
 
@@ -217,8 +219,14 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         detailRecyclerView.hasFixedSize();
         detailRecyclerView.setLayoutManager(detailManger);
         pileLayout = (PileLayout) view.findViewById(R.id.pileLayout);
-
+        detailRecyclerView.setNestedScrollingEnabled(false);
         detailRecyclerView.setOnScrollChangeListener(this);
+
+        ViewGroup.LayoutParams params = detailRecyclerView.getLayoutParams();
+        int height = (int) ((float) MainActivity.screenHeight * 1.1);
+        params.height = height;
+        detailRecyclerView.setLayoutParams(params);
+        detailRecyclerView.setNestedScrollingEnabled(false);
 
         animatorListener = new Animator.AnimatorListener() {
             @Override
@@ -399,16 +407,6 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
             transitionAnimator.cancel();
         }
 
-        int id = courseItems.get(position).getId();
-
-        if (id == 0) {
-            dataSet1();
-        } else if (id == 1) {
-            dataSet2();
-        } else if (id == 2) {
-            dataSet3();
-        }
-
         transitionAnimator = ObjectAnimator.ofFloat(this, "transitionValue", 0.0f, 1.0f);
         transitionAnimator.setDuration(300);
         transitionAnimator.start();
@@ -417,29 +415,14 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
     private void initDtalist() {
 
-        Service.getRetrofit(getContext()).
-                getModernCourseList().
-                enqueue(new Callback<JsonObject>() {
-                    @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        if (response.code() == 200) {
-                            JsonObject jsonObject = response.body();
-                        } else {
-                            Log.d("--codeTag", String.valueOf(response.code()));
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t) {
-                        Log.d("error", t.toString());
-                    }
-                });
         courseItems = new ArrayList<>();
-        CourseItem item1 = new CourseItem("http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", "palace", "far", 0);
+        CourseItem item1 = new CourseItem("http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", "palace", "far",String.valueOf(0));
         courseItems.add(item1);
-        CourseItem item2 = new CourseItem("http://img.hb.aicdn.com/a3a995b26bd7d58ccc164eafc6ab902601984728a3101-S2H0lQ_fw658", "dessert", "as well", 1);
+        CourseItem item2 = new CourseItem("http://img.hb.aicdn.com/a3a995b26bd7d58ccc164eafc6ab902601984728a3101-S2H0lQ_fw658", "dessert", "as well",String.valueOf(0));
         courseItems.add(item2);
-        CourseItem item3 = new CourseItem("http://pic4.nipic.com/20091124/3789537_153149003980_2.jpg", "kingdom", "near", 2);
+        CourseItem item3 = new CourseItem("http://pic4.nipic.com/20091124/3789537_153149003980_2.jpg", "kingdom", "near",String.valueOf(2));
+
         courseItems.add(item3);
     }
 
@@ -450,6 +433,18 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
     public float getTransitionValue() {
         return transitionValue;
+    }
+    @Override
+    public void onScrollChanged(MyScrollView scrollView, int x, int y, int oldx, int oldy) {
+        View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
+        int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
+
+        // if diff is zero, then the bottom has been reached
+        if (diff == 0) {
+            detailRecyclerView.setNestedScrollingEnabled(true);
+        } else {
+            detailRecyclerView.setNestedScrollingEnabled(false);
+        }
     }
 
 
