@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">SeoulWithYou</string>
     <string name="gender">성별</string>
     <string name="age">나이</string>

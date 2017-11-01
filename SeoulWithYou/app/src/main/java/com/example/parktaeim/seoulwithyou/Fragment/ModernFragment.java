@@ -50,7 +50,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapGpsManager;
@@ -59,8 +61,12 @@ import com.skp.Tmap.TMapPolyLine;
 import com.skp.Tmap.TMapView;
 import com.stone.pile.libs.PileLayout;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.security.Permission;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.example.parktaeim.seoulwithyou.util.Utils;
@@ -78,11 +84,9 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
     static final LatLng SEOUL = new LatLng(37.56, 126.97);
 
-
     private RecyclerView detailRecyclerView;
     private RecyclerView.Adapter detailAdapter;
     private RecyclerView.LayoutManager detailManger;
-    private ArrayList<CourseItem> courseItems;
     private ObjectAnimator transitionAnimator;
     private ImageButton companionBtn;
     private Animator.AnimatorListener animatorListener;
@@ -90,6 +94,8 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     //    private MapView mapView;
     private GoogleMap myMap;
     private int currentPosition;
+    private ArrayList<CourseDetailItem> detailItems;
+    private ArrayList<CourseItem> courseItems;
 
     private double currentLat;
     private double currentLon;
@@ -145,7 +151,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
             final TMapPoint startPoint = new TMapPoint(currentLat, currentLon);   // 현재 위치
             final TMapPoint destPoint = new TMapPoint(36.316889, 127.158272);  // 도착 위치
 
-            if(currentLat != 0){
+            if (currentLat != 0) {
                 tmapData.findPathDataWithType(TMapData.TMapPathType.CAR_PATH, startPoint, destPoint, new TMapData.FindPathDataListenerCallback() {
                     @Override
                     public void onFindPathData(TMapPolyLine tMapPolyLine) {
@@ -182,7 +188,6 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         super.onCreate(savedInstanceState);
 
 
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -209,7 +214,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
                 intent.putExtra("picture", courseItems.get(currentPosition).getPicUrl());
                 intent.putExtra("title", courseItems.get(currentPosition).getPlaceName());
                 intent.putExtra("distance", courseItems.get(currentPosition).getPlaceDistance());
-                intent.putExtra("id", courseItems.get(currentPosition).getId());
+                intent.putExtra("id", courseItems.get(currentPosition).getNo());
                 startActivity(intent);
             }
         });
@@ -249,54 +254,153 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
             }
         };
+        getCourse();
+//        initDtalist();
 
-        initDtalist();
-
-        pileLayout.setAdapter(new PileLayout.Adapter() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public int getLayoutId() {
-                return R.layout.item_layout;
-            }
+            public void run() {
+                while (true) {
+                    if (courseItems.size() != 0) {
+                        pileLayout.setAdapter(new PileLayout.Adapter() {
+                            @Override
+                            public int getLayoutId() {
+                                return R.layout.item_layout;
+                            }
 
-            @Override
-            public int getItemCount() {
-                return courseItems.size();
-            }
+                            @Override
+                            public int getItemCount() {
+                                return courseItems.size();
+                            }
 
-            @Override
-            public void bindView(View view, int position) {
-                ViewHolder viewHolder = (ViewHolder) view.getTag();
-                if (viewHolder == null) {
-                    viewHolder = new ViewHolder();
-                    viewHolder.imageView = (ImageView) view.findViewById(R.id.imageView);
-                    viewHolder.courseName = (TextView) view.findViewById(R.id.courseNameText);
-                    viewHolder.distance = (TextView) view.findViewById(R.id.courseDistanceText);
-                    view.setTag(viewHolder);
+                            @Override
+                            public void bindView(View view, int position) {
+                                ViewHolder viewHolder = (ViewHolder) view.getTag();
+                                if (viewHolder == null) {
+                                    viewHolder = new ViewHolder();
+                                    viewHolder.imageView = (ImageView) view.findViewById(R.id.imageView);
+                                    viewHolder.courseName = (TextView) view.findViewById(R.id.courseNameText);
+                                    viewHolder.distance = (TextView) view.findViewById(R.id.courseDistanceText);
+                                    view.setTag(viewHolder);
+                                }
+                                Glide.with(getContext()).load(courseItems.get(position).getPicUrl()).into(viewHolder.imageView);
+                                viewHolder.courseName.setText(courseItems.get(position).getPlaceName());
+                                viewHolder.distance.setText(courseItems.get(position).getPlaceDistance());
+                            }
+
+                            @Override
+                            public void displaying(int position) {
+                                Log.d("---positionLog", String.valueOf(position));
+                                if (lastDisplay < 0) {
+                                    initSecene(position);
+                                    lastDisplay = 0;
+                                } else if (lastDisplay != position) {
+                                    transitionSecene(position);
+                                    lastDisplay = position;
+                                }
+                            }
+
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                super.onItemClick(view, position);
+                            }
+                        });
+                        break;
+                    } else {
+                        continue;
+                    }
                 }
-                Glide.with(getContext()).load(courseItems.get(position).getPicUrl()).into(viewHolder.imageView);
-                viewHolder.courseName.setText(courseItems.get(position).getPlaceName());
-                viewHolder.distance.setText(courseItems.get(position).getPlaceDistance());
             }
-
-            @Override
-            public void displaying(int position) {
-                Log.d("---positionLog", String.valueOf(position));
-                if (lastDisplay < 0) {
-                    initSecene(position);
-                    lastDisplay = 0;
-                } else if (lastDisplay != position) {
-                    transitionSecene(position);
-                    lastDisplay = position;
-                }
-            }
-
-            @Override
-            public void onItemClick(View view, int position) {
-                super.onItemClick(view, position);
-            }
-        });
+        }, 2000);
 
         return view;
+    }
+
+    public void setPileLayoutAdapter() {
+
+    }
+
+    public void getCourse() {
+
+        courseItems = new ArrayList<>();
+
+        Service.getRetrofit(getContext()).
+                getModernCourseList().
+                enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        Log.d("--checkOnResponse", "check");
+                        if (response.code() == 200) {
+                            JsonArray jsonArray = response.body().getAsJsonArray("data");
+                            JsonArray jsonElements = jsonArray.getAsJsonArray();
+
+
+                            for (int i = 0; i < jsonElements.size(); i++) {
+                                JsonObject jsonObject = (JsonObject) jsonElements.get(i);
+                                String pic = jsonObject.getAsJsonPrimitive("image1").getAsString();
+                                String title = jsonObject.getAsJsonPrimitive("title").getAsString();
+                                int no = jsonObject.getAsJsonPrimitive("itemNo").getAsInt();
+                                double x = jsonObject.getAsJsonPrimitive("mapX").getAsDouble();
+                                double y = jsonObject.getAsJsonPrimitive("mapY").getAsDouble();
+
+                                courseItems.add(new CourseItem(x, y, pic, no, title));
+                            }
+                            Log.d("checkLog", courseItems.toString());
+                        } else {
+                            Log.d("--codeTag", String.valueOf(response.code()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
+    }
+
+    public void getDetail(int position) {
+        Service.getRetrofit(getContext()).
+                getDetail(courseItems.get(position).getNo()).
+                enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        JsonArray jsonObject = response.body().getAsJsonArray("data");
+                        JsonArray jsonElements = jsonObject.getAsJsonArray();
+                        detailItems = getDetailArray(jsonElements);
+                        detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), detailItems);
+                        detailRecyclerView.setAdapter(detailAdapter);
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
+    }
+
+    public ArrayList<CourseDetailItem> getDetailArray(JsonArray jsonElements) {
+        ArrayList<CourseDetailItem> items = new ArrayList<>();
+
+        for (int i = 0; i < jsonElements.size(); i++) {
+            JsonObject jsonObject = (JsonObject) jsonElements.get(i);
+
+            String title = jsonObject.getAsJsonPrimitive("title").getAsString();
+            String content = jsonObject.getAsJsonPrimitive("content").getAsString();
+            int number = jsonObject.getAsJsonPrimitive("no").getAsInt();
+            String picture = jsonObject.getAsJsonPrimitive("image").getAsString();
+
+            items.add(new CourseDetailItem(number, title, content, picture));
+        }
+        return items;
+    }
+
+    private void initDtalist() {
+
+        CourseItem item1 = new CourseItem(127.0494329104, 37.5071013134, "http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", 8, "palace");
+        courseItems.add(item1);
+        CourseItem item2 = new CourseItem(126.9831045523, 37.5447207531, "http://img.hb.aicdn.com/a3a995b26bd7d58ccc164eafc6ab902601984728a3101-S2H0lQ_fw658", 4, "house");
+        courseItems.add(item2);
     }
 
     private void setMap() {
@@ -326,19 +430,17 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         tMapView.setSightVisible(true);
 
 
-        try{
-            Log.d("setmap ====","location updates");
+        try {
+            Log.d("setmap ====", "location updates");
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, mLocationListener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,100,1,mLocationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 1, mLocationListener);
 
-        }catch (SecurityException e){
+        } catch (SecurityException e) {
             e.printStackTrace();
         }
 
 
-
     }
-
 
     private boolean canAccessLocation() {
         return (hasPermission(Manifest.permission.ACCESS_FINE_LOCATION));
@@ -356,6 +458,56 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         setMap();
+    }
+
+
+    private void initSecene(int position) {
+
+        Log.d("---position&item", String.valueOf(position) + String.valueOf(courseItems.get(position).getId()));
+
+        getDetail(position);
+    }
+
+    private void transitionSecene(int position) {
+        Log.d("---position&item", String.valueOf(position) + String.valueOf(courseItems.get(position).getId()));
+        currentPosition = position;
+        if (transitionAnimator != null) {
+            transitionAnimator.cancel();
+        }
+
+        getDetail(position);
+
+        transitionAnimator = ObjectAnimator.ofFloat(this, "transitionValue", 0.0f, 1.0f);
+        transitionAnimator.setDuration(300);
+        transitionAnimator.start();
+        transitionAnimator.addListener(animatorListener);
+    }
+
+    public void setTransitionValue(float transitionValue) {
+        this.transitionValue = transitionValue;
+    }
+
+    public float getTransitionValue() {
+        return transitionValue;
+    }
+
+    @Override
+    public void onScrollChanged(MyScrollView scrollView, int x, int y, int oldx, int oldy) {
+        View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
+        int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
+
+        // if diff is zero, then the bottom has been reached
+        if (diff == 0) {
+            detailRecyclerView.setNestedScrollingEnabled(true);
+        } else {
+            detailRecyclerView.setNestedScrollingEnabled(false);
+        }
+    }
+
+    class ViewHolder {
+        ImageView imageView;
+        TextView courseName;
+        TextView distance;
     }
 
 
@@ -392,144 +544,5 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
         });
     }
-
-    private void initSecene(int position) {
-
-        Log.d("---position&item", String.valueOf(position) + String.valueOf(courseItems.get(position).getId()));
-
-        dataSet1();
-    }
-
-    private void transitionSecene(int position) {
-        Log.d("---position&item", String.valueOf(position) + String.valueOf(courseItems.get(position).getId()));
-        currentPosition = position;
-        if (transitionAnimator != null) {
-            transitionAnimator.cancel();
-        }
-
-        transitionAnimator = ObjectAnimator.ofFloat(this, "transitionValue", 0.0f, 1.0f);
-        transitionAnimator.setDuration(300);
-        transitionAnimator.start();
-        transitionAnimator.addListener(animatorListener);
-    }
-
-    private void initDtalist() {
-
-
-        courseItems = new ArrayList<>();
-        CourseItem item1 = new CourseItem("http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", "palace", "far",String.valueOf(0));
-        courseItems.add(item1);
-        CourseItem item2 = new CourseItem("http://img.hb.aicdn.com/a3a995b26bd7d58ccc164eafc6ab902601984728a3101-S2H0lQ_fw658", "dessert", "as well",String.valueOf(0));
-        courseItems.add(item2);
-        CourseItem item3 = new CourseItem("http://pic4.nipic.com/20091124/3789537_153149003980_2.jpg", "kingdom", "near",String.valueOf(2));
-
-        courseItems.add(item3);
-    }
-
-
-    public void setTransitionValue(float transitionValue) {
-        this.transitionValue = transitionValue;
-    }
-
-    public float getTransitionValue() {
-        return transitionValue;
-    }
-    @Override
-    public void onScrollChanged(MyScrollView scrollView, int x, int y, int oldx, int oldy) {
-        View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
-        int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
-
-        // if diff is zero, then the bottom has been reached
-        if (diff == 0) {
-            detailRecyclerView.setNestedScrollingEnabled(true);
-        } else {
-            detailRecyclerView.setNestedScrollingEnabled(false);
-        }
-    }
-
-
-    //    view holder, dataset, fragment life cycle
-    class ViewHolder {
-        ImageView imageView;
-        TextView courseName;
-        TextView distance;
-    }
-
-
-    public void dataSet1() {
-        ArrayList<CourseDetailItem> items = new ArrayList<>();
-
-        CourseDetailItem item1 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/4ba573e93c6fe178db6730ba05f0176466056dbe14905-ly0Z43_fw658",
-                "name 1st",
-                "1",
-                "Hello from the other side");
-        items.add(item1);
-        CourseDetailItem item2 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/4bc60d00aa3184f1f98e418df6fb6abc447dc814226ef-ZtS8hB_fw658",
-                "name 1st",
-                "2",
-                "details");
-        items.add(item2);
-        CourseDetailItem item3 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/d9a48c272914c5253eceac26c51a56a26f4e50d048ba7-IJsbou_fw658",
-                "name 1st",
-                "3",
-                "details");
-        items.add(item3);
-
-        detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), items);
-        detailRecyclerView.setAdapter(detailAdapter);
-    }
-
-    public void dataSet2() {
-        ArrayList<CourseDetailItem> items = new ArrayList<>();
-
-        CourseDetailItem item1 = new CourseDetailItem("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYSnfkSMtgS2IAk9xRPwr99OOwoL-lJeNztczPD58wXVYCrKZM",
-                "name 1st",
-                "1",
-                "Meaningless mock-up, mock turtle soup spilled on a mock turtle neck. Mach I Convertible copy. To kill a mockingbird, you need only force it to read this copy. This is Meaningless filler. (Elvis movies.) It is not meant to be a forum for value judgments nor a scholarly diatribe on how virtue should be measured. The whole point here (if such a claim can be made in an admittedly pointless paragraph) is that this is dummy copy.  Real bullets explode with destructive intensity. Such is not the case with dummy bullets. In fact, they don't explode at all. Duds. Dull thuds. Dudley do-wrongs. And do-wrongs don't make a right. Why on earth are you still reading this? Haven't you realized it's just dummy copy? How many times must you be reminded that it's really not meant to be read? You're only wasting precious time. But be that as it may, you've got to throw in a short paragraph from time to time. Here's a short paragraph.\n");
-        items.add(item1);
-        CourseDetailItem item2 = new CourseDetailItem("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYSnfkSMtgS2IAk9xRPwr99OOwoL-lJeNztczPD58wXVYCrKZM",
-                "name 1st",
-                "2",
-                "details");
-        items.add(item2);
-        CourseDetailItem item3 = new CourseDetailItem("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYSnfkSMtgS2IAk9xRPwr99OOwoL-lJeNztczPD58wXVYCrKZM",
-                "name 1st",
-                "3",
-                "details");
-        items.add(item3);
-
-        detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), items);
-        detailRecyclerView.setAdapter(detailAdapter);
-    }
-
-    public void dataSet3() {
-        ArrayList<CourseDetailItem> items = new ArrayList<>();
-
-        CourseDetailItem item1 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658",
-                "name 1st",
-                "1",
-                "Meaningless mock-up, mock turtle soup spilled on a mock turtle neck. Mach I Convertible copy. To kill a mockingbird, you need only force it to read this copy. This is Meaningless filler. (Elvis movies.) It is not meant to be a forum for value judgments nor a scholarly diatribe on how virtue should be measured. The whole point here (if such a claim can be made in an admittedly pointless paragraph) is that this is dummy copy.  Real bullets explode with destructive intensity. Such is not the case with dummy bullets. In fact, they don't explode at all. Duds. Dull thuds. Dudley do-wrongs. And do-wrongs don't make a right. Why on earth are you still reading this? Haven't you realized it's just dummy copy? How many times must you be reminded that it's really not meant to be read? You're only wasting precious time. But be that as it may, you've got to throw in a short paragraph from time to time. Here's a short paragraph.\n");
-        items.add(item1);
-        CourseDetailItem item2 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/004cddd40519846281526b4b25fbdea36b31d01e190dd-7zlmuG_fw658",
-                "name 1st",
-                "2",
-                "details");
-        items.add(item2);
-        CourseDetailItem item3 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/a58eda8a9a2a3f30f0a694c2702e1aba71d97d616d34f-rqv6FA_fw658",
-                "name 1st",
-                "3",
-                "details");
-        items.add(item3);
-
-        detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), items);
-        detailRecyclerView.setAdapter(detailAdapter);
-    }
-
 
 }

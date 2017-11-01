@@ -8,19 +8,20 @@ import android.support.design.widget.TextInputEditText;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.parktaeim.seoulwithyou.Network.Service;
 import com.example.parktaeim.seoulwithyou.R;
 
 /**
  * Created by user on 2017-10-30.
  */
 
-public class BillboardDialog extends Dialog {
+public class BillboardAddDialog extends Dialog {
 
     private Button noBtn, yesBtn;
     private TextInputEditText title, content;
     private String sTitle, sContent;
 
-    public BillboardDialog(@NonNull Context context) {
+    public BillboardAddDialog(@NonNull Context context) {
         super(context);
     }
 
@@ -37,6 +38,8 @@ public class BillboardDialog extends Dialog {
         noBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setTitle(null);
+                setsContent(null);
                 dismiss();
             }
         });
@@ -54,6 +57,7 @@ public class BillboardDialog extends Dialog {
             }
         });
     }
+
 
     public String getsTitle() {
         return sTitle;

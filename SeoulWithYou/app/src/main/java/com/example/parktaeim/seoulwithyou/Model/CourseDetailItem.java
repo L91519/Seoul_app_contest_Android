@@ -5,23 +5,23 @@ package com.example.parktaeim.seoulwithyou.Model;
  */
 
 public class CourseDetailItem {
-    private String number;
+    private int number;
     private String name;
     private String detail;
     private String picUrl;
 
-    public CourseDetailItem(String picUrl, String name, String number, String detail) {
+    public CourseDetailItem(int number, String name, String detail, String picUrl) {
         this.number = number;
         this.name = name;
         this.detail = detail;
         this.picUrl = picUrl;
     }
 
-    public String getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 

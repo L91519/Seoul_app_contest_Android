@@ -33,7 +33,7 @@ public class Service extends APIAdapter{
         @POST(APIUrl.SIGN_UP_URL)
         Call<Void> signUp(@Field("name") String name,@Field("id") String id,@Field("pw") String pw, @Field("birth") Integer birth, @Field("sex") Boolean sex);
 
-        @GET(APIUrl.GET_MODERN_COURSE)
+        @GET("/list/modern")
         Call<JsonObject> getModernCourseList();
 
         @GET(APIUrl.MYPAGE_URL_ANYONE)
@@ -45,9 +45,31 @@ public class Service extends APIAdapter{
         @GET(APIUrl.GET_ART_COURSE)
         Call<JsonObject> getArtCourseList();
 
+<<<<<<< HEAD
+        @GET("/detail/{no}")
+        Call<JsonObject> getDetail(@Path("no") int no);
+
+        @GET("/post/comment/{no}")
+        Call<JsonObject> getComment(@Path("no") int no);
+
+        @FormUrlEncoded
+        @POST("/post/comment")
+        Call<Void> postComment(@Field("content") String content, @Field("postNo") int postNo);
+
+        @GET("/post/{no}")
+        Call<JsonObject> getPost(@Path("no") int no);
+
+        @FormUrlEncoded
+        @POST("/post")
+        Call<Void> postList(@Field("title") String title, @Field("content") String content, @Field("itemNo") int itemNo);
+
+        @GET("/list/post/{no}")
+        Call<JsonObject> getList(@Path("no") int no);
+=======
         @FormUrlEncoded
         @PATCH(APIUrl.CHANGE_PW_URL)
         Call<Void> changePw(@Field("pw") String pw);
 
+>>>>>>> 31889ee07c3775d32e3563b9f7c44b98863a8ef3
     }
 }
