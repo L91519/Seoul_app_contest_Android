@@ -75,20 +75,6 @@ public class MyPageDialogActivity extends Activity implements View.OnClickListen
         changeProfileIcon = (CircleImageView) findViewById(R.id.changeProfileIcon);
         mypage_profileImg = (CircleImageView) findViewById(R.id.mypage_profileImg);
 
-        changeProfileIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        mypage_profileImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
 
     }
 

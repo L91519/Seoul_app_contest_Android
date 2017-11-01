@@ -60,12 +60,14 @@ public class ChangePwActivity extends AppCompatActivity {
 
                 SharedPreferences sharedPreferences = getSharedPreferences("myId",MODE_PRIVATE);
                 String currentId = sharedPreferences.getString("myId","null");   // 현재 id
+
+                // 현재 비밀번호가 정확히 입력되었는지 확인
                 Service.getRetrofit(getApplicationContext()).logIn(currentId,currentPw).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         Log.d("chanpw login res ==",String.valueOf(response.code()));
                         if(response.code() == 200){
-                            // 비밀번호 맞음
+                            // 비밀번호 변경
                             Service.getRetrofit(getApplicationContext()).changePw(changePw).enqueue(new Callback<Void>() {
                                 @Override
                                 public void onResponse(Call<Void> call, Response<Void> response) {
@@ -107,6 +109,13 @@ public class ChangePwActivity extends AppCompatActivity {
             }
         });
 
-
+        // 뒤로가기
+        ImageView backIcon = (ImageView) findViewById(R.id.changePw_back_icon);
+        backIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 }
