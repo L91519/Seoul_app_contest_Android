@@ -10,4 +10,6 @@
     <string name="open_drawer">open drawer</string>
     <string name="close_drawer">close drawer</string>
 
+    <string name="tmap_app_key">0a734f29-713b-31ea-bbdc-7ae823a89150</string>
+
 </resources>

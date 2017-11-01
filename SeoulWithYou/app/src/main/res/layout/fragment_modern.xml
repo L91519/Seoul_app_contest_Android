@@ -8,7 +8,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"/>
+
+
+
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_weight="1">
 
         <LinearLayout
             android:focusableInTouchMode="true"
@@ -27,11 +34,12 @@
                 pile:scaleStep="0.4"
                 pile:sizeRatio="0.65" />
 
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/map"
+            <LinearLayout
+                android:id="@+id/tmap_view"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_marginBottom="10dp" />
+                android:layout_height="200dp"
+                android:layout_marginBottom="10dp"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/detailRecyclerView"
@@ -41,7 +49,7 @@
             </android.support.v7.widget.RecyclerView>
 
         </LinearLayout>
-    </ScrollView>
+    </RelativeLayout>
 
     <ImageButton
         android:id="@+id/companionBtn"

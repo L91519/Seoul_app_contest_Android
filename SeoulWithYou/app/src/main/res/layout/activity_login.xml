@@ -48,6 +48,7 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:hint="비밀번호"
+            android:inputType="textPassword"
             app:met_baseColor="@color/whiteColor"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/whiteColor"

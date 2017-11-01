@@ -1,6 +1,7 @@
 package com.example.parktaeim.seoulwithyou.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.parktaeim.seoulwithyou.Activity.MyPageDialogActivity;
 import com.example.parktaeim.seoulwithyou.Holder.BillboardViewHolder;
 import com.example.parktaeim.seoulwithyou.Model.BillboardItem;
 import com.example.parktaeim.seoulwithyou.R;
@@ -52,6 +54,16 @@ public class BillboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             viewHolder.date.setText(items.get(position).getDate());
             viewHolder.name.setText(items.get(position).getName());
             viewHolder.title.setText(items.get(position).getTitle());
+
+            viewHolder.profilPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, MyPageDialogActivity.class);
+                    intent.putExtra("mypage_id",items.get(position).getNo());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 

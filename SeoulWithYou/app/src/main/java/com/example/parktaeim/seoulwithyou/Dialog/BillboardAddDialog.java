@@ -38,6 +38,8 @@ public class BillboardAddDialog extends Dialog {
         noBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setTitle(null);
+                setsContent(null);
                 dismiss();
             }
         });

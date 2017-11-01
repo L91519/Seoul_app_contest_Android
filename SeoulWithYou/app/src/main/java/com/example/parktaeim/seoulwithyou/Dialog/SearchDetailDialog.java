@@ -31,6 +31,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.parktaeim.seoulwithyou.Activity.MainActivity;
+import com.example.parktaeim.seoulwithyou.Activity.MyPageDialogActivity;
 import com.example.parktaeim.seoulwithyou.Adapter.CommentRecyclerViewAdapter;
 import com.example.parktaeim.seoulwithyou.Model.CommentItem;
 import com.example.parktaeim.seoulwithyou.Network.Service;
@@ -147,6 +148,16 @@ public class SearchDetailDialog extends Dialog {
 
                     }
                 });
+            }
+        });
+
+        pictureImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), MyPageDialogActivity.class);
+//                intent.putExtra("mypage_id",items.get(position).getId());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getContext().startActivity(intent);
             }
         });
 

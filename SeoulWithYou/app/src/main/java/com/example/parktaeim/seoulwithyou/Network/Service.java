@@ -11,7 +11,6 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 /**
@@ -35,6 +34,12 @@ public class Service extends APIAdapter{
 
         @GET("/list/modern")
         Call<JsonObject> getModernCourseList();
+
+        @GET(APIUrl.MYPAGE_URL_ANYONE)
+        Call<JsonObject> mypage_info(@Path("id") String id);
+
+        @GET(APIUrl.MYPAGE_POST)
+        Call<JsonObject> mypage_post(@Path("id") String id);
 
         @GET(APIUrl.GET_ART_COURSE)
         Call<JsonObject> getArtCourseList();

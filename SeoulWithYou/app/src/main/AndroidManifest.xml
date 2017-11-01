@@ -18,16 +18,16 @@
 
         </activity>
         <activity android:name=".Activity.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".Activity.SignUpActivity">
         </activity>
         <activity android:name=".Activity.FindIdPwActivity"/>
         <activity android:name=".Activity.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".Activity.ChattingActivity">
 
@@ -44,10 +44,10 @@
         </activity>
         <activity android:name=".Activity.SearchCompanionActivity">
         </activity>
-        <activity android:name=".Dialog.SearchDetailDialog"
-            android:theme="@android:style/Theme.Translucent">
+        <!--<activity android:name=".Dialog.SearchDetailDialog"-->
+            <!--android:theme="@android:style/Theme.Translucent">-->
 
-        </activity>
+        <!--</activity>-->
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -65,5 +65,8 @@
     <uses-permission android:name="com.example.permission.MAPS_RECEIVE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
 </manifest>

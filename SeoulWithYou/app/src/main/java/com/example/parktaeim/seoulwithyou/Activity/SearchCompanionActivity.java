@@ -153,9 +153,11 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
                 addDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        items.add(new BillboardItem(contentId, picture, addDialog.getsTitle(), "date", "name", "userId"));
-                        postBillboard(addDialog.getsTitle(), addDialog.getsContent());
-                        adapter.notifyDataSetChanged();
+                        if (addDialog.getsContent() == null || addDialog.getsTitle() == null) {
+                            items.add(new BillboardItem(contentId, picture, addDialog.getsTitle(), "date", "name", "userId"));
+                            postBillboard(addDialog.getsTitle(), addDialog.getsContent());
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 });
             }
@@ -167,7 +169,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
         Service.getRetrofit(getApplicationContext()).postList(title, content, contentId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.code() == 200) {
+                if (response.code() == 200) {
 
                 } else {
                     Log.d("--postBillboardLog", String.valueOf(response.code()));
@@ -212,7 +214,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
                     "title" + i,
                     "date" + i,
                     "name" + i,
-                    "userId" +i);
+                    "userId" + i);
 
             items.add(item);
         }
