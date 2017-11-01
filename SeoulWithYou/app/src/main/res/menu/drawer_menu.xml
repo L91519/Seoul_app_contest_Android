@@ -7,12 +7,8 @@
             android:icon="@drawable/navi_mypage"
             android:title="마이페이지" />
         <item
-            android:id="@+id/nav_changeId"
-            android:icon="@drawable/navi_id_change"
-            android:title="아이디 변경" />
-        <item
             android:id="@+id/nav_changePw"
-            android:icon="@drawable/navi_pw_change"
+            android:icon="@drawable/navi_change_pw"
             android:title="비밀번호 변경" />
         <item
             android:id="@+id/nav_logout"

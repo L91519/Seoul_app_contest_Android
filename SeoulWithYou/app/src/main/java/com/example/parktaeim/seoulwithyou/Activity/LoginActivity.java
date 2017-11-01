@@ -49,7 +49,6 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn = (ImageView) findViewById(R.id.loginBtn) ;
         ImageView logoImg = (ImageView) findViewById(R.id.logo_img);
         registTextView = (TextView) findViewById(R.id.registTextView);
-        findIdPwTextView = (TextView) findViewById(R.id.findIdPwTextView);
 
 
         Glide.with(this).load(R.drawable.img_login_background).into(backgroundImg);
@@ -60,14 +59,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this,SignUpActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        findIdPwTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this,FindIdPwActivity.class);
                 startActivity(intent);
             }
         });

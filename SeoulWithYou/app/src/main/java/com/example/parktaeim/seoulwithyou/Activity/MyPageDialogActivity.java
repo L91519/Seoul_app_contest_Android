@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -58,12 +60,11 @@ public class MyPageDialogActivity extends Activity implements View.OnClickListen
 
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        ImageView backImg = (ImageView) findViewById(R.id.backImg);
-        Glide.with(this).load(R.drawable.img_login_background).into(backImg);
-        backImg.setClipToOutline(true);
+        ImageView mypage_backImg = (ImageView) findViewById(R.id.mypage_backImg);
+        Glide.with(this).load(R.drawable.img_login_background).into(mypage_backImg);
+        LinearLayout clipLayout = (LinearLayout) findViewById(R.id.clipLayout);
+        clipLayout.setClipToOutline(true);
 
-        ImageView courseImg = (ImageView) findViewById(R.id.courseImg);
-//        courseImg.setClipToOutline(true);
         setProfile();
         setOnClick();
         setRecyclerView();

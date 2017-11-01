@@ -20,5 +20,7 @@ public class APIUrl {
     public static final String GET_HEALING_COURSE = "/list/healing";
     public static final String POST_CONTENT = "";
     public static final String POST_DETAIL = "";
+    public static final String CHANGE_PW_URL = "/mypage/change/password";
+
 
 }

@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -128,12 +129,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             intent.putExtra("id","");
             startActivity(intent);
 
-        } else if (id == R.id.nav_changeId) {
-            Intent intent = new Intent(MainActivity.this,FindIdActivity.class);
-            startActivity(intent);
-
         } else if (id == R.id.nav_changePw) {
-            Intent intent = new Intent(MainActivity.this,FindPwActivity.class);
+            Intent intent = new Intent(MainActivity.this,ChangePwActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
