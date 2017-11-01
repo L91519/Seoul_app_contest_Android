@@ -8,12 +8,14 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/clipLayout"
         android:layout_width="290dp"
         android:layout_height="430dp"
         android:background="@drawable/rounded"
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/lalalayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -23,10 +25,9 @@
                 android:layout_height="130dp">
 
                 <ImageView
-                    android:id="@+id/backImg"
+                    android:id="@+id/mypage_backImg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/colorPrimary"
                     android:scaleType="centerCrop"/>
 
                 <ImageView
@@ -135,16 +136,17 @@
 
                 <ImageView
                     android:id="@+id/blockIcon"
-                    android:layout_width="10dp"
+                    android:layout_width="5dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="15dp"
-                    android:src="@drawable/icon_block" />
+                    android:src="@drawable/icon_square"
+                    android:scaleType="centerCrop"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="3dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_toRightOf="@+id/blockIcon"
                     android:text="작성글"
                     android:textColor="#424242"
