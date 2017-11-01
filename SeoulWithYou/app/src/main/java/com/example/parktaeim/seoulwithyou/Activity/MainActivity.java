@@ -31,9 +31,21 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.ViewPagerAdapter;
 import com.example.parktaeim.seoulwithyou.CustomViewPager;
+import com.example.parktaeim.seoulwithyou.Network.Service;
 import com.example.parktaeim.seoulwithyou.R;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.Collection;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -45,6 +57,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
 
     public static int screenWidth, screenHeight;
+
+    private MaterialSearchView searchView;
+    private ArrayList<String> courseTitleArrayList = new ArrayList<>();
+    private String[] courseTitleArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +105,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
+
+        getCourseTitle();
+        searchView = (MaterialSearchView) findViewById(R.id.search_view);
+
+        courseTitleArray = courseTitleArrayList.toArray(new String[courseTitleArrayList.size()]);
+        searchView.setSuggestions(courseTitleArray);
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                return false;
+            }
+        });
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+
+            }
+        });
+
+    }
+
+    private void getCourseTitle() {
+        courseTitleArrayList.add("ff");
+        Service.getRetrofit(getApplicationContext()).getModernCourseList().enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonArray jsonArray = response.body().getAsJsonArray("data");
+                for(int i =0;i<jsonArray.size();i++){
+                    JsonObject jsonObject = (JsonObject) jsonArray.get(i);
+                    String courseTitle = jsonObject.getAsJsonPrimitive("title").getAsString();
+                    Log.d("courseTitle ==",courseTitle);
+                    courseTitleArrayList.add(courseTitle);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
     }
 
     private void setDrawer() {
@@ -113,6 +180,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(drawer.isDrawerOpen(GravityCompat.START)){
             drawer.closeDrawer(GravityCompat.START);
         }else{
+            super.onBackPressed();
+        }
+
+        if(searchView.isSearchOpen()){
+            searchView.closeSearch();
+        } else {
             super.onBackPressed();
         }
     }
@@ -175,4 +248,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
+
+        return true;
+    }
+
+
 }

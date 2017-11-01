@@ -64,7 +64,7 @@ public class Service extends APIAdapter{
 
         @GET("/list/post/{no}")
         Call<JsonObject> getList(@Path("no") int no);
-        
+
         @FormUrlEncoded
         @PATCH(APIUrl.CHANGE_PW_URL)
         Call<Void> changePw(@Field("pw") String pw);

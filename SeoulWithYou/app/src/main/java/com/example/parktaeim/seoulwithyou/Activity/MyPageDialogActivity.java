@@ -86,7 +86,7 @@ public class MyPageDialogActivity extends Activity implements View.OnClickListen
     private void setProfile() {
         Intent intent = getIntent();
         String myPage_id = intent.getStringExtra("myPage_id");
-
+        Log.d("mypage id get =======",myPage_id);
 
     }
 
