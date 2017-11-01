@@ -45,7 +45,6 @@ public class Service extends APIAdapter{
         @GET(APIUrl.GET_ART_COURSE)
         Call<JsonObject> getArtCourseList();
 
-<<<<<<< HEAD
         @GET("/detail/{no}")
         Call<JsonObject> getDetail(@Path("no") int no);
 
@@ -65,11 +64,10 @@ public class Service extends APIAdapter{
 
         @GET("/list/post/{no}")
         Call<JsonObject> getList(@Path("no") int no);
-=======
+        
         @FormUrlEncoded
         @PATCH(APIUrl.CHANGE_PW_URL)
         Call<Void> changePw(@Field("pw") String pw);
 
->>>>>>> 31889ee07c3775d32e3563b9f7c44b98863a8ef3
     }
 }
