@@ -1,60 +1,43 @@
 package com.example.parktaeim.seoulwithyou.Model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by user on 2017-10-11.
  */
 
 public class CourseItem {
-    private int lon;
-    private int lat;
+    private double lon;
+    private double lat;
     private String picUrl;
     private String picUrl2;
     private int no;
     private String placeName;
     private String placeDistance;
-    private String id;
+    private int id;
 
-    public CourseItem() {
-    }
-
-    public CourseItem(String picUrl, String placeName, String placeDistance, String id) {
-        this.picUrl = picUrl;
-        this.placeName = placeName;
-        this.placeDistance = placeDistance;
-        this.id = id;
-    }
-
-    public CourseItem(int lon, int lat, String picUrl, String placeName, String placeDistance, String id) {
+    public CourseItem(double lon, double lat, String picUrl, int no, String placeName) {
         this.lon = lon;
         this.lat = lat;
         this.picUrl = picUrl;
+        this.no = no;
         this.placeName = placeName;
-        this.placeDistance = placeDistance;
-        this.id = id;
     }
 
-    public int getLon() {
+    public double getLon() {
         return lon;
     }
 
-    public void setLon(int lon) {
+    public void setLon(double lon) {
         this.lon = lon;
     }
 
-    public int getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(int lat) {
+    public void setLat(double lat) {
         this.lat = lat;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getPicUrl() {
@@ -63,6 +46,22 @@ public class CourseItem {
 
     public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;
+    }
+
+    public String getPicUrl2() {
+        return picUrl2;
+    }
+
+    public void setPicUrl2(String picUrl2) {
+        this.picUrl2 = picUrl2;
+    }
+
+    public int getNo() {
+        return no;
+    }
+
+    public void setNo(int no) {
+        this.no = no;
     }
 
     public String getPlaceName() {
@@ -79,5 +78,13 @@ public class CourseItem {
 
     public void setPlaceDistance(String placeDistance) {
         this.placeDistance = placeDistance;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

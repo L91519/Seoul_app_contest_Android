@@ -45,12 +45,17 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.stone.pile.libs.PileLayout;
 
+import java.lang.reflect.Array;
 import java.security.Permission;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.example.parktaeim.seoulwithyou.util.Utils;
@@ -68,11 +73,9 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
     static final LatLng SEOUL = new LatLng(37.56, 126.97);
 
-
     private RecyclerView detailRecyclerView;
     private RecyclerView.Adapter detailAdapter;
     private RecyclerView.LayoutManager detailManger;
-    private ArrayList<CourseItem> courseItems;
     private ObjectAnimator transitionAnimator;
     private ImageButton companionBtn;
     private Animator.AnimatorListener animatorListener;
@@ -80,6 +83,8 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     private MapView mapView;
     private GoogleMap myMap;
     private int currentPosition;
+    private ArrayList<CourseDetailItem> detailItems;
+    private ArrayList<CourseItem> courseItems;
 
     private static final int REQUEST_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -101,10 +106,10 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SearchCompanionActivity.class);
-                intent.putExtra("picture",courseItems.get(currentPosition).getPicUrl());
+                intent.putExtra("picture", courseItems.get(currentPosition).getPicUrl());
                 intent.putExtra("title", courseItems.get(currentPosition).getPlaceName());
                 intent.putExtra("distance", courseItems.get(currentPosition).getPlaceDistance());
-                intent.putExtra("id", courseItems.get(currentPosition).getId());
+                intent.putExtra("id", courseItems.get(currentPosition).getNo());
                 startActivity(intent);
             }
         });
@@ -148,9 +153,8 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
             }
         };
-
-        initDtalist();
         getCourse();
+        initDtalist();
 
         pileLayout.setAdapter(new PileLayout.Adapter() {
             @Override
@@ -199,45 +203,94 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         return view;
     }
 
-    @Override
-    public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-        detailRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+    public void getCourse() {
 
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
+        courseItems = new ArrayList<>();
 
-                if (newState == 0) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
+        Service.getRetrofit(getContext()).
+                getModernCourseList().
+                enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        Log.d("--checkOnResponse", "check");
+                        if (response.code() == 200) {
+                            JsonArray jsonArray = response.body().getAsJsonArray("data");
+                            JsonArray jsonElements = jsonArray.getAsJsonArray();
 
-                            companionBtn.setVisibility(View.VISIBLE);
-                            companionBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.show));
+
+                            for (int i = 0; i < jsonElements.size(); i++) {
+                                JsonObject jsonObject = (JsonObject) jsonElements.get(i);
+                                String pic = jsonObject.getAsJsonPrimitive("image1").getAsString();
+                                String title = jsonObject.getAsJsonPrimitive("title").getAsString();
+                                int no = jsonObject.getAsJsonPrimitive("itemNo").getAsInt();
+                                double x = jsonObject.getAsJsonPrimitive("mapX").getAsDouble();
+                                double y = jsonObject.getAsJsonPrimitive("mapY").getAsDouble();
+
+                                courseItems.add(new CourseItem(x, y, pic, no, title));
+                            }
+                            Log.d("checkLog",courseItems.toString());
+                        } else {
+                            Log.d("--codeTag", String.valueOf(response.code()));
                         }
-                    }, 1000);
+                    }
 
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                if ((dy > 0) || (dy < 0)) {
-                    companionBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.hide));
-                    companionBtn.setVisibility(View.INVISIBLE);
-                }
-            }
-
-        });
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
     }
 
+    private void initDtalist() {
+
+        CourseItem item1 = new CourseItem(127.0494329104, 37.5071013134, "http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", 8, "palace");
+        courseItems.add(item1);
+        CourseItem item2 = new CourseItem(126.9831045523, 37.5447207531, "http://img.hb.aicdn.com/a3a995b26bd7d58ccc164eafc6ab902601984728a3101-S2H0lQ_fw658", 4, "house");
+        courseItems.add(item2);
+    }
+
+    public void getDetail(int position) {
+        Service.getRetrofit(getContext()).
+                getDetail(courseItems.get(position).getNo()).
+                enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        JsonArray jsonObject = response.body().getAsJsonArray("data");
+                        JsonArray jsonElements = jsonObject.getAsJsonArray();
+                        detailItems = getDetailArray(jsonElements);
+                        detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), detailItems);
+                        detailRecyclerView.setAdapter(detailAdapter);
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                    }
+                });
+    }
+
+    public ArrayList<CourseDetailItem> getDetailArray(JsonArray jsonElements) {
+        ArrayList<CourseDetailItem> items = new ArrayList<>();
+
+        for (int i = 0; i < jsonElements.size(); i++) {
+            JsonObject jsonObject = (JsonObject) jsonElements.get(i);
+
+            String title = jsonObject.getAsJsonPrimitive("title").getAsString();
+            String content = jsonObject.getAsJsonPrimitive("content").getAsString();
+            int number = jsonObject.getAsJsonPrimitive("no").getAsInt();
+            String picture = jsonObject.getAsJsonPrimitive("image").getAsString();
+
+            items.add(new CourseDetailItem(number, title, content, picture));
+        }
+        return items;
+    }
+
+    //    =========================================================================================================================================================
     private void initSecene(int position) {
 
         Log.d("---position&item", String.valueOf(position) + String.valueOf(courseItems.get(position).getId()));
 
-        dataSet1();
+//        getDetail(position);
     }
 
     private void transitionSecene(int position) {
@@ -247,69 +300,14 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
             transitionAnimator.cancel();
         }
 
+//        getDetail(position);
+
         transitionAnimator = ObjectAnimator.ofFloat(this, "transitionValue", 0.0f, 1.0f);
         transitionAnimator.setDuration(300);
         transitionAnimator.start();
         transitionAnimator.addListener(animatorListener);
     }
-
-    public void getCourse() {
-        Service.getRetrofit(getContext()).
-                getModernCourseList().
-                enqueue(new Callback<JsonObject>() {
-                    @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        if(response.code() == 200) {
-                            JsonArray jsonObject = response.body().getAsJsonArray("data");
-                            JsonArray jsonElements = jsonObject.getAsJsonArray();
-                            courseItems = getCourseArray(jsonElements);
-                        } else {
-                            Log.d("--codeTag", String.valueOf(response.code()));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t) {
-                        Log.d("error", t.toString());
-                    }
-                });
-    }
-
-    public ArrayList<CourseItem> getCourseArray(JsonArray jsonElements) {
-        ArrayList<CourseItem> arrayList  = new ArrayList<>();
-
-        for(int i = 0; i < jsonElements.size(); i++) {
-            JsonObject jsonObject = (JsonObject) jsonElements.get(i);
-            String pic = jsonObject.getAsJsonPrimitive("image1").toString();
-            String title = jsonObject.getAsJsonPrimitive("title").toString();
-            String id = jsonObject.getAsJsonPrimitive("no").toString();
-
-            arrayList.add(new CourseItem(pic, title, "far", id));
-        }
-
-        return arrayList;
-    }
-
-    public void getDetail() {
-
-    }
-
-    public ArrayList<CourseDetailItem> getDetailArray() {
-        return null;
-    }
-
-
-    private void initDtalist() {
-
-
-        courseItems = new ArrayList<>();
-        CourseItem item1 = new CourseItem("http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", "palace", "far",String.valueOf(0));
-        courseItems.add(item1);
-        CourseItem item2 = new CourseItem("http://img.hb.aicdn.com/a3a995b26bd7d58ccc164eafc6ab902601984728a3101-S2H0lQ_fw658", "dessert", "as well",String.valueOf(0));
-        courseItems.add(item2);
-        CourseItem item3 = new CourseItem("http://pic4.nipic.com/20091124/3789537_153149003980_2.jpg", "kingdom", "near",String.valueOf(2));
-        courseItems.add(item3);
-    }
+//    =========================================================================================================================================================
 
 
     public void setTransitionValue(float transitionValue) {
@@ -358,8 +356,6 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         }
     }
 
-
-    //    view holder, dataset, fragment life cycle
     class ViewHolder {
         ImageView imageView;
         TextView courseName;
@@ -384,78 +380,38 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         mapView.onLowMemory();
     }
 
-    public void dataSet1() {
-        ArrayList<CourseDetailItem> items = new ArrayList<>();
+    @Override
+    public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+        detailRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
-        CourseDetailItem item1 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/4ba573e93c6fe178db6730ba05f0176466056dbe14905-ly0Z43_fw658",
-                "name 1st",
-                "1",
-                "Hello from the other side");
-        items.add(item1);
-        CourseDetailItem item2 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/4bc60d00aa3184f1f98e418df6fb6abc447dc814226ef-ZtS8hB_fw658",
-                "name 1st",
-                "2",
-                "details");
-        items.add(item2);
-        CourseDetailItem item3 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/d9a48c272914c5253eceac26c51a56a26f4e50d048ba7-IJsbou_fw658",
-                "name 1st",
-                "3",
-                "details");
-        items.add(item3);
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
 
-        detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), items);
-        detailRecyclerView.setAdapter(detailAdapter);
+                if (newState == 0) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            companionBtn.setVisibility(View.VISIBLE);
+                            companionBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.show));
+                        }
+                    }, 1000);
+
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if ((dy > 0) || (dy < 0)) {
+                    companionBtn.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.hide));
+                    companionBtn.setVisibility(View.INVISIBLE);
+                }
+            }
+
+        });
     }
 
-    public void dataSet2() {
-        ArrayList<CourseDetailItem> items = new ArrayList<>();
-
-        CourseDetailItem item1 = new CourseDetailItem("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYSnfkSMtgS2IAk9xRPwr99OOwoL-lJeNztczPD58wXVYCrKZM",
-                "name 1st",
-                "1",
-                "Meaningless mock-up, mock turtle soup spilled on a mock turtle neck. Mach I Convertible copy. To kill a mockingbird, you need only force it to read this copy. This is Meaningless filler. (Elvis movies.) It is not meant to be a forum for value judgments nor a scholarly diatribe on how virtue should be measured. The whole point here (if such a claim can be made in an admittedly pointless paragraph) is that this is dummy copy.  Real bullets explode with destructive intensity. Such is not the case with dummy bullets. In fact, they don't explode at all. Duds. Dull thuds. Dudley do-wrongs. And do-wrongs don't make a right. Why on earth are you still reading this? Haven't you realized it's just dummy copy? How many times must you be reminded that it's really not meant to be read? You're only wasting precious time. But be that as it may, you've got to throw in a short paragraph from time to time. Here's a short paragraph.\n");
-        items.add(item1);
-        CourseDetailItem item2 = new CourseDetailItem("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYSnfkSMtgS2IAk9xRPwr99OOwoL-lJeNztczPD58wXVYCrKZM",
-                "name 1st",
-                "2",
-                "details");
-        items.add(item2);
-        CourseDetailItem item3 = new CourseDetailItem("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYSnfkSMtgS2IAk9xRPwr99OOwoL-lJeNztczPD58wXVYCrKZM",
-                "name 1st",
-                "3",
-                "details");
-        items.add(item3);
-
-        detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), items);
-        detailRecyclerView.setAdapter(detailAdapter);
-    }
-
-    public void dataSet3() {
-        ArrayList<CourseDetailItem> items = new ArrayList<>();
-
-        CourseDetailItem item1 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658",
-                "name 1st",
-                "1",
-                "Meaningless mock-up, mock turtle soup spilled on a mock turtle neck. Mach I Convertible copy. To kill a mockingbird, you need only force it to read this copy. This is Meaningless filler. (Elvis movies.) It is not meant to be a forum for value judgments nor a scholarly diatribe on how virtue should be measured. The whole point here (if such a claim can be made in an admittedly pointless paragraph) is that this is dummy copy.  Real bullets explode with destructive intensity. Such is not the case with dummy bullets. In fact, they don't explode at all. Duds. Dull thuds. Dudley do-wrongs. And do-wrongs don't make a right. Why on earth are you still reading this? Haven't you realized it's just dummy copy? How many times must you be reminded that it's really not meant to be read? You're only wasting precious time. But be that as it may, you've got to throw in a short paragraph from time to time. Here's a short paragraph.\n");
-        items.add(item1);
-        CourseDetailItem item2 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/004cddd40519846281526b4b25fbdea36b31d01e190dd-7zlmuG_fw658",
-                "name 1st",
-                "2",
-                "details");
-        items.add(item2);
-        CourseDetailItem item3 = new CourseDetailItem(
-                "http://img.hb.aicdn.com/a58eda8a9a2a3f30f0a694c2702e1aba71d97d616d34f-rqv6FA_fw658",
-                "name 1st",
-                "3",
-                "details");
-        items.add(item3);
-
-        detailAdapter = new CourseDetailRecycerViewAdapter(getContext(), items);
-        detailRecyclerView.setAdapter(detailAdapter);
-    }
 }

@@ -6,33 +6,28 @@ package com.example.parktaeim.seoulwithyou.Model;
 
 public class BillboardItem {
 
-    private String id;
+    private int no;
     private String pic;
     private String title;
     private String date;
     private String name;
+    private String userId;
 
-    public BillboardItem(String id, String pic, String title, String date, String name) {
-        this.id = id;
+    public BillboardItem(int no, String pic, String title, String date, String name, String userId) {
+        this.no = no;
         this.pic = pic;
         this.title = title;
         this.date = date;
         this.name = name;
+        this.userId = userId;
     }
 
-    public BillboardItem(String pic, String title, String date, String name) {
-        this.pic = pic;
-        this.title = title;
-        this.date = date;
-        this.name = name;
+    public int getNo() {
+        return no;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setNo(int no) {
+        this.no = no;
     }
 
     public String getPic() {
@@ -65,5 +60,13 @@ public class BillboardItem {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

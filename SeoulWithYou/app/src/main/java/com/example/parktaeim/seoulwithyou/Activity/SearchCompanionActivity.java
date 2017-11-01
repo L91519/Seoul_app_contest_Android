@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,29 +22,37 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Adapter.BillboardRecyclerViewAdapter;
-import com.example.parktaeim.seoulwithyou.Dialog.BillboardDialog;
+import com.example.parktaeim.seoulwithyou.Dialog.BillboardAddDialog;
 import com.example.parktaeim.seoulwithyou.Dialog.SearchDetailDialog;
 import com.example.parktaeim.seoulwithyou.Model.BillboardItem;
 import com.example.parktaeim.seoulwithyou.MyLayoutManager;
 import com.example.parktaeim.seoulwithyou.MyScrollView;
+import com.example.parktaeim.seoulwithyou.Network.Service;
 import com.example.parktaeim.seoulwithyou.R;
 import com.example.parktaeim.seoulwithyou.RecyclerViewClickListener;
 import com.example.parktaeim.seoulwithyou.ScrollViewListener;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by user on 2017-10-26.
  */
 
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class SearchCompanionActivity extends AppCompatActivity implements ScrollViewListener{
+public class SearchCompanionActivity extends AppCompatActivity implements ScrollViewListener {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager manager;
     private RecyclerView.Adapter adapter;
 
-    private String picture, title, distance, id;
+    private String picture, title, distance;
+    private int contentId;
     private ImageView coverPicture;
     private TextView courseTitle, courstDistance;
     private ImageButton xBtn, addBtn;
@@ -53,8 +60,9 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
     private RelativeLayout container;
     private RecyclerViewClickListener listener;
     private SearchDetailDialog dialog;
-    private BillboardDialog addDialog;
+    private BillboardAddDialog addDialog;
     private ArrayList<BillboardItem> items;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +72,8 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
         picture = intent.getStringExtra("picture");
         title = intent.getStringExtra("title");
         distance = intent.getStringExtra("distance");
-        id = intent.getStringExtra("id");
+        //코스 아이디
+        contentId = intent.getIntExtra("id", 0);
 
         coverPicture = (ImageView) findViewById(R.id.picture);
         courseTitle = (TextView) findViewById(R.id.title);
@@ -83,7 +92,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
         recyclerView.setLayoutManager(manager);
 
         ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
-        int height = (int) ((float)MainActivity.screenHeight * 0.6);
+        int height = (int) ((float) MainActivity.screenHeight * 0.6);
         params.height = height;
         recyclerView.setLayoutParams(params);
         recyclerView.setNestedScrollingEnabled(false);
@@ -96,14 +105,18 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
 //            containerParams.setMargins(0, MainActivity.screenHeight - height, 0, 0);
 //            container.setLayoutParams(containerParams);
 
-            dialog = new SearchDetailDialog(SearchCompanionActivity.this, location);
+            dialog = new SearchDetailDialog(SearchCompanionActivity.this, location,
+                    items.get(position).getNo(),
+                    items.get(position).getName(),
+                    items.get(position).getDate(),
+                    items.get(position).getPic(),
+                    items.get(position).getTitle());
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
 
             dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface dialog) {
-
                 }
             });
 
@@ -122,7 +135,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
         Glide.with(this).load(picture).into(coverPicture);
         courseTitle.setText(title);
         courstDistance.setText(distance);
-        setData();
+        setData(8);
 
         xBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,31 +148,95 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                addDialog = new BillboardDialog(SearchCompanionActivity.this);
+                addDialog = new BillboardAddDialog(SearchCompanionActivity.this);
                 addDialog.show();
-                items.add(new BillboardItem(id, "picture", addDialog.getsTitle(), "date", "name"));
-                adapter.notifyDataSetChanged();
+                addDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        items.add(new BillboardItem(contentId, picture, addDialog.getsTitle(), "date", "name", "userId"));
+                        postBillboard(addDialog.getsTitle(), addDialog.getsContent());
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
     }
 
-    public void setData() {
+    //게시글 보내기
+    public void postBillboard(String title, String content) {
+        Service.getRetrofit(getApplicationContext()).postList(title, content, contentId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.code() == 200) {
+
+                } else {
+                    Log.d("--postBillboardLog", String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    //게시글 가져오기
+    public void setData(int no) {
         items = new ArrayList<>();
+
+        Service.getRetrofit(getApplicationContext()).getList(no).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.code() == 200) {
+                    JsonArray jsonArray = response.body().getAsJsonArray("data");
+                    JsonArray jsonElements = jsonArray.getAsJsonArray();
+                    items = getBillboardArray(jsonElements);
+                    adapter = new BillboardRecyclerViewAdapter(getApplicationContext(), items, listener);
+                    recyclerView.setAdapter(adapter);
+                } else {
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
 
         for (int i = 0; i < 10; i++) {
 
             BillboardItem item = new BillboardItem(
+                    i,
                     "http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658",
                     "title" + i,
                     "date" + i,
-                    "name" + i);
+                    "name" + i,
+                    "userId" +i);
 
             items.add(item);
         }
 
         adapter = new BillboardRecyclerViewAdapter(getApplicationContext(), items, listener);
         recyclerView.setAdapter(adapter);
+    }
+
+    public ArrayList<BillboardItem> getBillboardArray(JsonArray jsonElements) {
+        ArrayList<BillboardItem> billboardItems = new ArrayList<>();
+
+        for (int i = 0; i < jsonElements.size(); i++) {
+            JsonObject jsonObject = (JsonObject) jsonElements.get(i);
+
+            int no = jsonObject.getAsJsonPrimitive("no").getAsInt();
+            String title = jsonObject.getAsJsonPrimitive("title").getAsString();
+            String userName = jsonObject.getAsJsonPrimitive("userName").getAsString();
+            String userId = jsonObject.getAsJsonPrimitive("userId").getAsString();
+            String createdAt = jsonObject.getAsJsonPrimitive("createAt").getAsString();
+
+            billboardItems.add(new BillboardItem(no, "picture", "title", "createAt", "userName", "userId"));
+        }
+
+        return billboardItems;
     }
 
     @Override
