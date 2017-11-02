@@ -227,6 +227,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         detailRecyclerView.setNestedScrollingEnabled(false);
         detailRecyclerView.setOnScrollChangeListener(this);
 
+
         ViewGroup.LayoutParams params = detailRecyclerView.getLayoutParams();
 //        int height = (int) ((float) MainActivity.screenHeight * 1.1);
 //        params.height = height;
@@ -281,12 +282,12 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
                                     viewHolder = new ViewHolder();
                                     viewHolder.imageView = (ImageView) view.findViewById(R.id.imageView);
                                     viewHolder.courseName = (TextView) view.findViewById(R.id.courseNameText);
-                                    viewHolder.distance = (TextView) view.findViewById(R.id.courseDistanceText);
+//                                    viewHolder.distance = (TextView) view.findViewById(R.id.courseDistanceText);
                                     view.setTag(viewHolder);
                                 }
                                 Glide.with(getContext()).load(courseItems.get(position).getPicUrl()).into(viewHolder.imageView);
                                 viewHolder.courseName.setText(courseItems.get(position).getPlaceName());
-                                viewHolder.distance.setText(courseItems.get(position).getPlaceDistance());
+//                                viewHolder.distance.setText(courseItems.get(position).getPlaceDistance());
                             }
 
                             @Override
@@ -334,7 +335,6 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
                         if (response.code() == 200) {
                             JsonArray jsonArray = response.body().getAsJsonArray("data");
                             JsonArray jsonElements = jsonArray.getAsJsonArray();
-
 
                             for (int i = 0; i < jsonElements.size(); i++) {
                                 JsonObject jsonObject = (JsonObject) jsonElements.get(i);

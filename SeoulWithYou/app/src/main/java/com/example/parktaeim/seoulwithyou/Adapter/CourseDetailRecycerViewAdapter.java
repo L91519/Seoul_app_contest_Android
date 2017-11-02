@@ -46,7 +46,7 @@ public class CourseDetailRecycerViewAdapter extends RecyclerView.Adapter<CourseD
         holder.detailExplaination.setMovementMethod(new ScrollingMovementMethod());
         holder.detailExplaination.setText(details.get(position).getDetail());
         holder.detailName.setText(details.get(position).getName());
-//        holder.courseNum.setText(details.get(position).getNumber());
+        holder.courseNum.setText(String.valueOf(details.get(position).getNumber() + 1));
     }
 
     @Override

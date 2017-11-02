@@ -60,12 +60,8 @@ public class BillboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, MyPageDialogActivity.class);
-<<<<<<< HEAD
-                    intent.putExtra("mypage_id",items.get(position).getPostNo());
-=======
                     intent.putExtra("mypage_id",items.get(position).getUserId());
                     Log.d("billboard adapter id ==",items.get(position).getUserId());
->>>>>>> ae5ed51353c35f59ce0608afeeb72ca607bc6727
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }
