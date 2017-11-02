@@ -50,13 +50,7 @@ public class Service extends APIAdapter{
         Call<JsonObject> getDetail(@Path("no") int no);
 
         @GET("/post/comment/{no}")
-        Call<JsonObject> getComment(@Path("no") int no);
-
-        @FormUrlEncoded
-        @POST("/post/comment")
-        Call<Void> postComment(@Header("Authorization") String Authorization,
-                               @Field("content") String content,
-                               @Field("postNo") int postNo);
+        Call<JsonObject> getComment(@Header("Authorization") String Authorization, @Path("no") int no);
 
         @FormUrlEncoded
         @POST("/post")
@@ -65,17 +59,23 @@ public class Service extends APIAdapter{
                             @Field("content") String content,
                             @Field("itemNo") int itemNo);
 
-        @GET("/post/{no}")
-        Call<JsonObject> getPost(@Path("no") int no);
+        @FormUrlEncoded
+        @POST("/post/comment")
+        Call<Void> postComment(@Header("Authorization") String Authorization,
+                               @Field("content") String content,
+                               @Field("postNo") int postNo);
+
+        @GET("/post/{postNo}")
+        Call<JsonObject> getPost(@Header("Authorization") String Authorization, @Path("postNo") int no);
 
         @GET("/list/post/{no}")
-        Call<JsonObject> getList(@Path("no") int no);
+        Call<JsonObject> getList(@Header("Authorization") String Authorization,@Path("no") int no);
 
         @FormUrlEncoded
         @PATCH(APIUrl.CHANGE_PW_URL)
         Call<Void> changePw(@Header("Authorization") String authorization, @Field("password") String password);
 
-
+//comment하기
 
     }
 }

@@ -172,7 +172,9 @@ public class SearchDetailDialog extends Dialog {
 
     //게시글 가져오는 부분
     public void getContent(int no) {
-        Service.getRetrofit(getContext()).getPost(no).enqueue(new Callback<JsonObject>() {
+        SharedPreferences tokenPref = getContext().getSharedPreferences("tokenPref",MODE_PRIVATE);
+        String authorization = tokenPref.getString("token", "null");
+        Service.getRetrofit(getContext()).getPost(authorization, no).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 JsonObject jsonObject = response.body();
@@ -180,10 +182,11 @@ public class SearchDetailDialog extends Dialog {
                 postNo = jsonObject.getAsJsonPrimitive("postNo").getAsInt();
                 String sTitle = jsonObject.getAsJsonPrimitive("title").getAsString();
                 String sContent = jsonObject.getAsJsonPrimitive("content").getAsString();
-                int sItemId = jsonObject.getAsJsonPrimitive("itemId").getAsInt();
+                int sItemId = jsonObject.getAsJsonPrimitive("itemNo").getAsInt();
                 String sCreatedAt = jsonObject.getAsJsonPrimitive("createdAt").getAsString();
                 String sUserName = jsonObject.getAsJsonPrimitive("userName").getAsString();
                 String sUserId = jsonObject.getAsJsonPrimitive("userId").getAsString();
+                String userImg;
 
                 //title은 다이얼로그 띄울떄 받는 값으로 다 대채함.
                 userName.setText(sUserName);
@@ -201,7 +204,9 @@ public class SearchDetailDialog extends Dialog {
 
     //코맨트 가져오는 부분
     public void getData(int no) {
-        Service.getRetrofit(getContext()).getComment(no).enqueue(new Callback<JsonObject>() {
+        SharedPreferences tokenPref = getContext().getSharedPreferences("tokenPref",MODE_PRIVATE);
+        String authorization = tokenPref.getString("token", "null");
+        Service.getRetrofit(getContext()).getComment(authorization, no).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if(response.code() == 200) {
