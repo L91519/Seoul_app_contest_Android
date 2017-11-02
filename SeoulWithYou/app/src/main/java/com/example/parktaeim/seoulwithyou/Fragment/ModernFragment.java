@@ -228,10 +228,10 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         detailRecyclerView.setOnScrollChangeListener(this);
 
         ViewGroup.LayoutParams params = detailRecyclerView.getLayoutParams();
-        int height = (int) ((float) MainActivity.screenHeight * 1.1);
-        params.height = height;
-        detailRecyclerView.setLayoutParams(params);
-        detailRecyclerView.setNestedScrollingEnabled(false);
+//        int height = (int) ((float) MainActivity.screenHeight * 1.1);
+//        params.height = height;
+//        detailRecyclerView.setLayoutParams(params);
+//        detailRecyclerView.setNestedScrollingEnabled(false);
 
         animatorListener = new Animator.AnimatorListener() {
             @Override
@@ -339,6 +339,9 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
                             for (int i = 0; i < jsonElements.size(); i++) {
                                 JsonObject jsonObject = (JsonObject) jsonElements.get(i);
                                 String pic = jsonObject.getAsJsonPrimitive("image1").getAsString();
+                                if(pic == null) {
+                                    pic = "https://i5.walmartimages.com/asr/f752abb3-1b49-4f99-b68a-7c4d77b45b40_1.39d6c524f6033c7c58bd073db1b99786.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF";
+                                }
                                 String title = jsonObject.getAsJsonPrimitive("title").getAsString();
                                 int no = jsonObject.getAsJsonPrimitive("itemNo").getAsInt();
                                 double x = jsonObject.getAsJsonPrimitive("mapX").getAsDouble();

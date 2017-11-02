@@ -35,7 +35,7 @@ public class BillboardAddDialog extends Dialog {
         noBtn = (Button) findViewById(R.id.noBtn);
         yesBtn = (Button) findViewById(R.id.okBtn);
 
-        noBtn.setOnClickListener(new View.OnClickListener() {
+        yesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setTitle(null);
@@ -44,7 +44,7 @@ public class BillboardAddDialog extends Dialog {
             }
         });
 
-        yesBtn.setOnClickListener(new View.OnClickListener() {
+        noBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sTitle = title.getText().toString();

@@ -52,7 +52,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
     private RecyclerView.Adapter adapter;
 
     private String picture, title, distance;
-    private int contentId;
+    private int itemNo;
     private ImageView coverPicture;
     private TextView courseTitle, courstDistance;
     private ImageButton xBtn, addBtn;
@@ -73,7 +73,8 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
         title = intent.getStringExtra("title");
         distance = intent.getStringExtra("distance");
         //코스 아이디
-        contentId = intent.getIntExtra("id", 0);
+        itemNo = intent.getIntExtra("id", 0);
+        Log.d("---log", String.valueOf(itemNo));
 
         coverPicture = (ImageView) findViewById(R.id.picture);
         courseTitle = (TextView) findViewById(R.id.title);
@@ -106,7 +107,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
 //            container.setLayoutParams(containerParams);
 
             dialog = new SearchDetailDialog(SearchCompanionActivity.this, location,
-                    items.get(position).getNo(),
+                    items.get(position).getPostNo(),
                     items.get(position).getName(),
                     items.get(position).getDate(),
                     items.get(position).getPic(),
@@ -135,7 +136,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
         Glide.with(this).load(picture).into(coverPicture);
         courseTitle.setText(title);
         courstDistance.setText(distance);
-        setData(8);
+        setData();
 
         xBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +155,8 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         if (addDialog.getsContent() == null || addDialog.getsTitle() == null) {
-                            items.add(new BillboardItem(contentId, picture, addDialog.getsTitle(), "date", "name", "userId"));
+                            items.add(new BillboardItem(itemNo, "사용자 사진", addDialog.getsTitle(), "date", "name", "userId"));
+                            //박태임이 저장해둔 이름하고 아이디 가져와서 넣기(지금 어플을 사용하고 있는 사람)
                             postBillboard(addDialog.getsTitle(), addDialog.getsContent());
                             adapter.notifyDataSetChanged();
                         }
@@ -166,7 +168,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
 
     //게시글 보내기
     public void postBillboard(String title, String content) {
-        Service.getRetrofit(getApplicationContext()).postList(title, content, contentId).enqueue(new Callback<Void>() {
+        Service.getRetrofit(getApplicationContext()).postList(title, content, itemNo).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.code() == 200) {
@@ -184,10 +186,10 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
     }
 
     //게시글 가져오기
-    public void setData(int no) {
+    public void setData() {
         items = new ArrayList<>();
 
-        Service.getRetrofit(getApplicationContext()).getList(no).enqueue(new Callback<JsonObject>() {
+        Service.getRetrofit(getApplicationContext()).getList(itemNo).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.code() == 200) {
@@ -206,18 +208,6 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
             }
         });
 
-        for (int i = 0; i < 10; i++) {
-
-            BillboardItem item = new BillboardItem(
-                    i,
-                    "http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658",
-                    "title" + i,
-                    "date" + i,
-                    "name" + i,
-                    "userId" + i);
-
-            items.add(item);
-        }
 
         adapter = new BillboardRecyclerViewAdapter(getApplicationContext(), items, listener);
         recyclerView.setAdapter(adapter);
@@ -229,13 +219,15 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
         for (int i = 0; i < jsonElements.size(); i++) {
             JsonObject jsonObject = (JsonObject) jsonElements.get(i);
 
-            int no = jsonObject.getAsJsonPrimitive("no").getAsInt();
+            boolean gender = jsonObject.getAsJsonPrimitive("userSex").getAsBoolean();
             String title = jsonObject.getAsJsonPrimitive("title").getAsString();
             String userName = jsonObject.getAsJsonPrimitive("userName").getAsString();
             String userId = jsonObject.getAsJsonPrimitive("userId").getAsString();
             String createdAt = jsonObject.getAsJsonPrimitive("createAt").getAsString();
+            int postNo = jsonObject.getAsJsonPrimitive("postNo").getAsInt();
+            int userAge = jsonObject.getAsJsonPrimitive("userAge").getAsInt();
 
-            billboardItems.add(new BillboardItem(no, "picture", "title", "createAt", "userName", "userId"));
+            billboardItems.add(new BillboardItem(postNo, picture, title, createdAt, userName, userId, gender, userAge));
         }
 
         return billboardItems;
