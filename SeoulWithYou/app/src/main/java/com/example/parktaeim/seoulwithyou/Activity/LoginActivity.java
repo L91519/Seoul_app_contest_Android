@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                             finish();
 
                             Log.d("ㅋㅋㅋ망한듯",sharedPreferences.getString("myId","null"));
-                            Service.getRetrofit(getApplicationContext()).mypage_info(sharedPreferences.getString("myId","null")).enqueue(new Callback<JsonObject>() {
+                            Service.getRetrofit(getApplicationContext()).mypage_info(tokenPref.getString("token","null"),sharedPreferences.getString("myId","null")).enqueue(new Callback<JsonObject>() {
                                 @Override
                                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                                     Log.d("response.code ==",String.valueOf(response.code()));

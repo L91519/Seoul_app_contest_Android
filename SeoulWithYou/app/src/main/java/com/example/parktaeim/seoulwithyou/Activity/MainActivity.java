@@ -69,6 +69,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
+        Service.getRetrofit(getApplicationContext()).checkToken(tokenPref.getString("token","null")).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Log.d("check token ===",tokenPref.getString("token","null"));
+                Log.d("check response ===",response.body().toString());
+//                JsonObject jsonObject = response.body();
+//                Log.d("check result ===",jsonObject.toString());
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+
+
         setDrawer();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);

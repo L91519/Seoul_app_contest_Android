@@ -183,6 +183,8 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         }
     };
 
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -424,7 +426,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
         tMapGps = new TMapGpsManager(getActivity());
         tMapGps.setMinTime(1000);
-        tMapGps.setMinDistance(5);
+//        tMapGps.setMinDistance(5);
         tMapGps.setProvider(tMapGps.NETWORK_PROVIDER);  // 인터넷 이용 (실내일때 유용)
 //        tMapGps.setProvider(tMapGps.GPS_PROVIDER);    // 현위치 gps 이용
         tMapGps.OpenGps();
@@ -435,8 +437,8 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
         try {
             Log.d("setmap ====", "location updates");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, mLocationListener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 1, mLocationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, mLocationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, mLocationListener);
 
         } catch (SecurityException e) {
             e.printStackTrace();
@@ -444,7 +446,19 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
 
     }
+    @Override
+    public void onResume() {
+        super.onResume();
 
+        try {
+            Log.d("setmap ====", "location updates");
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, mLocationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, mLocationListener);
+
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
     private boolean canAccessLocation() {
         return (hasPermission(Manifest.permission.ACCESS_FINE_LOCATION));
     }

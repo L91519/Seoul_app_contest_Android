@@ -37,8 +37,8 @@ public class Service extends APIAdapter{
         @GET("/list/modern")
         Call<JsonObject> getModernCourseList();
 
-        @GET(APIUrl.MYPAGE_URL_ANYONE)
-        Call<JsonObject> mypage_info(@Path("id") String id);
+        @GET(APIUrl.MYPAGE_INFO_URL)
+        Call<JsonObject> mypage_info(@Header("Authorization") String Authorization, @Path("id") String id);
 
         @GET(APIUrl.MYPAGE_POST)
         Call<JsonObject> mypage_post(@Header("Authorization") String Authorization,@Path("userId") String userId);
@@ -68,9 +68,10 @@ public class Service extends APIAdapter{
 
         @FormUrlEncoded
         @PATCH(APIUrl.CHANGE_PW_URL)
-        Call<Void> changePw(@Header("Authorization") String authorization, @Field("password") String password);
+        Call<Void> changePw(@Header("Authorization") String Authorization, @Field("pw") String pw);
 
-
+        @GET("/check")
+        Call<JsonObject> checkToken(@Header("Authorization") String Authorization);
 
     }
 }

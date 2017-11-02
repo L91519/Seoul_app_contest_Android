@@ -28,6 +28,7 @@ import com.example.parktaeim.seoulwithyou.Model.MyPagePostItem;
 import com.example.parktaeim.seoulwithyou.R;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
 
@@ -50,6 +51,12 @@ public class MyPageDialogActivity extends Activity implements View.OnClickListen
     private RecyclerView.LayoutManager layoutManager;
     private CircleImageView changeProfileIcon;
     private CircleImageView mypage_profileImg;
+    private String myPage_id;
+    String name;
+    String birth;
+    String image;
+    String sex;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +64,10 @@ public class MyPageDialogActivity extends Activity implements View.OnClickListen
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_mypage);
+
+        Intent intent = getIntent();
+        myPage_id = intent.getStringExtra("myPage_id");
+        Log.d("mypage id get =======",myPage_id);
 
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -72,7 +83,7 @@ public class MyPageDialogActivity extends Activity implements View.OnClickListen
     }
 
     private void setChangeProfile() {
-        changeProfileIcon = (CircleImageView) findViewById(R.id.changeProfileIcon);
+//        changeProfileIcon = (CircleImageView) findViewById(R.id.change21ㅂ   232₩1₩ProfileIcon);
         mypage_profileImg = (CircleImageView) findViewById(R.id.mypage_profileImg);
 
 
@@ -84,9 +95,40 @@ public class MyPageDialogActivity extends Activity implements View.OnClickListen
     }
 
     private void setProfile() {
-        Intent intent = getIntent();
-        String myPage_id = intent.getStringExtra("myPage_id");
-        Log.d("mypage id get =======",myPage_id);
+        SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
+        com.example.parktaeim.seoulwithyou.Network.Service.getRetrofit(getApplicationContext()).mypage_info(tokenPref.getString("token","null"), myPage_id).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Log.d("mypage info retrofit===",String.valueOf(response.code()));
+
+                if(response.code() == 200){
+                    JsonObject jsonObject = response.body();
+                    name = jsonObject.getAsJsonPrimitive("name").getAsString();
+                    birth = jsonObject.getAsJsonPrimitive("birth").getAsString();
+                    image = jsonObject.getAsJsonPrimitive("image").getAsString();
+                    sex = jsonObject.getAsJsonPrimitive("sex").getAsString();
+
+
+                    // mypage info setting
+                    TextView mypage_name = (TextView)findViewById(R.id.mypage_nameTextView);
+                    CircleImageView mypage_profile = (CircleImageView) findViewById(R.id.mypage_profileImg);
+                    TextView mypage_age = (TextView) findViewById(R.id.mypage_ageTextView);
+                    TextView mypage_sex = (TextView) findViewById(R.id.mypage_genderTextView);
+
+                    mypage_name.setText(name);
+                    mypage_age.setText(birth);
+                    mypage_sex.setText(sex);
+                    Glide.with(context).load(image).into(mypage_profile);
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
 
     }
 
@@ -102,7 +144,7 @@ public class MyPageDialogActivity extends Activity implements View.OnClickListen
 
         // 다이얼로그에 작성 글 세팅
         SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
-        com.example.parktaeim.seoulwithyou.Network.Service.getRetrofit(context).mypage_post(tokenPref.getString("token","null"),sharedPreferences.getString("myId","null")).enqueue(new Callback<JsonObject>() {
+        com.example.parktaeim.seoulwithyou.Network.Service.getRetrofit(context).mypage_post(tokenPref.getString("token","null"),myPage_id).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Log.d("mypage response code ==",String.valueOf(response.code()));
