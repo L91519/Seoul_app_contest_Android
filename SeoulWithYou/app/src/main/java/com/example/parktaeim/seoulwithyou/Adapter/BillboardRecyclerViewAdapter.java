@@ -3,6 +3,7 @@ package com.example.parktaeim.seoulwithyou.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,11 +60,17 @@ public class BillboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, MyPageDialogActivity.class);
+<<<<<<< HEAD
                     intent.putExtra("mypage_id",items.get(position).getPostNo());
+=======
+                    intent.putExtra("mypage_id",items.get(position).getUserId());
+                    Log.d("billboard adapter id ==",items.get(position).getUserId());
+>>>>>>> ae5ed51353c35f59ce0608afeeb72ca607bc6727
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }
             });
+
         }
     }
 

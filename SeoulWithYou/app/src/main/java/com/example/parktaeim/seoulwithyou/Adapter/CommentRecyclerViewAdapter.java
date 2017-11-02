@@ -50,7 +50,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, MyPageDialogActivity.class);
-//                intent.putExtra("mypage_id",items.get(position).getId());
+                intent.putExtra("mypage_id",items.get(position).getId());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
