@@ -42,7 +42,7 @@ import retrofit2.Response;
  * Created by parktaeim on 2017. 10. 26..
  */
 
-public class MyPageDialogActivity extends Activity implements View.OnClickListener{
+public class MyPageDialogActivity extends Activity implements View.OnClickListener {
     private TextView goChatBtn;
 
     private Context context;
@@ -67,7 +67,7 @@ public class MyPageDialogActivity extends Activity implements View.OnClickListen
 
         Intent intent = getIntent();
         myPage_id = intent.getStringExtra("myPage_id");
-        Log.d("mypage id get =======",myPage_id);
+        Log.d("mypage id get =======", myPage_id);
 
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -95,13 +95,13 @@ public class MyPageDialogActivity extends Activity implements View.OnClickListen
     }
 
     private void setProfile() {
-        SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
-        com.example.parktaeim.seoulwithyou.Network.Service.getRetrofit(getApplicationContext()).mypage_info(tokenPref.getString("token","null"), myPage_id).enqueue(new Callback<JsonObject>() {
+        SharedPreferences tokenPref = getSharedPreferences("tokenPref", MODE_PRIVATE);
+        com.example.parktaeim.seoulwithyou.Network.Service.getRetrofit(getApplicationContext()).mypage_info(tokenPref.getString("token", "null"), myPage_id).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d("mypage info retrofit===",String.valueOf(response.code()));
+                Log.d("mypage info retrofit===", String.valueOf(response.code()));
 
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     JsonObject jsonObject = response.body();
                     name = jsonObject.getAsJsonPrimitive("name").getAsString();
                     birth = jsonObject.getAsJsonPrimitive("birth").getAsString();
@@ -110,7 +110,7 @@ public class MyPageDialogActivity extends Activity implements View.OnClickListen
 
 
                     // mypage info setting
-                    TextView mypage_name = (TextView)findViewById(R.id.mypage_nameTextView);
+                    TextView mypage_name = (TextView) findViewById(R.id.mypage_nameTextView);
                     CircleImageView mypage_profile = (CircleImageView) findViewById(R.id.mypage_profileImg);
                     TextView mypage_age = (TextView) findViewById(R.id.mypage_ageTextView);
                     TextView mypage_sex = (TextView) findViewById(R.id.mypage_genderTextView);
@@ -139,36 +139,39 @@ public class MyPageDialogActivity extends Activity implements View.OnClickListen
         recyclerView.setHasFixedSize(true);
 
         ArrayList items = new ArrayList<>();
-        SharedPreferences sharedPreferences = getSharedPreferences("myId",MODE_PRIVATE);
-        Log.d("mypage pref === ",sharedPreferences.getString("myId","null"));
+        SharedPreferences sharedPreferences = getSharedPreferences("myId", MODE_PRIVATE);
+        Log.d("mypage pref === ", sharedPreferences.getString("myId", "null"));
 
         // 다이얼로그에 작성 글 세팅
-        SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
-        com.example.parktaeim.seoulwithyou.Network.Service.getRetrofit(context).mypage_post(tokenPref.getString("token","null"),myPage_id).enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d("mypage response code ==",String.valueOf(response.code()));
-                if(response.code() == 200){
-                    JsonArray infoArray = response.body().getAsJsonArray("data");
-                    Log.d("mypage infoArray ==",infoArray.toString());
+        SharedPreferences tokenPref = getSharedPreferences("tokenPref", MODE_PRIVATE);
+        com.example.parktaeim.seoulwithyou.Network.Service.
+                getRetrofit(context).
+                mypage_post(tokenPref.getString("token", "null"), sharedPreferences.getString("myId", "null")).
+                enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        Log.d("mypage response code ==", String.valueOf(response.code()));
+                        if (response.code() == 200) {
+                            JsonArray infoArray = response.body().getAsJsonArray("data");
+                            Log.d("mypage infoArray ==", infoArray.toString());
 
-                }
-            }
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
 
-            }
-        });
+                    }
+                });
 
-        items.add(new MyPagePostItem("http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658","경복궁과 함께라면","2017-09-22","나랑 같이 놀러갈래?","아이러브유"));
+        items.add(new MyPagePostItem("http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658", "경복궁과 함께라면", "2017-09-22", "나랑 같이 놀러갈래?", "아이러브유"));
 
         layoutManager = new LinearLayoutManager(this);
 
         recyclerView.setLayoutManager(layoutManager);
 
         RequestManager requestManager = Glide.with(getApplicationContext());
-        adapter = new MyPagePostRecyclerViewAdapter(getApplicationContext(),items,requestManager);
+        adapter = new MyPagePostRecyclerViewAdapter(getApplicationContext(), items, requestManager);
         recyclerView.setAdapter(adapter);
 
     }

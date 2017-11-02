@@ -54,14 +54,19 @@ public class Service extends APIAdapter{
 
         @FormUrlEncoded
         @POST("/post/comment")
-        Call<Void> postComment(@Field("content") String content, @Field("postNo") int postNo);
-
-        @GET("/post/{no}")
-        Call<JsonObject> getPost(@Path("no") int no);
+        Call<Void> postComment(@Header("Authorization") String Authorization,
+                               @Field("content") String content,
+                               @Field("postNo") int postNo);
 
         @FormUrlEncoded
         @POST("/post")
-        Call<Void> postList(@Field("title") String title, @Field("content") String content, @Field("itemNo") int itemNo);
+        Call<Void> postList(@Header("Authorization") String Authorization,
+                            @Field("title") String title,
+                            @Field("content") String content,
+                            @Field("itemNo") int itemNo);
+
+        @GET("/post/{no}")
+        Call<JsonObject> getPost(@Path("no") int no);
 
         @GET("/list/post/{no}")
         Call<JsonObject> getList(@Path("no") int no);
