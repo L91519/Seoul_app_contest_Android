@@ -213,7 +213,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.nav_mypage) {
             Intent intent = new Intent(MainActivity.this,MyPageDialogActivity.class);
-            intent.putExtra("id","");
+            SharedPreferences sharedPreferences = getSharedPreferences("myId",MODE_PRIVATE);
+            intent.putExtra("myPage_id",sharedPreferences.getString("myId","null"));
             startActivity(intent);
 
         } else if (id == R.id.nav_changePw) {
