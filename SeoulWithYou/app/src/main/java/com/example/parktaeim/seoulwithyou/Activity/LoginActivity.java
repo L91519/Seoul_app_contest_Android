@@ -17,6 +17,7 @@ import com.example.parktaeim.seoulwithyou.Network.RestAPI;
 import com.example.parktaeim.seoulwithyou.Network.Service;
 import com.example.parktaeim.seoulwithyou.R;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.Collection;
@@ -82,23 +83,24 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-                Retrofit builder = new Retrofit.Builder()
-                        .baseUrl(APIUrl.API_BASE_URL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-
-                RestAPI restAPI = builder.create(RestAPI.class);
-
-                Call<Void> call = restAPI.logIn(id,pw);
 
                 Log.d("retrofit start ===","yeah~~");
 
-                call.enqueue(new Callback<Void>() {
+                Service.getRetrofit(getApplicationContext()).logIn(id,pw).enqueue(new Callback<JsonObject>() {
                     @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         Log.d("reponse ===",String.valueOf(response.code()));
 
                         if(response.code() == 200){
+
+                            String tokenPrimitive = response.body().getAsJsonPrimitive("token").getAsString();
+                            Log.d("jsonObject ===",tokenPrimitive.toString());
+
+                            SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
+                            SharedPreferences.Editor tokenEditor = tokenPref.edit();
+                            tokenEditor.putString("token",tokenPrimitive);
+                            tokenEditor.commit();
+
                             SharedPreferences sharedPreferences = getSharedPreferences("myId",MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("myId",id);
@@ -106,6 +108,10 @@ public class LoginActivity extends AppCompatActivity {
 
                             Collection<?> collection = sharedPreferences.getAll().values();
                             Log.d("after login pef===",collection.toString());
+
+                            Collection<?> tokenCollection = tokenPref.getAll().values();
+                            Log.d("login token pref===",tokenCollection.toString());
+
 
                             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                             startActivity(intent);
@@ -135,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
                         Log.d("login Failure === ",t.toString());
                     }
                 });

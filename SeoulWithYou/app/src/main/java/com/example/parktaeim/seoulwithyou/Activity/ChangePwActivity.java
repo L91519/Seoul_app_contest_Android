@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.parktaeim.seoulwithyou.Network.Service;
 import com.example.parktaeim.seoulwithyou.R;
+import com.google.gson.JsonObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,16 +63,20 @@ public class ChangePwActivity extends AppCompatActivity {
                 String currentId = sharedPreferences.getString("myId","null");   // 현재 id
 
                 // 현재 비밀번호가 정확히 입력되었는지 확인
-                Service.getRetrofit(getApplicationContext()).logIn(currentId,currentPw).enqueue(new Callback<Void>() {
+                Service.getRetrofit(getApplicationContext()).logIn(currentId,currentPw).enqueue(new Callback<JsonObject>() {
                     @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         Log.d("chanpw login res ==",String.valueOf(response.code()));
+
                         if(response.code() == 200){
                             // 비밀번호 변경
-                            Service.getRetrofit(getApplicationContext()).changePw(changePw).enqueue(new Callback<Void>() {
+                            SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
+
+                            Service.getRetrofit(getApplicationContext()).changePw(tokenPref.getString("token","null"),changePw).enqueue(new Callback<Void>() {
                                 @Override
                                 public void onResponse(Call<Void> call, Response<Void> response) {
                                     Log.d("changePw ===",changePw);
+                                    Log.d("changePw token ===",tokenPref.getString("token","null"));
                                     Log.d("changePw real res ==",String.valueOf(response.code()));
                                     if(response.code() == 200){
                                         Toast.makeText(ChangePwActivity.this, "비밀번호가 변경되었습니다!", Toast.LENGTH_SHORT).show();
@@ -98,7 +103,7 @@ public class ChangePwActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
                         Log.d("login fail(changePw)==",t.toString());
                         Toast.makeText(ChangePwActivity.this, "현재 비밀번호를 확인해주세요!", Toast.LENGTH_SHORT).show();
                         return;

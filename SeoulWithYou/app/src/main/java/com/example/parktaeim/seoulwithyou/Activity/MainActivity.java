@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,6 +39,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.stone.pile.libs.PileLayout;
 
 import java.sql.Array;
 import java.util.ArrayList;
@@ -125,12 +127,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
-                searchView.setSuggestions(courseTitleArray);
-                Log.d("searchview ======","shown!!");
+
             }
 
             @Override
             public void onSearchViewClosed() {
+
+            }
+        });
+        searchView.setSuggestions(courseTitleArray);
+        searchView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                String query = (String) adapterView.getItemAtPosition(position);
+                searchView.closeSearch();
+                Log.d("search click query===",query);
 
             }
         });
@@ -139,6 +150,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void getCourseTitle() {
         courseTitleArrayList.add("ff");
+        courseTitleArrayList.add("ffdd");
+        courseTitleArrayList.add("ffee");
+
         Service.getRetrofit(getApplicationContext()).getModernCourseList().enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

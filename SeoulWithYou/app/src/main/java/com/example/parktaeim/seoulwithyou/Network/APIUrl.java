@@ -14,7 +14,7 @@ public class APIUrl {
     public static final String GET_FOOD_COURSE = "/list/restaurant";
     public static final String MYPAGE_MY_URL = "/mypage";
     public static final String MYPAGE_URL_ANYONE = "/mypage/{id}";
-    public static final String MYPAGE_POST = "/mypage/post/:{id}";
+    public static final String MYPAGE_POST = "/mypage/post/:{userId}";
     public static final String GET_TRADITION_COURSE = "/list/history";
     public static final String GET_ART_COURSE = "/list/culture";
     public static final String GET_HEALING_COURSE = "/list/healing";

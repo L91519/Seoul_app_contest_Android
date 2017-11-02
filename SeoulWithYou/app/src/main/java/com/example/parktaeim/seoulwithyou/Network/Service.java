@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -27,7 +28,7 @@ public class Service extends APIAdapter{
     public interface RestApi {
         @FormUrlEncoded
         @POST(APIUrl.LOGIN_URL)
-        Call<Void> logIn(@Field("id") String id , @Field("pw") String pw);
+        Call<JsonObject> logIn(@Field("id") String id , @Field("pw") String pw);
 
         @FormUrlEncoded
         @POST(APIUrl.SIGN_UP_URL)
@@ -40,7 +41,7 @@ public class Service extends APIAdapter{
         Call<JsonObject> mypage_info(@Path("id") String id);
 
         @GET(APIUrl.MYPAGE_POST)
-        Call<JsonObject> mypage_post(@Path("id") String id);
+        Call<JsonObject> mypage_post(@Header("Authorization") String Authorization,@Path("userId") String userId);
 
         @GET(APIUrl.GET_ART_COURSE)
         Call<JsonObject> getArtCourseList();
@@ -67,7 +68,9 @@ public class Service extends APIAdapter{
 
         @FormUrlEncoded
         @PATCH(APIUrl.CHANGE_PW_URL)
-        Call<Void> changePw(@Field("pw") String pw);
+        Call<Void> changePw(@Header("Authorization") String authorization, @Field("password") String password);
+
+
 
     }
 }
