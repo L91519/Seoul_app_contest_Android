@@ -102,7 +102,10 @@ public class MyPageDialogActivity extends Activity implements View.OnClickListen
 
         // 다이얼로그에 작성 글 세팅
         SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
-        com.example.parktaeim.seoulwithyou.Network.Service.getRetrofit(context).mypage_post(tokenPref.getString("token","null"),sharedPreferences.getString("myId","null")).enqueue(new Callback<JsonObject>() {
+        com.example.parktaeim.seoulwithyou.Network.Service.
+                getRetrofit(context).
+                mypage_post(tokenPref.getString("token","null"), sharedPreferences.getString("myId","null")).
+                enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Log.d("mypage response code ==",String.valueOf(response.code()));

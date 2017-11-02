@@ -398,14 +398,6 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         return items;
     }
 
-    private void initDtalist() {
-
-        CourseItem item1 = new CourseItem(127.0494329104, 37.5071013134, "http://img.hb.aicdn.com/10dd7b6eb9ca02a55e915a068924058e72f7b3353a40d-ZkO3ko_fw658", 8, "palace");
-        courseItems.add(item1);
-        CourseItem item2 = new CourseItem(126.9831045523, 37.5447207531, "http://img.hb.aicdn.com/a3a995b26bd7d58ccc164eafc6ab902601984728a3101-S2H0lQ_fw658", 4, "house");
-        courseItems.add(item2);
-    }
-
     private void setMap() {
         Log.d("!@#!@##!@", "setMap: ");
 

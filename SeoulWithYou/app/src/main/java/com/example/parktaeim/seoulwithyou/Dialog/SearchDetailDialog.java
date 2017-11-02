@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
@@ -48,6 +49,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.GET;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by user on 2017-10-28.
@@ -135,17 +138,21 @@ public class SearchDetailDialog extends Dialog {
                 String comment = commentText.getText().toString();
                 Toast.makeText(getContext(), comment, Toast.LENGTH_SHORT).show();
 
-                Service.getRetrofit(getContext()).postComment(comment, number).enqueue(new Callback<Void>() {
+                SharedPreferences tokenPref = getContext().getSharedPreferences("tokenPref",MODE_PRIVATE);
+                String token = tokenPref.getString("token", "null");
+                Service.getRetrofit(getContext()).postComment(token, comment, number).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.code() == 200) {
                             Log.d("postCommentStatus : ", String.valueOf(response.code()));
+                        } else {
+                            Log.d("log code", String.valueOf(response.code()));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-
+                        t.printStackTrace();
                     }
                 });
             }

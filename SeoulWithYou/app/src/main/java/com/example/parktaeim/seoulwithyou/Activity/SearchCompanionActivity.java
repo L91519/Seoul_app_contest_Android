@@ -72,7 +72,6 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
         Intent intent = getIntent();
         picture = intent.getStringExtra("picture");
         title = intent.getStringExtra("title");
-        distance = intent.getStringExtra("distance");
         //코스 아이디
         itemNo = intent.getIntExtra("id", 0);
         Log.d("---log", String.valueOf(itemNo));
@@ -152,12 +151,12 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
             public void onClick(View v) {
                 addDialog = new BillboardAddDialog(SearchCompanionActivity.this);
                 addDialog.show();
+
                 addDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         if (addDialog.getsContent() == null || addDialog.getsTitle() == null) {
-                            items.add(new BillboardItem(itemNo, "사용자 사진", addDialog.getsTitle(), "date", "name", "userId"));
-                            //박태임이 저장해둔 이름하고 아이디 가져와서 넣기(지금 어플을 사용하고 있는 사람)
+                        } else if(addDialog.getsContent() != null || addDialog.getsTitle() != null) {
                             postBillboard(addDialog.getsTitle(), addDialog.getsContent());
                             adapter.notifyDataSetChanged();
                         }
@@ -169,11 +168,15 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
 
     //게시글 보내기
     public void postBillboard(String title, String content) {
-        Service.getRetrofit(getApplicationContext()).postList(title, content, itemNo).enqueue(new Callback<Void>() {
+        SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
+        String authorization = tokenPref.getString("token", "null");
+        Service.getRetrofit(getApplicationContext())
+                .postList(authorization, title, content, itemNo)
+                .enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.code() == 200) {
-
+                    adapter.notifyDataSetChanged();
                 } else {
                     Log.d("--postBillboardLog", String.valueOf(response.code()));
                 }

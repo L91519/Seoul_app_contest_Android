@@ -38,8 +38,12 @@ public class BillboardAddDialog extends Dialog {
         yesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setTitle(null);
-                setsContent(null);
+                sTitle = title.getText().toString();
+                sContent = content.getText().toString();
+
+                setsTitle(sTitle);
+                setsContent(sContent);
+
                 dismiss();
             }
         });
@@ -47,12 +51,8 @@ public class BillboardAddDialog extends Dialog {
         noBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sTitle = title.getText().toString();
-                sContent = content.getText().toString();
-
-                setsTitle(sTitle);
-                setsContent(sContent);
-
+                setTitle(null);
+                setsContent(null);
                 dismiss();
             }
         });
