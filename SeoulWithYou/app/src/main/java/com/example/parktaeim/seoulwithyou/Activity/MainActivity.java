@@ -110,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
 
         courseTitleArray = courseTitleArrayList.toArray(new String[courseTitleArrayList.size()]);
-        searchView.setSuggestions(courseTitleArray);
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -126,7 +125,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
-
+                searchView.setSuggestions(courseTitleArray);
+                Log.d("searchview ======","shown!!");
             }
 
             @Override

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,35 +7,62 @@
     android:orientation="vertical"
     tools:context="com.example.parktaeim.seoulwithyou.Activity.MainActivity">
 
-    <include
-        layout="@layout/toolbar_main"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawerLayout"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:openDrawer="start">
+        android:layout_marginTop="?attr/actionBarSize">
 
-        <include layout="@layout/content_main" />
-
-        <android.support.design.widget.NavigationView
-            android:id="@+id/navigation_view"
-            android:layout_width="wrap_content"
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawerLayout"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
-            app:headerLayout="@layout/navidrawer_header"
-            app:menu="@menu/drawer_menu"
-            app:itemIconTint="@color/colorAccent">
+            tools:openDrawer="start">
 
-        </android.support.design.widget.NavigationView>
-    </android.support.v4.widget.DrawerLayout>
+            <include layout="@layout/content_main" />
 
-    <!--<include layout="@layout/content_main" />-->
+            <android.support.design.widget.NavigationView
+                android:id="@+id/navigation_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                app:headerLayout="@layout/navidrawer_header"
+                app:itemIconTint="@color/colorAccent"
+                app:menu="@menu/drawer_menu">
+
+            </android.support.design.widget.NavigationView>
+        </android.support.v4.widget.DrawerLayout>
+    </LinearLayout>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="com.example.parktaeim.seoulwithyou.Activity.MainActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_toolBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <ImageView
+                android:id="@+id/main_logo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:src="@drawable/main_logo" />
+
+        </android.support.v7.widget.Toolbar>
 
 
+        <com.miguelcatalan.materialsearchview.MaterialSearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-
-</LinearLayout>
+    </FrameLayout>
+</FrameLayout>
