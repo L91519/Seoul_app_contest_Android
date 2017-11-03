@@ -28,20 +28,6 @@ public class SplashActivity extends AppCompatActivity {
         backgroundImg = (ImageView) findViewById(R.id.splashImage);
         Glide.with(this).load(R.drawable.img_splash_background).into(backgroundImg);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("myId",MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        Collection<?> collection = sharedPreferences.getAll().values();
-        Log.d("before clear pef===",collection.toString());
-
-        SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
-        SharedPreferences.Editor tokenEditor = tokenPref.edit();
-
-        editor.clear();
-        editor.commit();
-        tokenEditor.clear();
-        tokenEditor.commit();
-        
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

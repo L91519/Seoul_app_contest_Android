@@ -125,6 +125,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         } else if(response.code() == 400){
                             Toast.makeText(LoginActivity.this,"로그인 실패!",Toast.LENGTH_SHORT);
+                            input_id.setText("");
+                            input_pw.setText("");
                             return;
                         }
                     }
