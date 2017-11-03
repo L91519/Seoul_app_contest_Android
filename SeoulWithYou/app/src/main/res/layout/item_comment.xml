@@ -12,7 +12,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_margin="15dp"
-        android:background="@color/gray300"
+        android:background="@null"
         android:scaleType="centerCrop" />
 
 
@@ -71,7 +71,7 @@
                 android:id="@+id/content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="5dp"
                 android:background="@null"
                 android:textSize="11dp" />
 

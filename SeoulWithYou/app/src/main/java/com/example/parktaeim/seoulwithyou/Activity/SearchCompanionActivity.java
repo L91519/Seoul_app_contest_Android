@@ -126,7 +126,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-
+                    addBtn.setImageResource(R.drawable.add);
                 }
             });
 

@@ -124,6 +124,13 @@ public class SearchDetailDialog extends Dialog {
         int height = (int) ((float) MainActivity.screenHeight * 0.6);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(0, height);
 
+        drawerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
         xBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,7 +142,6 @@ public class SearchDetailDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 String comment = commentText.getText().toString();
-                Toast.makeText(getContext(), comment, Toast.LENGTH_SHORT).show();
 
                 SharedPreferences tokenPref = getContext().getSharedPreferences("tokenPref", MODE_PRIVATE);
                 String token = tokenPref.getString("token", "null");
@@ -144,7 +150,7 @@ public class SearchDetailDialog extends Dialog {
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.code() == 200) {
                             Log.d("postCommentStatus : ", String.valueOf(response.code()));
-                            adapter.notifyDataSetChanged();
+                            getData();
                         } else {
                             Log.d("log code", String.valueOf(response.code()));
                         }

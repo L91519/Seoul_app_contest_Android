@@ -370,7 +370,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
                     }
                 }
             }
-        }, 2000);
+        }, 5000);
 
         return view;
     }
