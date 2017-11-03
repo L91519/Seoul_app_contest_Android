@@ -103,7 +103,7 @@ public class SearchDetailDialog extends Dialog {
         manager.hasFocus();
         recyclerView.setLayoutManager(manager);
         getContent(number);
-        getData(postNo);
+        getData();
 
         nameText = (TextView) findViewById(R.id.nameText);
         dateText = (TextView) findViewById(R.id.billboardDate);
@@ -119,8 +119,6 @@ public class SearchDetailDialog extends Dialog {
         nameText.setText(name);
         dateText.setText(date);
         titleText.setText(title);
-        Glide.with(getContext()).load(picture).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(pictureImage);
-        Glide.with(getContext()).load(picture).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(userPic);
 
         int height = (int) ((float) MainActivity.screenHeight * 0.6);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(0, height);
@@ -138,7 +136,7 @@ public class SearchDetailDialog extends Dialog {
                 String comment = commentText.getText().toString();
                 Toast.makeText(getContext(), comment, Toast.LENGTH_SHORT).show();
 
-                SharedPreferences tokenPref = getContext().getSharedPreferences("tokenPref",MODE_PRIVATE);
+                SharedPreferences tokenPref = getContext().getSharedPreferences("tokenPref", MODE_PRIVATE);
                 String token = tokenPref.getString("token", "null");
                 Service.getRetrofit(getContext()).postComment(token, comment, number).enqueue(new Callback<Void>() {
                     @Override
@@ -172,7 +170,7 @@ public class SearchDetailDialog extends Dialog {
 
     //게시글 가져오는 부분
     public void getContent(int no) {
-        SharedPreferences tokenPref = getContext().getSharedPreferences("tokenPref",MODE_PRIVATE);
+        SharedPreferences tokenPref = getContext().getSharedPreferences("tokenPref", MODE_PRIVATE);
         String authorization = tokenPref.getString("token", "null");
         Service.getRetrofit(getContext()).getPost(authorization, no).enqueue(new Callback<JsonObject>() {
             @Override
@@ -180,19 +178,35 @@ public class SearchDetailDialog extends Dialog {
                 JsonObject jsonObject = response.body();
 
                 postNo = jsonObject.getAsJsonPrimitive("postNo").getAsInt();
-                String sTitle = jsonObject.getAsJsonPrimitive("title").getAsString();
                 String sContent = jsonObject.getAsJsonPrimitive("content").getAsString();
-                int sItemId = jsonObject.getAsJsonPrimitive("itemNo").getAsInt();
-                String sCreatedAt = jsonObject.getAsJsonPrimitive("createdAt").getAsString();
+                int sItemId = jsonObject.getAsJsonPrimitive("itemNo").getAsInt(); //태임이가 쓸꺼, 어디다가 저장해두자
                 String sUserName = jsonObject.getAsJsonPrimitive("userName").getAsString();
+                String sCreatedAt = jsonObject.getAsJsonPrimitive("createdAt").getAsString();
                 String sUserId = jsonObject.getAsJsonPrimitive("userId").getAsString();
-                String userImg;
+                boolean sGender = jsonObject.getAsJsonPrimitive("userSex").getAsBoolean();
+                int iUserAge = jsonObject.getAsJsonPrimitive("userAge").getAsInt();
+                String sUserImg = null;
+                try {
+                    sUserImg = jsonObject.getAsJsonPrimitive("userImage").getAsString();
+                } catch (ClassCastException e) {
+                    sUserImg = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwQzkGr6zOpQD7nG8YtZIIzlutO7kOL1NkG88BOH5fNVBqkwWc";
+                }
+                String sTitle = jsonObject.getAsJsonPrimitive("title").getAsString();
 
                 //title은 다이얼로그 띄울떄 받는 값으로 다 대채함.
                 userName.setText(sUserName);
-                userGender.setText("female");
-                userAge.setText("10대");
+                String tmpGender = null;
+                if (sGender == false) {
+                    tmpGender = "여자";
+                } else {
+                    tmpGender = "남자";
+                }
+                userGender.setText(tmpGender);
+                String tmpAge = String.valueOf(iUserAge) + "세";
+                userAge.setText(tmpAge);
                 content.setText(sContent);
+                Glide.with(getContext()).load(sUserImg).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(pictureImage);
+                Glide.with(getContext()).load(sUserImg).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(userPic);
             }
 
             @Override
@@ -203,19 +217,19 @@ public class SearchDetailDialog extends Dialog {
     }
 
     //코맨트 가져오는 부분
-    public void getData(int no) {
-        SharedPreferences tokenPref = getContext().getSharedPreferences("tokenPref",MODE_PRIVATE);
+    public void getData() {
+        SharedPreferences tokenPref = getContext().getSharedPreferences("tokenPref", MODE_PRIVATE);
         String authorization = tokenPref.getString("token", "null");
-        Service.getRetrofit(getContext()).getComment(authorization, no).enqueue(new Callback<JsonObject>() {
+        Service.getRetrofit(getContext()).getComment(authorization, number).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if(response.code() == 200) {
+                if (response.code() == 200) {
                     JsonArray jsonArray = response.body().getAsJsonArray("data");
                     JsonArray jsonElements = jsonArray.getAsJsonArray();
                     commentItems = getCommentArray(jsonElements);
                     adapter = new CommentRecyclerViewAdapter(getContext(), commentItems);
                     recyclerView.setAdapter(adapter);
-                } else{
+                } else {
 
                 }
             }
@@ -234,13 +248,27 @@ public class SearchDetailDialog extends Dialog {
         for (int i = 0; i < jsonElements.size(); i++) {
             JsonObject jsonObject = (JsonObject) jsonElements.get(i);
 
-            String name = jsonObject.getAsJsonPrimitive("name").getAsString();
+            String name = jsonObject.getAsJsonPrimitive("userName").getAsString();
             String createdAt = jsonObject.getAsJsonPrimitive("createdAt").getAsString();
             String content = jsonObject.getAsJsonPrimitive("content").getAsString();
             String userId = jsonObject.getAsJsonPrimitive("userId").getAsString();
-            String gender;
-            String age;
-            String pic;
+            boolean gender = jsonObject.getAsJsonPrimitive("userSex").getAsBoolean();
+            int age = jsonObject.getAsJsonPrimitive("userAge").getAsInt();
+            String sUserImg = null;
+            try {
+                sUserImg = jsonObject.getAsJsonPrimitive("userImage").getAsString();
+            } catch (ClassCastException e) {
+                sUserImg = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwQzkGr6zOpQD7nG8YtZIIzlutO7kOL1NkG88BOH5fNVBqkwWc";
+            }
+
+            String sGender = null;
+            if(gender == false) {
+                sGender = "여자";
+            } else {
+                sGender = "남자";
+            }
+
+            items.add(new CommentItem(name, sGender, String.valueOf(age), content, sUserImg,userId));
         }
 
         return items;
