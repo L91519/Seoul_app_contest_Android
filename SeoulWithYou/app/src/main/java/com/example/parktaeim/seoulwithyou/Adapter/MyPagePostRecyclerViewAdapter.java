@@ -53,6 +53,7 @@ public class MyPagePostRecyclerViewAdapter extends RecyclerView.Adapter<MyPagePo
         holder.writeDate.setText(items.get(position).getWriteDate());
         holder.postTitle.setText(items.get(position).getPostTitle());
         holder.postContent.setText(items.get(position).getPostContent());
+
     }
 
     @Override

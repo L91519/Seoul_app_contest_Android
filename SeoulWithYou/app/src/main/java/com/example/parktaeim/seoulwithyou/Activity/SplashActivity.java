@@ -25,6 +25,27 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+
+        SharedPreferences sharedPreferences = getSharedPreferences("myId",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        Collection<?> collection = sharedPreferences.getAll().values();
+        Log.d("before clear pef===",collection.toString());
+
+        SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
+        SharedPreferences.Editor tokenEditor = tokenPref.edit();
+
+        SharedPreferences myInfoPref = getSharedPreferences("myInfoPref",MODE_PRIVATE);
+        SharedPreferences.Editor myInfoEditor = myInfoPref.edit();
+
+        editor.clear();
+        editor.commit();
+        tokenEditor.clear();
+        tokenEditor.commit();
+        myInfoEditor.clear();
+        myInfoEditor.commit();
+
+
         backgroundImg = (ImageView) findViewById(R.id.splashImage);
         Glide.with(this).load(R.drawable.img_splash_background).into(backgroundImg);
 
@@ -35,12 +56,14 @@ public class SplashActivity extends AppCompatActivity {
                 SharedPreferences pref = getSharedPreferences("myId",MODE_PRIVATE);
                 Collection<?> collection = pref.getAll().values();
 
+                SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
+                Collection<?> tokenCollection = tokenPref.getAll().values();
                 Log.d("splash pref ==",collection.toString());
 
-                if(collection.toString().equals("[]") == false){
+                if(collection.toString().equals("[]") == false && tokenCollection.toString().equals("[]")==false){
                     Intent intent = new Intent(SplashActivity.this,MainActivity.class);
                     startActivity(intent);
-                }else if(collection.toString().equals("[]")){
+                }else if(collection.toString().equals("[]") || tokenCollection.toString().equals("[]")) {
                     Intent intent = new Intent(SplashActivity.this,LoginActivity.class);
                     startActivity(intent);
                 }
