@@ -50,9 +50,7 @@ public class MyPagePostRecyclerViewAdapter extends RecyclerView.Adapter<MyPagePo
         Log.d(items.get(position).getImgUrl(),"glide url");
 //        Glide.with(context).load(items.get(position).getImgUrl()).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(holder.courseImg);
         holder.courseName.setText(items.get(position).getCourseName());
-        holder.writeDate.setText(items.get(position).getWriteDate());
         holder.postTitle.setText(items.get(position).getPostTitle());
-        holder.postContent.setText(items.get(position).getPostContent());
 
     }
 
@@ -72,9 +70,7 @@ public class MyPagePostRecyclerViewAdapter extends RecyclerView.Adapter<MyPagePo
             super(itemView);
             courseImg = (ImageView) itemView.findViewById(R.id.courseImg);
             courseName = (TextView) itemView.findViewById(R.id.courseName);
-            writeDate = (TextView) itemView.findViewById(R.id.writeDate);
             postTitle = (TextView) itemView.findViewById(R.id.postTitle);
-            postContent = (TextView) itemView.findViewById(R.id.postContent);
 
         }
     }

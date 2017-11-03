@@ -28,19 +28,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="경복궁 북쪽마을 북촌 즐기기"
+                android:textSize="17dp"
+                android:maxLines="2"
                 android:textColor="#424242" />
-
-            <TextView
-                android:id="@+id/writeDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/courseName"
-                android:layout_marginLeft="6dp"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@+id/courseName"
-                android:text="2017.10.28"
-                android:textColor="@color/colorAccent"
-                android:textSize="8dp" />
 
             <TextView
                 android:id="@+id/postTitle"
@@ -50,17 +40,11 @@
                 android:layout_marginTop="4dp"
                 android:text="12월 1일에 같이 가실 여성 구합니다!"
                 android:textColor="@color/colorAccent"
-                android:textSize="11dp"
+                android:maxLines="1"
+                android:textSize="15dp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/postContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/postTitle"
-                android:maxLines="2"
-                android:text="이왕이면 사진찍는거 좋아하는 연이ㅓㅣㅏㅓㅇ리만어리ㅏㅁ너리ㅏㅇ너라ㅣㄴㅇ머리ㅏㅓㄹㅏㅣㅁㅇ널ㅏㅣ너라ㅣㅇㅁㄴㄹㅓㅁㄴㄹㅏ"
-                android:textSize="8dp" />
+
         </RelativeLayout>
 
     </RelativeLayout>

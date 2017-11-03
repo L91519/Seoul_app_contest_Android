@@ -100,6 +100,8 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     private double currentLat;
     private double currentLon;
 
+    TMapPoint destPoint;
+
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
 
     private static final String[] INITIAL_PERMS = {
@@ -125,6 +127,8 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
     private int lastDisplay = -1;
     private float transitionValue;
+
+    private int positionForMap ;
 
 //    @Override
 //    public void onLocationChange(Location location) {
@@ -183,7 +187,11 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
             currentLon = location.getLongitude();
 
             final TMapPoint startPoint = new TMapPoint(currentLat, currentLon);   // 현재 위치
-            final TMapPoint destPoint = new TMapPoint(36.316889, 127.158272);  // 도착 위치
+            if(courseItems != null){
+                destPoint = new TMapPoint(courseItems.get(positionForMap).getLat(), courseItems.get(positionForMap).getLon());  // 도착 위치
+
+            }
+            Log.d("positionFormap",String.valueOf(positionForMap));
 
             if (currentLat != 0) {
                 tmapData.findPathDataWithType(TMapData.TMapPathType.CAR_PATH, startPoint, destPoint, new TMapData.FindPathDataListenerCallback() {
@@ -227,22 +235,22 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
     private void setGps() {
         final LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
-                1000, // 통지사이의 최소 시간간격 (miliSecond)
-                1, // 통지사이의 최소 변경거리 (m)
-                mLocationListener);
+//        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-        Log.d("setGps ==","ㅠㅠ");
+                ActivityCompat.requestPermissions(getActivity(), LOCATION_PERMS, REQUEST_CODE_LOCATION);
+            Log.d("!!!!!!!!!!!!!","===============");
+
+        }else{
+            Log.d("==============","===============");
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
+                    1000, // 통지사이의 최소 시간간격 (miliSecond)
+                    1, // 통지사이의 최소 변경거리 (m)
+                    mLocationListener);
+
+            Log.d("setGps ==","ㅠㅠ");
+        }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -350,6 +358,9 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
                             @Override
                             public void displaying(int position) {
                                 Log.d("---positionLog", String.valueOf(position));
+                                positionForMap = position;
+                                Log.d("bbb",String.valueOf(courseItems.get(positionForMap).getLat()));
+                                setGps();
                                 if (lastDisplay < 0) {
                                     initSecene(position);
                                     lastDisplay = 0;

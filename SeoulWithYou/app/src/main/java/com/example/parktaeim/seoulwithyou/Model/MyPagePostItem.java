@@ -11,12 +11,10 @@ public class MyPagePostItem {
     private String postTitle;
     private String postContent;
 
-    public MyPagePostItem(String imgUrl, String courseName, String writeDate, String postTitle, String postContent) {
+    public MyPagePostItem(String imgUrl, String courseName,  String postTitle) {
         this.imgUrl = imgUrl;
         this.courseName = courseName;
-        this.writeDate = writeDate;
         this.postTitle = postTitle;
-        this.postContent = postContent;
     }
 
     public String getImgUrl() {

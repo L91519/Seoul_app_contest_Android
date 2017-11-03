@@ -229,6 +229,20 @@ public class MyPageDialogActivity extends Activity  {
                             Log.d("mypage infoArray ==", infoArray.toString());
                             JsonArray jsonElements = infoArray.getAsJsonArray();
 //                            arrayList = new getPostList(jsonElements);
+                            if(infoArray.toString().equals("[]")){
+                                RelativeLayout noPostLayout = (RelativeLayout) findViewById(R.id.noPostLayout);
+                                noPostLayout.setVisibility(View.VISIBLE);
+                            }else {
+                                arrayList = getArrayList(jsonElements);
+                                Log.d("getArrayList",arrayList.get(0).getCourseName());
+                                layoutManager = new LinearLayoutManager(getApplicationContext());
+
+                                recyclerView.setLayoutManager(layoutManager);
+
+                                RequestManager requestManager = Glide.with(getApplicationContext());
+                                adapter = new MyPagePostRecyclerViewAdapter(getApplicationContext(), arrayList, requestManager);
+                                recyclerView.setAdapter(adapter);
+                            }
 
 
 
@@ -245,15 +259,7 @@ public class MyPageDialogActivity extends Activity  {
                     }
                 });
 
-        items.add(new MyPagePostItem("http://img.hb.aicdn.com/03d474bbe20efb7df9aed4541ace70b53b53c70bdfe3-8djYVv_fw658", "경복궁과 함께라면", "2017-09-22", "나랑 같이 놀러갈래?", "아이러브유"));
 
-        layoutManager = new LinearLayoutManager(this);
-
-        recyclerView.setLayoutManager(layoutManager);
-
-        RequestManager requestManager = Glide.with(getApplicationContext());
-        adapter = new MyPagePostRecyclerViewAdapter(getApplicationContext(), items, requestManager);
-        recyclerView.setAdapter(adapter);
 
     }
 
@@ -262,10 +268,10 @@ public class MyPageDialogActivity extends Activity  {
         for (int i = 0; i < jsonElements.size(); i++) {
             JsonObject jsonObject = (JsonObject) jsonElements.get(i);
             String title = jsonObject.getAsJsonPrimitive("title").getAsString();
-            String singer = jsonObject.getAsJsonPrimitive("createdAt").getAsString();
-            String url = jsonObject.getAsJsonPrimitive("musicURL").getAsString();
-            String imaurl = jsonObject.getAsJsonPrimitive("imgURL").getAsString();
+            String imgUrl = jsonObject.getAsJsonPrimitive("itemImage").getAsString();
+            String courseName = jsonObject.getAsJsonPrimitive("itemTitle").getAsString();
 
+            arrayList.add(new MyPagePostItem(imgUrl,courseName,title));
         }
         return arrayList;
     }
