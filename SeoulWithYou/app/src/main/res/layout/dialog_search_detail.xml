@@ -57,6 +57,7 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:visibility="invisible"
             android:id="@+id/profilePic"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -72,6 +73,7 @@
             //제목
 
             <TextView
+                android:visibility="invisible"
                 android:id="@+id/nameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -81,6 +83,7 @@
                 android:textSize="16dp" />
 
             <TextView
+                android:visibility="invisible"
                 android:id="@+id/billboardDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -93,6 +96,7 @@
             //제목과 버튼
 
             <android.support.v7.widget.CardView
+                android:visibility="invisible"
                 android:id="@+id/titleLayout"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
@@ -114,6 +118,7 @@
                         android:background="@null"
                         android:textSize="18dp" />
 
+<!--
                     <ImageButton
                         android:id="@+id/drawerBtn"
                         android:layout_width="15dp"
@@ -124,6 +129,7 @@
                         android:background="@null"
                         android:scaleType="fitXY"
                         android:src="@drawable/close" />
+-->
                 </RelativeLayout>
 
             </android.support.v7.widget.CardView>
@@ -142,6 +148,19 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
+                    <ImageButton
+                        android:id="@+id/drawerBtn"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="15dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:background="@null"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/close" />
 
                     <ImageView
                         android:id="@+id/userPic"

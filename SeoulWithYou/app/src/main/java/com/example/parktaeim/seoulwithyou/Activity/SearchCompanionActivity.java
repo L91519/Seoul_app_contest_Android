@@ -35,7 +35,9 @@ import com.example.parktaeim.seoulwithyou.ScrollViewListener;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -124,7 +126,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-
+                    addBtn.setImageResource(R.drawable.add);
                 }
             });
 
@@ -221,6 +223,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
 
     public ArrayList<BillboardItem> getBillboardArray(JsonArray jsonElements) {
         ArrayList<BillboardItem> billboardItems = new ArrayList<>();
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
         for (int i = 0; i < jsonElements.size(); i++) {
             JsonObject jsonObject = (JsonObject) jsonElements.get(i);
@@ -229,12 +232,17 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
             String title = jsonObject.getAsJsonPrimitive("title").getAsString();
             String userName = jsonObject.getAsJsonPrimitive("userName").getAsString();
             String userId = jsonObject.getAsJsonPrimitive("userId").getAsString();
+            int userAge = jsonObject.getAsJsonPrimitive("userAge").getAsInt();
+            int postNo = jsonObject.getAsJsonPrimitive("postNo").getAsInt();
 //            String createdAt = jsonObject.getAsJsonPrimitive("createAt").getAsString();
             String createdAt = "date";
-            int postNo = jsonObject.getAsJsonPrimitive("postNo").getAsInt();
-            int userAge = jsonObject.getAsJsonPrimitive("userAge").getAsInt();
-
-            billboardItems.add(new BillboardItem(postNo, picture, title, createdAt, userName, userId, gender, userAge));
+            String sUserImg = null;
+            try {
+                sUserImg = jsonObject.getAsJsonPrimitive("userImage").getAsString();
+            } catch (ClassCastException e) {
+                sUserImg = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwQzkGr6zOpQD7nG8YtZIIzlutO7kOL1NkG88BOH5fNVBqkwWc";
+            }
+            billboardItems.add(new BillboardItem(postNo, sUserImg, title, createdAt, userName, userId, gender, userAge));
         }
 
         return billboardItems;

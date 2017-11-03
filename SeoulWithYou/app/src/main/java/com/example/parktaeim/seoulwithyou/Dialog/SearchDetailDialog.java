@@ -65,7 +65,7 @@ public class SearchDetailDialog extends Dialog {
     private String name, date, picture, title;
     private TextView nameText, dateText, titleText;
     private ImageView pictureImage, userPic;
-    private ImageButton xBtn;
+    private ImageButton xBtn, drawerBtn;
     private TextInputEditText commentText;
     private TextView enterBtn, userName, userGender, userAge, content;
     private RelativeLayout commentBtn, dialogContainer;
@@ -111,6 +111,7 @@ public class SearchDetailDialog extends Dialog {
         pictureImage = (ImageView) findViewById(R.id.profilePic);
         userPic = (ImageView) findViewById(R.id.userPic);
         xBtn = (ImageButton) findViewById(R.id.xBtn);
+        drawerBtn = (ImageButton) findViewById(R.id.drawerBtn);
         commentText = (TextInputEditText) findViewById(R.id.commentText);
         enterBtn = (TextView) findViewById(R.id.enterBtn);
         commentBtn = (RelativeLayout) findViewById(R.id.commentBtn);
@@ -123,6 +124,13 @@ public class SearchDetailDialog extends Dialog {
         int height = (int) ((float) MainActivity.screenHeight * 0.6);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(0, height);
 
+        drawerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
         xBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,7 +142,6 @@ public class SearchDetailDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 String comment = commentText.getText().toString();
-                Toast.makeText(getContext(), comment, Toast.LENGTH_SHORT).show();
 
                 SharedPreferences tokenPref = getContext().getSharedPreferences("tokenPref", MODE_PRIVATE);
                 String token = tokenPref.getString("token", "null");
@@ -143,6 +150,7 @@ public class SearchDetailDialog extends Dialog {
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.code() == 200) {
                             Log.d("postCommentStatus : ", String.valueOf(response.code()));
+                            getData();
                         } else {
                             Log.d("log code", String.valueOf(response.code()));
                         }
@@ -182,6 +190,7 @@ public class SearchDetailDialog extends Dialog {
                 int sItemId = jsonObject.getAsJsonPrimitive("itemNo").getAsInt(); //태임이가 쓸꺼, 어디다가 저장해두자
                 String sUserName = jsonObject.getAsJsonPrimitive("userName").getAsString();
                 String sCreatedAt = jsonObject.getAsJsonPrimitive("createdAt").getAsString();
+//                String sCreatedAt ="date";
                 String sUserId = jsonObject.getAsJsonPrimitive("userId").getAsString();
                 boolean sGender = jsonObject.getAsJsonPrimitive("userSex").getAsBoolean();
                 int iUserAge = jsonObject.getAsJsonPrimitive("userAge").getAsInt();

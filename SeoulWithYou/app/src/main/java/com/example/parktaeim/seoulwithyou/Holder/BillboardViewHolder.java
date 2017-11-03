@@ -58,8 +58,5 @@ public class BillboardViewHolder extends RecyclerView.ViewHolder implements View
         location = new int[]{top, bottom, left, right};
 
         mListener.onClick(view, getAdapterPosition(), location);
-        button.setImageResource(R.drawable.close);
-
-
     }
 }
