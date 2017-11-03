@@ -25,6 +25,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        backgroundImg = (ImageView) findViewById(R.id.splashImage);
+        Glide.with(this).load(R.drawable.img_splash_background).into(backgroundImg);
 
         SharedPreferences sharedPreferences = getSharedPreferences("myId",MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -35,20 +37,11 @@ public class SplashActivity extends AppCompatActivity {
         SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
         SharedPreferences.Editor tokenEditor = tokenPref.edit();
 
-        SharedPreferences myInfoPref = getSharedPreferences("myInfoPref",MODE_PRIVATE);
-        SharedPreferences.Editor myInfoEditor = myInfoPref.edit();
-
         editor.clear();
         editor.commit();
         tokenEditor.clear();
         tokenEditor.commit();
-        myInfoEditor.clear();
-        myInfoEditor.commit();
-
-
-        backgroundImg = (ImageView) findViewById(R.id.splashImage);
-        Glide.with(this).load(R.drawable.img_splash_background).into(backgroundImg);
-
+        
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -63,7 +56,7 @@ public class SplashActivity extends AppCompatActivity {
                 if(collection.toString().equals("[]") == false && tokenCollection.toString().equals("[]")==false){
                     Intent intent = new Intent(SplashActivity.this,MainActivity.class);
                     startActivity(intent);
-                }else if(collection.toString().equals("[]") || tokenCollection.toString().equals("[]")) {
+                }else if(pref.getString("myId","null").equals("null") || tokenPref.getString("tokenPref","null").equals("null")) {
                     Intent intent = new Intent(SplashActivity.this,LoginActivity.class);
                     startActivity(intent);
                 }

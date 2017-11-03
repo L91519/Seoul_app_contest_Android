@@ -73,16 +73,10 @@ public class Service extends APIAdapter{
 
         @FormUrlEncoded
         @PATCH(APIUrl.CHANGE_PW_URL)
-<<<<<<< HEAD
-        Call<Void> changePw(@Header("Authorization") String authorization, @Field("password") String password);
-
-//comment하기
-=======
         Call<Void> changePw(@Header("Authorization") String Authorization, @Field("pw") String pw);
 
         @GET("/check")
         Call<JsonObject> checkToken(@Header("Authorization") String Authorization);
->>>>>>> badb94ba74a10453c2a19541a4afc87c2da03af2
 
     }
 }

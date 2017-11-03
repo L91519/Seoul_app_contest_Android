@@ -197,10 +197,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         CircleImageView header_profileImg = (CircleImageView) header.findViewById(R.id.mypage_header_profile);
         TextView header_name = (TextView) header.findViewById(R.id.mypage_header_myname);
 
-        SharedPreferences myInfoPref = getSharedPreferences("myInfoPref",MODE_PRIVATE);
-//        Glide.with(getApplicationContext()).load("").into(header_profileImg);
-        Log.d("drawer name ==",myInfoPref.getString("name",null));
-        header_name.setText(myInfoPref.getString("name","null"));
+        SharedPreferences tokenPref = getSharedPreferences("tokenPref", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("myId",MODE_PRIVATE);
+
+        com.example.parktaeim.seoulwithyou.Network.Service.getRetrofit(getApplicationContext()).mypage_info(tokenPref.getString("token", "null"), sharedPreferences.getString("myId","null")).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Log.d("mainac info retrofit===", String.valueOf(response.code()));
+
+                if (response.code() == 200) {
+                    JsonObject jsonObject = response.body();
+                    Log.d("info object ==",response.body().toString());
+                    String name = jsonObject.getAsJsonPrimitive("name").getAsString();
+//                    image = jsonObject.getAsJsonPrimitive("image").getAsString();
+
+//                    Glide.with(getApplicationContext()).load(image).into(header_profileImg);
+                    header_name.setText(name);
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
 
     }
 
@@ -252,15 +274,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
                             SharedPreferences.Editor tokenEditor = tokenPref.edit();
 
-                            SharedPreferences myInfoPref = getSharedPreferences("myInfoPref",MODE_PRIVATE);
-                            SharedPreferences.Editor myInfoEditor = myInfoPref.edit();
-
                             editor.clear();
                             editor.commit();
                             tokenEditor.clear();
                             tokenEditor.commit();
-                            myInfoEditor.clear();
-                            myInfoEditor.commit();
 
                             Collection<?> collection2 = sharedPreferences.getAll().values();
                             Log.d("after clear pef===",collection2.toString());
