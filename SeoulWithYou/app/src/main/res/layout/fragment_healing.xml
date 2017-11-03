@@ -1,54 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:pile="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:scrollbars="vertical">
 
-    <com.stone.pile.libs.PileLayout
-        android:id="@+id/pileLayout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"
-        pile:displayCount="1.8"
-        pile:interval="10dp"
-        pile:scaleStep="0.4"
-        pile:sizeRatio="0.65" />
+        android:layout_height="wrap_content">
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="1" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/detailRecyclerView"
+        <RelativeLayout
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_weight="1">
 
-        </android.support.v7.widget.RecyclerView>
+            <LinearLayout
+                android:focusableInTouchMode="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/companionBtn"
-            android:layout_width="300dp"
-            android:layout_height="80dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:animateLayoutChanges="true"
-            android:background="@null"
-            android:scaleType="fitXY"
-            android:src="@drawable/main_companion_btn" />
+                <com.stone.pile.libs.PileLayout
+                    android:id="@+id/pileLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    pile:displayCount="1.8"
+                    pile:interval="10dp"
+                    pile:scaleStep="0.4"
+                    pile:sizeRatio="0.65" />
 
-    </RelativeLayout>
+                <LinearLayout
+                    android:id="@+id/tmap_view"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginBottom="10dp"/>
 
-</LinearLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:layout_marginBottom="20dp"
+                    android:id="@+id/detailRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+    </ScrollView>
+    <ImageButton
+        android:id="@+id/companionBtn"
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:animateLayoutChanges="true"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/main_companion_btn" />
+
+</RelativeLayout>
 

@@ -157,7 +157,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
                 addDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        if (addDialog.getsContent() == null || addDialog.getsTitle() == null) {
+                        if (addDialog.getsContent() == null || addDialog.getsTitle() == null || addDialog.getsTitle().isEmpty() || addDialog.getsContent().isEmpty()) {
                         } else if(addDialog.getsContent() != null || addDialog.getsTitle() != null) {
                             postBillboard(addDialog.getsTitle(), addDialog.getsContent());
                             adapter.notifyDataSetChanged();
