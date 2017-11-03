@@ -38,6 +38,7 @@
         <activity android:name=".Activity.SearchCompanionActivity">
         </activity>
         <activity android:name=".Activity.ChangePwActivity"/>
+        <activity android:name=".Activity.ShowChangeImgActivity"/>
         <!--<activity android:name=".Dialog.SearchDetailDialog"-->
             <!--android:theme="@android:style/Theme.Translucent">-->
 

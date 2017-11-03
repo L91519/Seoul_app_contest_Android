@@ -153,6 +153,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        CircleImageView header_profileImg = (CircleImageView) findViewById(R.id.mypage_header_profile);
+//        Glide.with(getApplicationContext()).load(R.drawable.icon_profile).into(header_profileImg);
+
     }
 
     private void getCourseTitle() {
@@ -252,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_mypage) {
             Intent intent = new Intent(MainActivity.this,MyPageDialogActivity.class);
             SharedPreferences sharedPreferences = getSharedPreferences("myId",MODE_PRIVATE);
-            intent.putExtra("myPage_id",sharedPreferences.getString("myId","null"));
+            intent.putExtra("mypage_id",sharedPreferences.getString("myId","null"));
             startActivity(intent);
 
         } else if (id == R.id.nav_changePw) {
@@ -274,6 +277,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
                             SharedPreferences.Editor tokenEditor = tokenPref.edit();
 
+                            Collection<?> tokenCollection = tokenPref.getAll().values();
+                            Log.d("before clear pef===",tokenCollection.toString());
+
                             editor.clear();
                             editor.commit();
                             tokenEditor.clear();
@@ -281,6 +287,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                             Collection<?> collection2 = sharedPreferences.getAll().values();
                             Log.d("after clear pef===",collection2.toString());
+
+                            Collection<?> tokenCollection2 = tokenPref.getAll().values();
+                            Log.d("before clear pef===",tokenCollection2.toString());
 
                             finish();   //SettingsActivity finish
 
@@ -303,15 +312,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_menu, menu);
-
-        MenuItem item = menu.findItem(R.id.action_search);
-        searchView.setMenuItem(item);
-
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.search_menu, menu);
+//
+//        MenuItem item = menu.findItem(R.id.action_search);
+//        searchView.setMenuItem(item);
+//
+//        return true;
+//    }
 
 
 }

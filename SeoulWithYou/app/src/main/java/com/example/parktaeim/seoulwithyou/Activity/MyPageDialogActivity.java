@@ -73,12 +73,15 @@ public class MyPageDialogActivity extends Activity  {
     String birth;
     String image;
     String sex;
+    String age;
 
     private int CAMERA_CODE =0;
     private int GALLERY_CODE =1;
     private int CROP_IMAGE_CODE = 2;
     private String absolutePath;
     private Uri mImageCaptureUri;
+
+    ArrayList<MyPagePostItem> arrayList;
 
 
     @Override
@@ -89,7 +92,7 @@ public class MyPageDialogActivity extends Activity  {
         setContentView(R.layout.dialog_mypage);
 
         Intent intent = getIntent();
-        myPage_id = intent.getStringExtra("myPage_id");
+        myPage_id = intent.getStringExtra("mypage_id");
         Log.d("mypage id get =======", myPage_id);
 
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -104,6 +107,8 @@ public class MyPageDialogActivity extends Activity  {
         Glide.with(this).load(R.raw.pizza).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE)).into(imageViewTarget);
 //        Glide.with(getApplicationContext()).load(R.drawable.pizza).into(gifView);
 
+        CircleImageView profileImg = (CircleImageView) findViewById(R.id.mypage_profileImg);
+        Glide.with(getApplicationContext()).load(R.drawable.icon_profile).into(profileImg);
 
         setProfile();
         setOnClick();
@@ -128,11 +133,15 @@ public class MyPageDialogActivity extends Activity  {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case 0: //앨범
-                                takeAlbum();
+                                Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+                                galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                galleryIntent.setType("image/*");
+                                startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"),GALLERY_CODE);
                                 break;
 
                             case 1: //카메라
-                                takePhoto();
+                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(intent, CAMERA_CODE);
                                 break;
                         }
                     }
@@ -158,6 +167,7 @@ public class MyPageDialogActivity extends Activity  {
                     Log.d("info object ==",response.body().toString());
                     name = jsonObject.getAsJsonPrimitive("name").getAsString();
                     birth = jsonObject.getAsJsonPrimitive("birth").getAsString();
+                    age = jsonObject.getAsJsonPrimitive("age").getAsString();
 //                    image = jsonObject.getAsJsonPrimitive("image").getAsString();
                     sex = jsonObject.getAsJsonPrimitive("sex").getAsString();
 
@@ -169,8 +179,13 @@ public class MyPageDialogActivity extends Activity  {
                     TextView mypage_sex = (TextView) findViewById(R.id.mypage_genderTextView);
 
                     mypage_name.setText(name);
-                    mypage_age.setText(birth);
-                    mypage_sex.setText(sex);
+                    mypage_age.setText(age+"세");
+                    if(sex.equals("true")){
+                        mypage_sex.setText("남성");
+                    }else if(sex.equals("false")){
+                        mypage_sex.setText("여성");
+
+                    }
 //                    Glide.with(context).load(image).into(mypage_profile);
 
                 }
@@ -182,6 +197,9 @@ public class MyPageDialogActivity extends Activity  {
 
             }
         });
+
+
+
 
     }
 
@@ -197,22 +215,32 @@ public class MyPageDialogActivity extends Activity  {
 
         // 다이얼로그에 작성 글 세팅
         SharedPreferences tokenPref = getSharedPreferences("tokenPref", MODE_PRIVATE);
-        com.example.parktaeim.seoulwithyou.Network.Service.
-                getRetrofit(context).
+
+        Log.d("get post ==========","start!!!!!!");
+        com.example.parktaeim.seoulwithyou.Network.Service.getRetrofit(getApplicationContext()).
                 mypage_post(tokenPref.getString("token", "null"), myPage_id).
                 enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        Log.d("post id",myPage_id);
                         Log.d("mypage response code ==", String.valueOf(response.code()));
                         if (response.code() == 200) {
                             JsonArray infoArray = response.body().getAsJsonArray("data");
                             Log.d("mypage infoArray ==", infoArray.toString());
+                            JsonArray jsonElements = infoArray.getAsJsonArray();
+//                            arrayList = new getPostList(jsonElements);
 
+
+
+                        }else if(response.code() == 400){
+                            RelativeLayout noPostLayout = (RelativeLayout) findViewById(R.id.noPostLayout);
+                            noPostLayout.setVisibility(View.VISIBLE);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
+                        Log.d("get post=====","failure"+t.toString());
 
                     }
                 });
@@ -228,6 +256,21 @@ public class MyPageDialogActivity extends Activity  {
         recyclerView.setAdapter(adapter);
 
     }
+
+    public ArrayList<MyPagePostItem> getArrayList(JsonArray jsonElements) {
+        ArrayList<MyPagePostItem> arrayList = new ArrayList<>();
+        for (int i = 0; i < jsonElements.size(); i++) {
+            JsonObject jsonObject = (JsonObject) jsonElements.get(i);
+            String title = jsonObject.getAsJsonPrimitive("title").getAsString();
+            String singer = jsonObject.getAsJsonPrimitive("createdAt").getAsString();
+            String url = jsonObject.getAsJsonPrimitive("musicURL").getAsString();
+            String imaurl = jsonObject.getAsJsonPrimitive("imgURL").getAsString();
+
+        }
+        return arrayList;
+    }
+
+
 
     private void setOnClick() {
         ImageView cancelIcon = (ImageView) findViewById(R.id.cancel_Btn);
@@ -248,103 +291,30 @@ public class MyPageDialogActivity extends Activity  {
 //        });
     }
 
-    private void takePhoto(){
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        String url = "tmp_"+String.valueOf(System.currentTimeMillis())+".jpg";
-        mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),url));
-
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,mImageCaptureUri);
-        startActivityForResult(intent,CAMERA_CODE);
-    }
-
-    private void takeAlbum(){
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-        startActivityForResult(intent,GALLERY_CODE);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode != RESULT_OK) return;
-
         if (resultCode == RESULT_OK) {
             if(requestCode==GALLERY_CODE){
-                mImageCaptureUri = data.getData();
-
+                SendPicture(data);
             }else if(requestCode == CAMERA_CODE){
-                Log.d("camera ===","onactivityResult~~~~!");
-                Intent intent = new Intent("com.android.camera.action.CROP");
-                intent.setDataAndType(mImageCaptureUri,"image/*");
-
-                intent.putExtra("outputX",200);
-                intent.putExtra("outputY",200);
-                intent.putExtra("aspectX",1);
-                intent.putExtra("aspextY",1);
-                intent.putExtra("scale",true);
-                intent.putExtra("return-data",true);
-                startActivityForResult(intent,CROP_IMAGE_CODE);
-                return;
-
-            }else if(requestCode == CROP_IMAGE_CODE){
-                if(requestCode != RESULT_OK){
-                    return;
-                }
-
-                final Bundle extras = data.getExtras();
-
-                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+
-                        "/SeoulWithYou/"+System.currentTimeMillis()+".jpg";
-
-                if(extras != null){
-                    Bitmap profile = extras.getParcelable("data");
-                    mypage_profileImg = (CircleImageView) findViewById(R.id.mypage_profileImg);
-                    mypage_profileImg.setImageBitmap(profile);
-
-                    storeCropImage(profile,filePath);
-                    absolutePath = filePath;
-                    return;
-                }
-
-                File f = new File(mImageCaptureUri.getPath());
-                if(f.exists()){
-                    f.delete();
-                }
+                SendPicture(data);
             }
         }
     }
 
+    private void SendPicture(Intent data){
+        Uri imgUri = data.getData();
+        Log.d("dialog URI!!!!",String.valueOf(imgUri));
+        String imagePath = getRealPathFromURI(imgUri);
 
-//    private void SendPicture(Intent data){
-//        Uri imgUri = data.getData();
-//        String imagePath = getRealPathFromURI(imgUri);
-//        ExifInterface exif = null;
-//        try{
-//            exif = new ExifInterface(imagePath);
-//        }catch (IOException e){
-//            e.printStackTrace();
-//        }
-//
-//        int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-//        int exifDegree = exifOrientationToDegrees(exifOrientation);
-//
-//        contentImg = (ImageView) findViewById(R.id.contentImg);
-////        try {
-////            Bitmap bit = MediaStore.Images.Media.getBitmap(getContentResolver(),data.getData());
-////            contentImg.setImageBitmap(bit);
-////            if(null == contentImg) {
-////                Log.e("Error", "Ouh! there is no there is no child view with R.id.imageView ID within my parent view View.");
-////            }
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////        }
-//        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);//경로를 통해 비트맵으로 전환
-//        Log.d("imagePath",imagePath.toString());
-//        contentImg.setImageBitmap(rotate(bitmap, exifDegree));//이미지 뷰에 비트맵 넣기
-//
-//    }
+        Intent intent = new Intent(MyPageDialogActivity.this,ShowChangeImgActivity.class);
+        intent.putExtra("real uri",imagePath);
+        startActivity(intent);
+
+    }
 
     public Bitmap rotate(Bitmap src, float degree) {
 
@@ -405,6 +375,7 @@ public class MyPageDialogActivity extends Activity  {
         }
 
     }
+
 
 
 }

@@ -31,7 +31,7 @@ public class ChangePwActivity extends AppCompatActivity {
         setContentView(R.layout.activity_change_pw);
 
         ImageView changeBtn = (ImageView) findViewById(R.id.changepw_okBtn);
-        Glide.with(this).load(R.drawable.img_login_btn).into(changeBtn);
+        Glide.with(this).load(R.drawable.img_finish_btn).into(changeBtn);
 
         EditText currentEditText = (EditText) findViewById(R.id.currentPw_editText);
         EditText changeEditText = (EditText) findViewById(R.id.changePw_editText);
@@ -61,6 +61,7 @@ public class ChangePwActivity extends AppCompatActivity {
 
                 SharedPreferences sharedPreferences = getSharedPreferences("myId",MODE_PRIVATE);
                 String currentId = sharedPreferences.getString("myId","null");   // 현재 id
+                Log.d("currentId",currentId);
 
                 // 현재 비밀번호가 정확히 입력되었는지 확인
                 Service.getRetrofit(getApplicationContext()).logIn(currentId,currentPw).enqueue(new Callback<JsonObject>() {
@@ -70,7 +71,14 @@ public class ChangePwActivity extends AppCompatActivity {
 
                         if(response.code() == 200){
                             // 비밀번호 변경
+                            String tokenPrimitive = response.body().getAsJsonPrimitive("token").getAsString();
+                            Log.d("jsonObject ===",tokenPrimitive.toString());
+
                             SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
+                            SharedPreferences.Editor tokenEditor = tokenPref.edit();
+                            tokenEditor.clear();
+                            tokenEditor.putString("token",tokenPrimitive);
+                            tokenEditor.commit();
 
                             Service.getRetrofit(getApplicationContext()).changePw(tokenPref.getString("token","null"),changePw).enqueue(new Callback<Void>() {
                                 @Override
