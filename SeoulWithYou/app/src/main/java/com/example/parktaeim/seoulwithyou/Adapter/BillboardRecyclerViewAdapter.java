@@ -52,7 +52,7 @@ public class BillboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
                     .load(items.get(position).getPic())
                     .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                     .into(viewHolder.profilPic);
-            viewHolder.date.setText(items.get(position).getDate());
+            viewHolder.date.setText(null);
             viewHolder.name.setText(items.get(position).getName());
             viewHolder.title.setText(items.get(position).getTitle());
 

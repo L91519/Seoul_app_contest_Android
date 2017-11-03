@@ -34,17 +34,33 @@ public class Service extends APIAdapter{
         @POST(APIUrl.SIGN_UP_URL)
         Call<Void> signUp(@Field("name") String name,@Field("id") String id,@Field("pw") String pw, @Field("birth") Integer birth, @Field("sex") Boolean sex);
 
+
+
+
+
         @GET("/list/modern")
         Call<JsonObject> getModernCourseList();
+
+        @GET("/list/culture")
+        Call<JsonObject> getArtCourseList();
+
+        @GET("/list/restaurant")
+        Call<JsonObject> getFoodCourseList();
+
+        @GET("list/healing")
+        Call<JsonObject> getHealingCourseList();
+
+        @GET("list/history")
+        Call<JsonObject> getHistoryCourseList();
+
+
+
 
         @GET(APIUrl.MYPAGE_INFO_URL)
         Call<JsonObject> mypage_info(@Header("Authorization") String Authorization, @Path("id") String id);
 
         @GET(APIUrl.MYPAGE_POST)
         Call<JsonObject> mypage_post(@Header("Authorization") String Authorization,@Path("userId") String userId);
-
-        @GET(APIUrl.GET_ART_COURSE)
-        Call<JsonObject> getArtCourseList();
 
         @GET("/detail/{no}")
         Call<JsonObject> getDetail(@Path("no") int no);
