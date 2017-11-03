@@ -313,6 +313,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         };
         getCourse();
 //        initDtalist();
+        Log.d("ch", "kdj");
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -405,7 +406,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
                                 courseItems.add(new CourseItem(x, y, pic, no, title));
                             }
-                            Log.d("checkLog", courseItems.toString());
+                            Log.d("checkLogCourseItem", courseItems.toString());
                         } else {
                             Log.d("--codeTag", String.valueOf(response.code()));
                         }
@@ -537,7 +538,6 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         setMap();
     }
 
-
     private void initSecene(int position) {
 
         Log.d("---position&item", String.valueOf(position) + String.valueOf(courseItems.get(position).getId()));
@@ -586,7 +586,6 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         TextView courseName;
         TextView distance;
     }
-
 
     @Override
     public void onScrollChange(View view, int i, int i1, int i2, int i3) {

@@ -16,11 +16,21 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".Activity.LoginActivity">
-
         </activity>
         <activity android:name=".Activity.MainActivity">
+<<<<<<< HEAD
+        </activity>
+        <activity android:name=".Activity.SignUpActivity">
+        </activity>
+        <activity android:name=".Activity.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+=======
+>>>>>>> badb94ba74a10453c2a19541a4afc87c2da03af2
 
         </activity>
+<<<<<<< HEAD
+=======
         <activity android:name=".Activity.SignUpActivity">
         </activity>
         <activity android:name=".Activity.SplashActivity">
@@ -30,6 +40,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+>>>>>>> badb94ba74a10453c2a19541a4afc87c2da03af2
         <activity android:name=".Activity.ChattingActivity">
         </activity>
         <activity android:name=".Activity.ChatListActivity">

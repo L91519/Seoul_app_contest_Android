@@ -148,7 +148,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_margin="15dp"
-                        android:background="@color/gray300"
+                        android:background="@null"
                         android:scaleType="centerCrop" />
 
                     <TextView
@@ -158,7 +158,6 @@
                         android:layout_marginBottom="5dp"
                         android:layout_marginTop="20dp"
                         android:layout_toRightOf="@id/userPic"
-                        android:text="고수민"
                         android:textSize="12dp"
                         android:textStyle="bold" />
 
@@ -173,7 +172,6 @@
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:paddingTop="3dp"
-                        android:text="여자"
                         android:textColor="@color/colorPrimary"
                         android:textSize="10dp" />
 
@@ -189,7 +187,6 @@
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:paddingTop="3dp"
-                        android:text="10대"
                         android:textColor="@color/colorPrimary"
                         android:textSize="10dp" />
 
@@ -202,7 +199,6 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="15dp"
                         android:layout_marginTop="10dp"
-                        android:text="이왕이면 사진 찍는거 좋아하시는 여성분이 좋습니다!! 댓글 남겨주시면 1대1 걸겠습니당 ㅎ.ㅎ"
                         android:textColor="@color/colorPrimary"
                         android:textSize="12dp" />
 

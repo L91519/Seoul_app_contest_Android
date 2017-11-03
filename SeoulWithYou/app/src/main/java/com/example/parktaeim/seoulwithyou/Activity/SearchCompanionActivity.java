@@ -176,6 +176,7 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.code() == 200) {
+                    setData();
                     adapter.notifyDataSetChanged();
                 } else {
                     Log.d("--postBillboardLog", String.valueOf(response.code()));
@@ -192,8 +193,9 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
     //게시글 가져오기
     public void setData() {
         items = new ArrayList<>();
-
-        Service.getRetrofit(getApplicationContext()).getList(itemNo).enqueue(new Callback<JsonObject>() {
+        SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
+        String authorization = tokenPref.getString("token", "null");
+        Service.getRetrofit(getApplicationContext()).getList(authorization, itemNo).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.code() == 200) {
@@ -227,7 +229,8 @@ public class SearchCompanionActivity extends AppCompatActivity implements Scroll
             String title = jsonObject.getAsJsonPrimitive("title").getAsString();
             String userName = jsonObject.getAsJsonPrimitive("userName").getAsString();
             String userId = jsonObject.getAsJsonPrimitive("userId").getAsString();
-            String createdAt = jsonObject.getAsJsonPrimitive("createAt").getAsString();
+//            String createdAt = jsonObject.getAsJsonPrimitive("createAt").getAsString();
+            String createdAt = "date";
             int postNo = jsonObject.getAsJsonPrimitive("postNo").getAsInt();
             int userAge = jsonObject.getAsJsonPrimitive("userAge").getAsInt();
 
