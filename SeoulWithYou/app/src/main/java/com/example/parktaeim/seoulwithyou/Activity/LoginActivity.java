@@ -41,6 +41,9 @@ public class LoginActivity extends AppCompatActivity {
     MaterialEditText input_pw;
     private String id;
 
+    private SharedPreferences tokenPref;
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,12 +99,12 @@ public class LoginActivity extends AppCompatActivity {
                             String tokenPrimitive = response.body().getAsJsonPrimitive("token").getAsString();
                             Log.d("jsonObject ===",tokenPrimitive.toString());
 
-                            SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
+                            tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
                             SharedPreferences.Editor tokenEditor = tokenPref.edit();
                             tokenEditor.putString("token",tokenPrimitive);
                             tokenEditor.commit();
 
-                            SharedPreferences sharedPreferences = getSharedPreferences("myId",MODE_PRIVATE);
+                            sharedPreferences = getSharedPreferences("myId",MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("myId",id);
                             editor.commit();
@@ -113,39 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("login token pref===",tokenCollection.toString());
 
 
-                            SharedPreferences myInfoPref = getSharedPreferences("myInfoPref",MODE_PRIVATE);
-                            SharedPreferences.Editor myInfoEditor = myInfoPref.edit();
 
-                            Log.d("sharedpreferences","in login activity");
-                            Service.getRetrofit(getApplicationContext()).mypage_info(tokenPref.getString("token","null"),sharedPreferences.getString("myId","null")).enqueue(new Callback<JsonObject>() {
-                                @Override
-                                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                                    Log.d("loginactivity pref","start~~~~!");
-                                    Log.d("response code ==",String.valueOf(response.code()));
-                                    Log.d("check token ===",tokenPref.getString("token","null"));
-                                    Log.d("check response ===",response.body().toString());
-                                    JsonObject jsonObject = response.body();
-                                    Log.d("check result ===",jsonObject.toString());
-
-                                    myInfoEditor.putString("name",jsonObject.getAsJsonPrimitive("name").getAsString());
-                                    myInfoEditor.putInt("birth",jsonObject.getAsJsonPrimitive("birth").getAsInt());
-//                myInfoEditor.putString("image",jsonObject.getAsJsonPrimitive("image").getAsString());
-                                    myInfoEditor.putBoolean("sex",jsonObject.getAsJsonPrimitive("sex").getAsBoolean());
-
-                                    myInfoEditor.commit();
-
-                                    Log.d("put string",jsonObject.getAsJsonPrimitive("name").getAsString());
-                                    Collection<?> collection = myInfoPref.getAll().values();
-                                    Log.d("after login pef===",collection.toString());
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<JsonObject> call, Throwable t) {
-                                    Log.d("info pref failed ㅠㅠㅠ!!",t.toString());
-
-                                }
-                            });
 
                             Log.d("after pref","go main intent!!");
                             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
@@ -164,6 +135,41 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("login Failure === ",t.toString());
                     }
                 });
+
+                SharedPreferences myInfoPref = getSharedPreferences("myInfoPref",MODE_PRIVATE);
+                SharedPreferences.Editor myInfoEditor = myInfoPref.edit();
+
+                Log.d("sharedpreferences","in login activity");
+                Service.getRetrofit(getApplicationContext()).mypage_info(tokenPref.getString("token","null"),sharedPreferences.getString("myId","null")).enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        Log.d("loginactivity pref","start~~~~!");
+                        Log.d("response code ==",String.valueOf(response.code()));
+                        Log.d("check token ===",tokenPref.getString("token","null"));
+                        Log.d("check response ===",response.body().toString());
+                        JsonObject jsonObject = response.body();
+                        Log.d("check result ===",jsonObject.toString());
+
+                        myInfoEditor.putString("name",jsonObject.getAsJsonPrimitive("name").getAsString());
+                        myInfoEditor.putInt("birth",jsonObject.getAsJsonPrimitive("birth").getAsInt());
+//                myInfoEditor.putString("image",jsonObject.getAsJsonPrimitive("image").getAsString());
+                        myInfoEditor.putBoolean("sex",jsonObject.getAsJsonPrimitive("sex").getAsBoolean());
+
+                        myInfoEditor.commit();
+
+                        Log.d("put string",jsonObject.getAsJsonPrimitive("name").getAsString());
+                        Collection<?> collection = myInfoPref.getAll().values();
+                        Log.d("after login pef===",collection.toString());
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        Log.d("info pref failed ㅠㅠㅠ!!",t.toString());
+
+                    }
+                });
+
             }
         });
 
