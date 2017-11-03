@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.parktaeim.seoulwithyou.Activity.MyPageDialogActivity;
 import com.example.parktaeim.seoulwithyou.Holder.CommentViewHolder;
 import com.example.parktaeim.seoulwithyou.Model.CommentItem;
@@ -44,7 +46,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         viewHolder.gender.setText(items.get(position).getGender());
         viewHolder.age.setText(items.get(position).getAge());
         viewHolder.content.setText(items.get(position).getComment());
-        Glide.with(context).load(items.get(position).getProfilPic()).into(viewHolder.comment_profilePic);
+        Glide.with(context).load(items.get(position).getProfilPic()).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(viewHolder.comment_profilePic);
 
         viewHolder.comment_profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
