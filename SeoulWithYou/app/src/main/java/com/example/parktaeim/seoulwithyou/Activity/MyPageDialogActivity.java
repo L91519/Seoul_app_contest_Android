@@ -107,6 +107,8 @@ public class MyPageDialogActivity extends Activity  {
         Glide.with(this).load(R.raw.pizza).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE)).into(imageViewTarget);
 //        Glide.with(getApplicationContext()).load(R.drawable.pizza).into(gifView);
 
+        CircleImageView profileImg = (CircleImageView) findViewById(R.id.mypage_profileImg);
+        Glide.with(getApplicationContext()).load(R.drawable.icon_profile).into(profileImg);
 
         setProfile();
         setOnClick();
@@ -213,8 +215,9 @@ public class MyPageDialogActivity extends Activity  {
 
         // 다이얼로그에 작성 글 세팅
         SharedPreferences tokenPref = getSharedPreferences("tokenPref", MODE_PRIVATE);
-        com.example.parktaeim.seoulwithyou.Network.Service.
-                getRetrofit(context).
+
+        Log.d("get post ==========","start!!!!!!");
+        com.example.parktaeim.seoulwithyou.Network.Service.getRetrofit(getApplicationContext()).
                 mypage_post(tokenPref.getString("token", "null"), myPage_id).
                 enqueue(new Callback<JsonObject>() {
                     @Override
@@ -237,6 +240,7 @@ public class MyPageDialogActivity extends Activity  {
 
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
+                        Log.d("get post=====","failure"+t.toString());
 
                     }
                 });

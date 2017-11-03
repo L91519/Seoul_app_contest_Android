@@ -153,6 +153,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        CircleImageView header_profileImg = (CircleImageView) findViewById(R.id.mypage_header_profile);
+//        Glide.with(getApplicationContext()).load(R.drawable.icon_profile).into(header_profileImg);
+
     }
 
     private void getCourseTitle() {
@@ -309,15 +312,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_menu, menu);
-
-        MenuItem item = menu.findItem(R.id.action_search);
-        searchView.setMenuItem(item);
-
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.search_menu, menu);
+//
+//        MenuItem item = menu.findItem(R.id.action_search);
+//        searchView.setMenuItem(item);
+//
+//        return true;
+//    }
 
 
 }

@@ -79,6 +79,7 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/mypage_changeProfileIcon"
+                android:visibility="gone"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginLeft="80dp"
