@@ -113,27 +113,46 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("login token pref===",tokenCollection.toString());
 
 
-                            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                            startActivity(intent);
-                            finish();
+                            SharedPreferences myInfoPref = getSharedPreferences("myInfoPref",MODE_PRIVATE);
+                            SharedPreferences.Editor myInfoEditor = myInfoPref.edit();
 
-                            Log.d("ㅋㅋㅋ망한듯",sharedPreferences.getString("myId","null"));
-                            Service.getRetrofit(getApplicationContext()).mypage_info(sharedPreferences.getString("myId","null")).enqueue(new Callback<JsonObject>() {
+                            Log.d("sharedpreferences","in login activity");
+                            Service.getRetrofit(getApplicationContext()).mypage_info(tokenPref.getString("token","null"),sharedPreferences.getString("myId","null")).enqueue(new Callback<JsonObject>() {
                                 @Override
                                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                                    Log.d("response.code ==",String.valueOf(response.code()));
-                                    if(response.code() == 200){
-                                        Log.d("mypage info==",response.body().toString());
-                                        JsonObject jsonObject = response.body();
-                                    }
+                                    Log.d("loginactivity pref","start~~~~!");
+                                    Log.d("response code ==",String.valueOf(response.code()));
+                                    Log.d("check token ===",tokenPref.getString("token","null"));
+                                    Log.d("check response ===",response.body().toString());
+                                    JsonObject jsonObject = response.body();
+                                    Log.d("check result ===",jsonObject.toString());
+
+                                    myInfoEditor.putString("name",jsonObject.getAsJsonPrimitive("name").getAsString());
+                                    myInfoEditor.putInt("birth",jsonObject.getAsJsonPrimitive("birth").getAsInt());
+//                myInfoEditor.putString("image",jsonObject.getAsJsonPrimitive("image").getAsString());
+                                    myInfoEditor.putBoolean("sex",jsonObject.getAsJsonPrimitive("sex").getAsBoolean());
+
+                                    myInfoEditor.commit();
+
+                                    Log.d("put string",jsonObject.getAsJsonPrimitive("name").getAsString());
+                                    Collection<?> collection = myInfoPref.getAll().values();
+                                    Log.d("after login pef===",collection.toString());
 
                                 }
 
                                 @Override
                                 public void onFailure(Call<JsonObject> call, Throwable t) {
+                                    Log.d("info pref failed ㅠㅠㅠ!!",t.toString());
 
                                 }
                             });
+
+                            Log.d("after pref","go main intent!!");
+                            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                            startActivity(intent);
+                            finish();
+
+
                         } else if(response.code() == 400){
                             Toast.makeText(LoginActivity.this,"로그인 실패!",Toast.LENGTH_SHORT);
                             return;

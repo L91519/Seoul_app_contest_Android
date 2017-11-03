@@ -1,5 +1,6 @@
 package com.example.parktaeim.seoulwithyou.Activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +19,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -45,6 +47,7 @@ import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,6 +71,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences idPref = getSharedPreferences("myId",MODE_PRIVATE);
+        SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
+
 
         setDrawer();
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -185,6 +192,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View header=navigationView.getHeaderView(0);
+
+        CircleImageView header_profileImg = (CircleImageView) header.findViewById(R.id.mypage_header_profile);
+        TextView header_name = (TextView) header.findViewById(R.id.mypage_header_myname);
+
+        SharedPreferences myInfoPref = getSharedPreferences("myInfoPref",MODE_PRIVATE);
+//        Glide.with(getApplicationContext()).load("").into(header_profileImg);
+        Log.d("drawer name ==",myInfoPref.getString("name",null));
+        header_name.setText(myInfoPref.getString("name","null"));
 
     }
 
@@ -233,8 +249,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Collection<?> collection = sharedPreferences.getAll().values();
                             Log.d("before clear pef===",collection.toString());
 
+                            SharedPreferences tokenPref = getSharedPreferences("tokenPref",MODE_PRIVATE);
+                            SharedPreferences.Editor tokenEditor = tokenPref.edit();
+
+                            SharedPreferences myInfoPref = getSharedPreferences("myInfoPref",MODE_PRIVATE);
+                            SharedPreferences.Editor myInfoEditor = myInfoPref.edit();
+
                             editor.clear();
                             editor.commit();
+                            tokenEditor.clear();
+                            tokenEditor.commit();
+                            myInfoEditor.clear();
+                            myInfoEditor.commit();
 
                             Collection<?> collection2 = sharedPreferences.getAll().values();
                             Log.d("after clear pef===",collection2.toString());
@@ -253,15 +279,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .show();
 
 
-
-
-
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
     @Override

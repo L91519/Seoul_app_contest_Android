@@ -80,7 +80,7 @@ import retrofit2.Response;
  */
 
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class ModernFragment extends Fragment implements RecyclerView.OnScrollChangeListener, TMapGpsManager.onLocationChangedCallback, ScrollViewListener {
+public class ModernFragment extends Fragment implements RecyclerView.OnScrollChangeListener, ScrollViewListener {
 
     static final LatLng SEOUL = new LatLng(37.56, 126.97);
 
@@ -126,20 +126,54 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
     private int lastDisplay = -1;
     private float transitionValue;
 
-    @Override
-    public void onLocationChange(Location location) {
-        Log.d("start", "onlocation change!!");
-        tMapView.setLocationPoint(location.getLongitude(), location.getLatitude());
-        tMapView.setCenterPoint(location.getLongitude(), location.getLatitude());
-        Log.d(String.valueOf(location.getLongitude()), String.valueOf(location.getLatitude()));
-
-        currentLat = location.getLatitude();
-        currentLon = location.getLongitude();
-    }
+//    @Override
+//    public void onLocationChange(Location location) {
+//        Log.d("start", "onlocation change!!");
+//        tMapView.setLocationPoint(location.getLongitude(), location.getLatitude());
+//        tMapView.setCenterPoint(location.getLongitude(), location.getLatitude());
+//        Log.d(String.valueOf(location.getLongitude()), String.valueOf(location.getLatitude()));
+//
+//        currentLat = location.getLatitude();
+//        currentLon = location.getLongitude();
+//
+//        if (location != null) ;
+//        tMapView.setLocationPoint(location.getLongitude(), location.getLatitude());
+//        tMapView.setCenterPoint(location.getLongitude(), location.getLatitude());
+//        Log.d(String.valueOf(location.getLongitude()), String.valueOf(location.getLatitude()));
+//
+//        currentLat = location.getLatitude();
+//        currentLon = location.getLongitude();
+//
+//        final TMapPoint startPoint = new TMapPoint(currentLat, currentLon);   // 현재 위치
+//        final TMapPoint destPoint = new TMapPoint(36.316889, 127.158272);  // 도착 위치
+//
+//        if (currentLat != 0) {
+//            tmapData.findPathDataWithType(TMapData.TMapPathType.CAR_PATH, startPoint, destPoint, new TMapData.FindPathDataListenerCallback() {
+//                @Override
+//                public void onFindPathData(TMapPolyLine tMapPolyLine) {
+//                    Log.d("path start======" + String.valueOf(startPoint.getLatitude()), String.valueOf(startPoint.getLongitude()));
+//                    Log.d("path dest======" + String.valueOf(destPoint.getLatitude()), String.valueOf(destPoint.getLongitude()));
+//                    tMapView.setLocationPoint(startPoint.getLongitude(), startPoint.getLatitude());
+//                    tMapView.addTMapPath(tMapPolyLine);
+//                    Log.d("path poly", "finish=========");
+//
+//                }
+//            });
+//        }
+//    }
 
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
+
+            Log.d("start", "onlocation change!!");
+            tMapView.setLocationPoint(location.getLongitude(), location.getLatitude());
+            tMapView.setCenterPoint(location.getLongitude(), location.getLatitude());
+            Log.d(String.valueOf(location.getLongitude()), String.valueOf(location.getLatitude()));
+
+            currentLat = location.getLatitude();
+            currentLon = location.getLongitude();
+
             if (location != null) ;
             tMapView.setLocationPoint(location.getLongitude(), location.getLatitude());
             tMapView.setCenterPoint(location.getLongitude(), location.getLatitude());
@@ -165,6 +199,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
                 });
             }
 
+
         }
 
         @Override
@@ -183,11 +218,31 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         }
     };
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
 
+    private void setGps() {
+        final LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
+                1000, // 통지사이의 최소 시간간격 (miliSecond)
+                1, // 통지사이의 최소 변경거리 (m)
+                mLocationListener);
+
+        Log.d("setGps ==","ㅠㅠ");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -202,6 +257,7 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
             ActivityCompat.requestPermissions(getActivity(), LOCATION_PERMS, REQUEST_CODE_LOCATION);
         } else {
             setMap();
+            setGps();
 
         }
 
@@ -415,21 +471,29 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
         tMapView.setMapType(TMapView.MAPTYPE_STANDARD);
         tMapView.setLanguage(TMapView.LANGUAGE_KOREAN);
 
-        tMapGps = new TMapGpsManager(getActivity());
-        tMapGps.setMinTime(1000);
-        tMapGps.setMinDistance(5);
-        tMapGps.setProvider(tMapGps.NETWORK_PROVIDER);  // 인터넷 이용 (실내일때 유용)
+//        tMapGps = new TMapGpsManager(getActivity());
+//        tMapGps.setMinTime(1000);
+//        tMapGps.setMinDistance(5);
+//        tMapGps.setProvider(tMapGps.NETWORK_PROVIDER);  // 인터넷 이용 (실내일때 유용)
 //        tMapGps.setProvider(tMapGps.GPS_PROVIDER);    // 현위치 gps 이용
-        tMapGps.OpenGps();
+//        tMapGps.OpenGps();
 
         tMapView.setTrackingMode(true);   //트래킹모드
         tMapView.setSightVisible(true);
 
 
+
         try {
+
+            final LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
+                    1000, // 통지사이의 최소 시간간격 (miliSecond)
+                    1, // 통지사이의 최소 변경거리 (m)
+                    mLocationListener);
+
             Log.d("setmap ====", "location updates");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, mLocationListener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 1, mLocationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, mLocationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, mLocationListener);
 
         } catch (SecurityException e) {
             e.printStackTrace();
@@ -437,7 +501,25 @@ public class ModernFragment extends Fragment implements RecyclerView.OnScrollCha
 
 
     }
+    @Override
+    public void onResume() {
+        super.onResume();
 
+        try {
+
+            final LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
+                    1000, // 통지사이의 최소 시간간격 (miliSecond)
+                    1, // 통지사이의 최소 변경거리 (m)
+                    mLocationListener);
+            Log.d("setmap ====", "location updates");
+//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, mLocationListener);
+//            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, mLocationListener);
+
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
     private boolean canAccessLocation() {
         return (hasPermission(Manifest.permission.ACCESS_FINE_LOCATION));
     }

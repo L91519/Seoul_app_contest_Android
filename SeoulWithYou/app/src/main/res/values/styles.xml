@@ -27,5 +27,6 @@
         <item name="color">@color/colorAccent</item>
     </style>
 
+    <style name="DialogTheme" parent="Base.Theme.AppCompat.Light.Dialog.Alert"/>
 
 </resources>

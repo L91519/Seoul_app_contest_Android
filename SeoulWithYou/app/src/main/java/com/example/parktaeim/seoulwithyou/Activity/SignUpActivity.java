@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,6 +22,8 @@ import com.example.parktaeim.seoulwithyou.Network.Service;
 import com.example.parktaeim.seoulwithyou.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
+
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,6 +77,27 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
 
+    protected InputFilter filter= new InputFilter() {
+
+        public CharSequence filter(CharSequence source, int start, int end,
+
+                                   Spanned dest, int dstart, int dend) {
+
+
+
+            Pattern ps = Pattern.compile("^[a-zA-Z0-9]+$");
+
+            if (!ps.matcher(source).matches()) {
+
+                return "";
+
+            }
+
+            return null;
+
+        }
+
+    };
     private void setView() {
         backIcon = (ImageView) findViewById(R.id.backIcon);
         nameExitText = (MaterialEditText) findViewById(R.id.nameEditText);
@@ -87,6 +112,10 @@ public class SignUpActivity extends AppCompatActivity {
         ImageView backImg= (ImageView) findViewById(R.id.signup_backgroundImg);
 
         Glide.with(this).load(R.drawable.img_login_background).into(backImg);
+
+        idEditText.setFilters(new InputFilter[] {filter});
+        pwEditText.setFilters(new InputFilter[]{filter});
+        pwCheckEditText.setFilters(new InputFilter[]{filter});
 
         //Setting Select Gender
         noSelectGender_man.setOnClickListener(new View.OnClickListener() {
